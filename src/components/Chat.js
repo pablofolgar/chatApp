@@ -9,11 +9,19 @@ class Chat extends React.Component{
         return(
             <View>
                 <Text>
-                    Hello Chat
+                    Hello {this.props.name}
                 </Text>
             </View>
         );
     }
 }
+
+Chat.defaultProps = {
+    name:'Pablo',
+};
+
+Chat.propTypes={
+    name: React.PropTypes.string,
+};
 
 export default Chat;
