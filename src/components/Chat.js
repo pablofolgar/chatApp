@@ -1,5 +1,5 @@
 import React from 'react';
-//import {Text,View} from 'react-native';
+
 
 
 import {GiftedChat} from 'react-native-gifted-chat';
@@ -7,10 +7,9 @@ import {GiftedChat} from 'react-native-gifted-chat';
 import Backend from '../Backend';
 
 class Chat extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {messages: []};
-    }
+    state = {
+        messages: [],
+      };
 
     componentWillMount() {
 
@@ -29,14 +28,6 @@ class Chat extends React.Component{
                       name: this.props.name,
                     }}
              />
-        /*
-
-            <View>
-                <Text>
-                    Hello {this.props.name}
-                </Text>
-            </View>
-             */
         );
     }
 
@@ -44,7 +35,7 @@ class Chat extends React.Component{
         Backend.loadMessages((message) => {
             this.setState((previousState) => {
                 return{
-                    messages: GiftedChat.append(previousState.message, message),
+                    messages: GiftedChat.append(previousState.messages, message),
                 };
             });
         });

@@ -39,7 +39,7 @@ class Backend{
             const message = data.val();
             callback({
                 _id: data.key,
-                text: data.text,
+                text: message.text,
                 createdAt: new Date(message.createdAt),
                 user:{
                     _id: message.user._id,
