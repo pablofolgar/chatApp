@@ -11,6 +11,8 @@ import {
     Actions,
 } from 'react-native-router-flux';
 
+const style = require('./styles.js');
+
 class Home extends React.Component{
     state={
         name:'',
@@ -36,7 +38,7 @@ class Home extends React.Component{
                 <TouchableOpacity>
                     <Text style={style.buttonText}
                     onPress={() => {
-                        Actions.chat({
+                        Actions.menu({
                             name:this.state.name,
                         });
                     }}
@@ -48,24 +50,5 @@ class Home extends React.Component{
         );
     }
 }
-
-var style = StyleSheet.create({
-    title:{
-        marginTop: 20,
-        marginLeft: 20,
-        fontSize: 20,
-    },
-    nameInput:{
-        padding:5,
-        height:40,
-        borderWidth:2,
-        borderColor: 'black',
-        margin: 20,
-    },
-    buttonText:{
-        marginLeft:20,
-        fontSize:20,
-    },
-});
 
 export default Home;
