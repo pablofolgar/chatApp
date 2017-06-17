@@ -41,8 +41,7 @@ class Home extends React.Component{
                         Actions.menu({
                             name:this.state.name,
                         });
-                    }}
-                    >
+                    }}>
                         Next
                     </Text>
                 </TouchableOpacity>

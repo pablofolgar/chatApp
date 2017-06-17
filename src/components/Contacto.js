@@ -4,32 +4,36 @@ import {
     Actions,
 } from 'react-native-router-flux';
 
-import {SectionList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 const style = require('./styles.js');
 
 class Contacto extends React.Component{
     state={
-        name:'',
+        name:this.props.name,
     };
 
     render(){
             return(
                 <View style={style.container}>
-                    <SectionList
-                      sections={[
-                          {title: 'C', data: ['Carla']},
-                          {title: 'G', data: [' ','Gabriel']},
-                          {title: 'M', data: [' ',' ','Matias']},
-                          {title: 'P', data: [' ',' ',' ','Pablo','Paula']},
-                      ]}
-                      renderItem={
-                        ({item}) => <Text style={style.item} onPress={() => {
-                                                                                     Actions.chat({
-                                                                                         name:this.state.name,
-                                                                                     });
-                                                                                 }}>{item}</Text>
-                      }
-                      renderSectionHeader={({section}) => <Text style={style.sectionHeader}>{section.title}</Text>}
+                    <FlatList
+
+                        data={[
+                        {key: 'Carla'},
+                        {key: 'Gabriel'},
+                        {key: 'Matias'},
+                        {key: 'Pablo'},
+                        {key: 'Paula'},
+                        ]}
+
+                        renderItem={
+                            ({item}) =>
+                            <Text style={style.item}
+                            onPress={() => {
+                                Actions.chat({name:this.state.name,});}}>
+                                {item.key}
+                             </Text>
+                        }
+
                     />
                  </View>
             );

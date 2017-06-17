@@ -1,5 +1,5 @@
 import React from 'react';
-import {SectionList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {
     Actions,
 } from 'react-native-router-flux';
@@ -7,28 +7,31 @@ import {
 const style = require('./styles.js');
 class Menu extends React.Component{
     state={
-        name:'',
+        name:this.props.name,
     };
 
     render(){
         return(
             <View style={style.container}>
-                <SectionList
-                  sections={[
-                      {title: 'C', data: ['Catalogo','Chat']},
-                      {title: 'E', data: [' ',' ','Eventos']},
-                      {title: 'P', data: [' ',' ',' ','Perfil']},
-                  ]}
-                  renderItem={
-                    ({item}) => <Text style={style.item} onPress={() => {
-                                                                                 Actions.contacto({
-                                                                                     name:this.state.name,
-                                                                                 });
-                                                                             }}>{item}</Text>
-                  }
-                  renderSectionHeader={({section}) => <Text style={style.sectionHeader}>{section.title}</Text>}
+                <FlatList
+
+                    data={[
+                    {key: 'Catalogo'},
+                    {key: 'Chat'},
+                    {key: 'Eventos'},
+                    {key: 'Perfil'},
+                    ]}
+
+                    renderItem={
+                        ({item}) =>
+                        <Text style={style.item}
+                        onPress={() =>{
+                            Actions.contacto({name:this.state.name,});}}>
+                            {item.key}
+                        </Text>
+                    }
                 />
-             </View>
+            </View>
         );
     }
 }
