@@ -27,9 +27,14 @@ class Menu extends React.Component{
                         <Text style={style.item}
                         onPress={() =>{
 
-                            if(item.key==='Chat'){
-                                Actions.contacto({name:this.state.name,});}}
-                            }
+                            switch(item.key){
+                                case 'Chat':
+                                    Actions.contacto({name:this.state.name,});
+                                    break;
+                                default:
+                                    alert("El menu "+item.key+" no esta disponible");
+                                }
+                            }}
                             >
                             {item.key}
                         </Text>
