@@ -7,6 +7,15 @@ import {GiftedChat} from 'react-native-gifted-chat';
 import Backend from '../Backend';
 
 class Chat extends React.Component{
+
+    constructor(){
+        super();
+
+        console.ignoredYellowBox = [
+            'Setting a timer'
+        ]
+    }
+
     state = {
         messages: [],
       };
