@@ -39,6 +39,19 @@ var styles = StyleSheet.create({
             marginLeft:20,
             fontSize:20,
         },
+        action: {
+            backgroundColor: constants.actionColor,
+            borderColor: 'transparent',
+            borderWidth: 1,
+            paddingLeft: 16,
+            paddingTop: 14,
+            paddingBottom: 16,
+          },
+          actionText: {
+              color: '#fff',
+              fontSize: 16,
+              textAlign: 'center',
+            },
 })
 
 module.exports = styles

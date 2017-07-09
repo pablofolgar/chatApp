@@ -3,6 +3,7 @@ import firebase from 'firebase';
 class Backend{
     uid='';
     messageRef=null;
+    historyRef=null;
     //initialize Firebase Backend
     constructor(){
         firebase.initializeApp({
@@ -31,6 +32,9 @@ class Backend{
         return this.uid;
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Desde aca se escribe lo referido a los chat
     //Retrieve the message from the backend
     loadMessages(callback){
         this.messageRef = firebase.database().ref('messages');
@@ -64,8 +68,57 @@ class Backend{
 
     //Close the connection to the backend
     closeChat(){
-        if(this.messageRef){
-            this.messageRef.off();
+        this.close(this.messageRef);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+   //Desde aca se escribe lo referido a las historias
+    loadHistories(callback){
+            getHistoryRef();
+            const onReceive = (data) => {
+                const hist = data.val();
+                callback({
+                    _id: data.key,
+                    text: hist.text,
+                    createdAt: new Date(hist.createdAt),
+                    user:{
+                        _id: hist.user._id,
+                        name: hist.user.name,
+                    },
+                });
+            };
+            this.historyRef.limitToLast(20).on('child_added', onReceive);
+
+    }
+
+    //Send message to the backend
+    sendHistory(name,categoria,titulo,history){
+            this.getHistoryRef();
+            this.historyRef.push({
+                text: history,
+                category: categoria,
+                titulo: titulo,
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                user:{
+                  _id: this.getUid(),
+                  name: name,
+                }
+            });
+    }
+
+    getHistoryRef(){
+        this.historyRef = firebase.database().ref('histories');
+        this.historyRef.off();
+    }
+
+    closeHist(){
+        this.close(this.historyRef);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    close(ref){
+        if(this.ref){
+            this.ref.off();
         }
     }
 }

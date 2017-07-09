@@ -33,6 +33,7 @@ class Home extends React.Component{
                     })
                 }}
                 value= {this.state.name}
+
                 />
 
                 <TouchableOpacity>

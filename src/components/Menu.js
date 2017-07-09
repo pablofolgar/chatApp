@@ -17,7 +17,7 @@ class Menu extends React.Component{
 
                     data={[
                     {key: 'Catalogo'},
-                    {key: 'Chat'},
+                    {key: 'Comunicacion'},
                     {key: 'Eventos'},
                     {key: 'Perfil'},
                     ]}
@@ -26,10 +26,9 @@ class Menu extends React.Component{
                         ({item}) =>
                         <Text style={style.item}
                         onPress={() =>{
-
                             switch(item.key){
-                                case 'Chat':
-                                    Actions.contacto({name:this.state.name,});
+                                case 'Comunicacion':
+                                    Actions.comunicacion({name:this.state.name,});
                                     break;
                                 default:
                                     alert("El menu "+item.key+" no esta disponible");
