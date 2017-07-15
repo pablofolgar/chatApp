@@ -6,6 +6,7 @@ import {
     TextInput,
     TouchableOpacity,
     Picker,
+     Alert,
 } from 'react-native';
 import Categorias from './CategoriasHistorias';
 import ActionButton from  '../ActionButton';
@@ -13,9 +14,13 @@ import Backend from '../../Backend';
 const style = require('./../styles.js');
 
 class CargarHistoriaTexto extends React.Component{
+
+
+
+
     state={
         name:this.props.name,
-        categoria: this.props.categoria,
+        categoria: "java",
         titulo:'',
         history:'',
     };
@@ -34,7 +39,8 @@ class CargarHistoriaTexto extends React.Component{
 
                     <Picker
                       selectedValue={this.state.categoria}
-                      onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}>
+                      onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}
+                      mode="dropdown">
                       <Picker.Item label="Java" value="java" />
                       <Picker.Item label="JavaScript" value="js" />
                     </Picker>
@@ -60,12 +66,48 @@ class CargarHistoriaTexto extends React.Component{
                     />
 
                     <ActionButton title="Agregar"
-                        onPress={() => {Backend.sendHistory(this.state.name,this.state.categoria,
-                        this.state.titulo,this.state.history);}}
+                        onPress={this._addItem.bind(this)}
                         />
                 </View>
             );
         }
+
+    _addItem() {
+      Alert.alert(
+        'Esta por cargar su historia',
+        null,
+        [
+          {
+            text: 'Agregar',
+            onPress: (t) => {
+                  var camposLlenos = this.validarCamposRequeridos();
+                  if(camposLlenos){
+                      Backend.sendHistory(this.state.name,this.state.categoria,
+                                              this.state.titulo,this.state.history);
+                      this.limpiarCampos();
+                  }
+            }
+          },
+        ],
+        'plain-text'
+      );
+    }
+
+    limpiarCampos(){
+        this.setState({history: " ",titulo:" "})
+    }
+
+    validarCamposRequeridos(){
+        var result = true;
+        if(this.state.name==" " ||
+            this.state.categoria==" " ||
+            this.state.titulo==" " ||
+            this.state.history==" "){
+            alert("Debe completar todos los campos");
+            result = false;
+        }
+        return result;
+    }
 
  }
 

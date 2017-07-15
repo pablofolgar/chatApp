@@ -73,21 +73,33 @@ class Backend{
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
    //Desde aca se escribe lo referido a las historias
-    loadHistories(callback){
-            getHistoryRef();
-            const onReceive = (data) => {
-                const hist = data.val();
-                callback({
-                    _id: data.key,
-                    text: hist.text,
-                    createdAt: new Date(hist.createdAt),
-                    user:{
-                        _id: hist.user._id,
-                        name: hist.user.name,
-                    },
+    loadHistories(callback, categoria, titulo){
+    console.log("Primero entro por aca => Categotia: "+categoria+" => titulo: "+ titulo)
+            this.getHistoryRef();
+            this.historyRef.orderByChild("category")
+                            .equalTo(categoria)
+                            .limitToLast(20).once('value',function(snapshot){
+                snapshot.forEach(function(childSnapshot) {
+                const hist = childSnapshot.val();
+                console.log("Titulo: "+titulo + " - Variable hist: "+hist.titulo);
+                if(titulo.trim()==hist.titulo.trim()){
+                console.log("Entro: "+hist.titulo);
+                    callback({
+                                _id: childSnapshot.key,
+                                text: hist.text,
+                                category: hist.category,
+                                 titulo: hist.titulo,
+                                createdAt: new Date(hist.createdAt),
+                                user:{
+                                    _id: hist.user._id,
+                                    name: hist.user.name,
+                                    }
+                     });
+                }
                 });
-            };
-            this.historyRef.limitToLast(20).on('child_added', onReceive);
+                console.log("Salio Callback: ");
+            });
+
 
     }
 
@@ -108,7 +120,6 @@ class Backend{
 
     getHistoryRef(){
         this.historyRef = firebase.database().ref('histories');
-        this.historyRef.off();
     }
 
     closeHist(){

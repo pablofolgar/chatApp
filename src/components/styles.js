@@ -52,6 +52,9 @@ var styles = StyleSheet.create({
               fontSize: 16,
               textAlign: 'center',
             },
+            listview: {
+                flex: 1,
+              },
 })
 
 module.exports = styles
