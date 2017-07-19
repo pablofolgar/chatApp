@@ -44,14 +44,14 @@ class VerHistorias extends React.Component{
             <View>
                     <Picker
                       selectedValue={this.state.selectedCategoria}
-                      onValueChange={ (category) => {this.setState({selectedCategoria:category});this.getHistoriasPorCategoria(category)} }
+                      onValueChange={ (category) => {this.setState({selectedCategoria:category});this.limpiarSeleccionCategoria();this.getHistoriasPorCategoria(category)} }
                       mode="dropdown">
                       {categoryItems}
                     </Picker>
 
                     <Picker
                       selectedValue={this.state.selectedTitulo}
-                      onValueChange={ (titulo) => {this.setState({selectedTitulo:titulo});this.getHistoriasPorTitulo(titulo)} }
+                      onValueChange={ (titulo) => {this.setState({selectedTitulo:titulo});this.limpiarSeleccionTitulo();this.getHistoriasPorTitulo(titulo)} }
                       mode="dropdown">
                       {tituloItems}
                     </Picker>
@@ -81,13 +81,22 @@ class VerHistorias extends React.Component{
         for (var i = this.state.historias.length - 1; i >= 0; i--) {
             if(this.state.historias[i].titulo==titulo){
                 this.setState({text:this.state.historias[i].historia});
+                break;
             }
-            break;
+            
         }
     }
 
     componentWillUnMount(){
         Backend.closeHist();
+    }
+
+    limpiarSeleccionCategoria(){
+        this.setState({titulos:['Seleccione un título'],text:" "});
+    }
+
+    limpiarSeleccionTitulo(){
+        this.setState({text:" "});
     }
 
 }
