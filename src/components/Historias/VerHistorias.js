@@ -15,8 +15,11 @@ class VerHistorias extends React.Component{
         super(props);
         this.state = {
                 text: ' ',
-                titulo: ' ',
-                categoria: 'java',
+                categorias: ['Seleccione una categoría','Música', 'Teatro', 'Cine', 'Literatura', 'Historia Nacional','Historia Internacional','Actividades Manuales','Cocina','Deportes','Miscelaneouss'],
+                selectedCategoria: ' ',
+                titulos:['Seleccione un título'],
+                selectedTitulo: ' ',
+                historias:[]
             };
         console.ignoredYellowBox = [
             'Setting a timer'
@@ -29,35 +32,30 @@ class VerHistorias extends React.Component{
 
 
     render(){
+      
+        let categoryItems = this.state.categorias.map( (s, i) => {
+            return <Picker.Item key={i} value={s} label={s} />
+        });
+        let tituloItems = this.state.titulos.map( (s, i) => {
+            return <Picker.Item key={i} value={s} label={s} />
+        });
+
         return(
             <View>
-                <Text> Seleccione una categoria</Text>
                     <Picker
-                      selectedValue={this.state.categoria}
-                      onValueChange={(itemValue, itemIndex)=>this.setState({categoria: itemValue})}
+                      selectedValue={this.state.selectedCategoria}
+                      onValueChange={ (category) => {this.setState({selectedCategoria:category});this.getHistoriasPorCategoria(category)} }
                       mode="dropdown">
-                      <Picker.Item label="Java" value="java" />
-                      <Picker.Item label="JavaScript" value="js" />
+                      {categoryItems}
                     </Picker>
 
-                    <Text> Seleccione un titulo</Text>
-                   <TextInput style={style.nameInput}
-                       placeholder='Vacaciones'
-                       onChangeText={ (text) => {
-                           this.setState({
-                               titulo:text,
-                           })
-                       }}
-                       value= {this.state.titulo}
-                   />
-                    <ActionButton title="Buscar" onPress={()=>{
-                                            console.log("Boton Buscar");
-                                            var camposLlenos = this.validarCamposRequeridos();
-                                            if(camposLlenos){
-                                                this.setState({text:" "});
-                                                this.listenForItems();
-                                            }
-                                          }}/>
+                    <Picker
+                      selectedValue={this.state.selectedTitulo}
+                      onValueChange={ (titulo) => {this.setState({selectedTitulo:titulo});this.getHistoriasPorTitulo(titulo)} }
+                      mode="dropdown">
+                      {tituloItems}
+                    </Picker>
+                    
                     <Text>
                         Historia:
                         {this.state.text==" "?"No hay historias":this.state.text}
@@ -68,31 +66,28 @@ class VerHistorias extends React.Component{
 
 
     componentDidMount(){
-
     }
 
-    listenForItems() {
-            Backend.loadHistories((callback) => {
-            console.log("Despues entro por aca");
-                console.log('callback.text: '+callback.text);
+    getHistoriasPorCategoria(category) {
+            Backend.loadHistories((historia) => {
                 this.setState({
-                    text:callback.text,
+                    titulos: this.state.titulos.concat([historia.titulo]),
+                    historias: this.state.historias.concat([{categoria: historia.category,titulo:historia.titulo,historia:historia.text}]),
                 });
-            }, this.state.categoria, this.state.titulo);
+            }, category);
+    }
+
+    getHistoriasPorTitulo(titulo){
+        for (var i = this.state.historias.length - 1; i >= 0; i--) {
+            if(this.state.historias[i].titulo==titulo){
+                this.setState({text:this.state.historias[i].historia});
+            }
+            break;
+        }
     }
 
     componentWillUnMount(){
         Backend.closeHist();
-    }
-
-    validarCamposRequeridos(){
-            var result = true;
-            if( this.state.categoria==" " ||
-                this.state.titulo==" "){
-                alert("Debe completar todos los campos");
-                result = false;
-            }
-            return result;
     }
 
 }

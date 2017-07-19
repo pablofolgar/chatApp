@@ -73,31 +73,23 @@ class Backend{
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
    //Desde aca se escribe lo referido a las historias
-    loadHistories(callback, categoria, titulo){
-    console.log("Primero entro por aca => Categotia: "+categoria+" => titulo: "+ titulo)
+    loadHistories(callback,categoria){
             this.getHistoryRef();
-            this.historyRef.orderByChild("category")
-                            .equalTo(categoria)
-                            .limitToLast(20).once('value',function(snapshot){
+            this.historyRef.orderByChild("category").equalTo(categoria).limitToLast(20).once('value',function(snapshot){
                 snapshot.forEach(function(childSnapshot) {
                 const hist = childSnapshot.val();
-                console.log("Titulo: "+titulo + " - Variable hist: "+hist.titulo);
-                if(titulo.trim()==hist.titulo.trim()){
-                console.log("Entro: "+hist.titulo);
                     callback({
                                 _id: childSnapshot.key,
                                 text: hist.text,
                                 category: hist.category,
-                                 titulo: hist.titulo,
+                                titulo: hist.titulo,
                                 createdAt: new Date(hist.createdAt),
                                 user:{
                                     _id: hist.user._id,
                                     name: hist.user.name,
-                                    }
+                                }
                      });
-                }
                 });
-                console.log("Salio Callback: ");
             });
 
 
