@@ -15,11 +15,16 @@ const style = require('./../styles.js');
 
 class CargarHistoriaTexto extends React.Component{
 
+    constructor(){
+        super();
 
+        console.ignoredYellowBox = [
+            'Setting a timer'
+        ]
+    }
 
 
     state={
-        name:this.props.name,
         selectedCategoria: ' ',
         categorias: ['Seleccione una categoría','Música', 'Teatro', 'Cine', 'Literatura', 'Historia Nacional','Historia Internacional','Actividades Manuales','Cocina','Deportes','Miscelaneouss'],
         titulo:' ',
@@ -89,7 +94,7 @@ class CargarHistoriaTexto extends React.Component{
           {
             text: 'Agregar',
             onPress: (t) => {
-              Backend.sendHistory(this.state.name,this.state.selectedCategoria,
+              Backend.sendHistory(this.props.name,this.state.selectedCategoria,
                                       this.state.titulo,this.state.history);
               this.limpiarCampos();
             }
