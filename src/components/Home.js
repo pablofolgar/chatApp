@@ -22,7 +22,7 @@ class Home extends React.Component{
         return(
             <View>
                 <Text style={style.title} >
-                    Enter your name :
+                    Ingrese su nombre :
                 </Text>
 
                 <TextInput style={style.nameInput}

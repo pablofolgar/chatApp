@@ -20,9 +20,10 @@ class CargarHistoriaTexto extends React.Component{
 
     state={
         name:this.props.name,
-        categoria: "java",
-        titulo:'',
-        history:'',
+        selectedCategoria: ' ',
+        categorias: ['Seleccione una categoría','Música', 'Teatro', 'Cine', 'Literatura', 'Historia Nacional','Historia Internacional','Actividades Manuales','Cocina','Deportes','Miscelaneouss'],
+        titulo:' ',
+        history:' ',
     };
 
 
@@ -32,17 +33,20 @@ class CargarHistoriaTexto extends React.Component{
 
 
     render(){
+            let categoryItems = this.state.categorias.map( (s, i) => {
+                return <Picker.Item key={i} value={s} label={s} />
+            });
+
             return(
                 <View>
                     <Text> Seleccione una categoria</Text>
 
 
                     <Picker
-                      selectedValue={this.state.categoria}
-                      onValueChange={(itemValue, itemIndex) => this.setState({categoria: itemValue})}
+                      selectedValue={this.state.selectedCategoria}
+                      onValueChange={ (category) => {this.setState({selectedCategoria:category});} }
                       mode="dropdown">
-                      <Picker.Item label="Java" value="java" />
-                      <Picker.Item label="JavaScript" value="js" />
+                      {categoryItems}
                     </Picker>
 
                     <Text> Ingrese un titulo para su historia</Text>
@@ -61,18 +65,23 @@ class CargarHistoriaTexto extends React.Component{
 
                     <TextInput
                             style={{height: 100, borderColor: 'gray', borderWidth: 1}}
-                            onChangeText={(history) => this.setState({history})}
+                            onChangeText={(historia) => this.setState({history:historia})}
                             value={this.state.history}
                     />
 
                     <ActionButton title="Agregar"
-                        onPress={this._addItem.bind(this)}
+                        onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                        if(camposRequeridosOk){
+                                            this.agregarHistoria()}
+                                        }
+
+                                }
                         />
                 </View>
             );
         }
 
-    _addItem() {
+    agregarHistoria() {
       Alert.alert(
         'Esta por cargar su historia',
         null,
@@ -80,14 +89,12 @@ class CargarHistoriaTexto extends React.Component{
           {
             text: 'Agregar',
             onPress: (t) => {
-                  var camposLlenos = this.validarCamposRequeridos();
-                  if(camposLlenos){
-                      Backend.sendHistory(this.state.name,this.state.categoria,
-                                              this.state.titulo,this.state.history);
-                      this.limpiarCampos();
-                  }
+              Backend.sendHistory(this.state.name,this.state.selectedCategoria,
+                                      this.state.titulo,this.state.history);
+              this.limpiarCampos();
             }
           },
+          {text: 'Cancelar', onPress: (t) => console.log('Cancel')}
         ],
         'plain-text'
       );
@@ -100,7 +107,7 @@ class CargarHistoriaTexto extends React.Component{
     validarCamposRequeridos(){
         var result = true;
         if(this.state.name==" " ||
-            this.state.categoria==" " ||
+            this.state.selectedCategoria==" " ||
             this.state.titulo==" " ||
             this.state.history==" "){
             alert("Debe completar todos los campos");
