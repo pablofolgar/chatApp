@@ -78,7 +78,6 @@ class CargarHistoriaTexto extends React.Component{
                         onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
                                         if(camposRequeridosOk){
                                             this.agregarHistoria();
-                                            this.setState({selectedCategoria:'Seleccione una categoría'});
                                             }
                                         }
 
@@ -108,7 +107,7 @@ class CargarHistoriaTexto extends React.Component{
     }
 
     limpiarCampos(){
-        this.setState({history: '' ,titulo:''})
+        this.setState({history: '' ,titulo:'',selectedCategoria:'Seleccione una categoría'})
     }
 
     validarCamposRequeridos(){
