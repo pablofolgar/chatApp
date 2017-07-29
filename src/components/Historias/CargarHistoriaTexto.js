@@ -27,8 +27,8 @@ class CargarHistoriaTexto extends React.Component{
     state={
         selectedCategoria: ' ',
         categorias: ['Seleccione una categoría','Música', 'Teatro', 'Cine', 'Literatura', 'Historia Nacional','Historia Internacional','Actividades Manuales','Cocina','Deportes','Miscelaneouss'],
-        titulo:' ',
-        history:' ',
+        titulo:'',
+        history:'',
     };
 
 
@@ -77,7 +77,9 @@ class CargarHistoriaTexto extends React.Component{
                     <ActionButton title="Agregar"
                         onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
                                         if(camposRequeridosOk){
-                                            this.agregarHistoria()}
+                                            this.agregarHistoria();
+                                            this.setState({selectedCategoria:'Seleccione una categoría'});
+                                            }
                                         }
 
                                 }
@@ -106,15 +108,15 @@ class CargarHistoriaTexto extends React.Component{
     }
 
     limpiarCampos(){
-        this.setState({history: " ",titulo:" "})
+        this.setState({history: '' ,titulo:''})
     }
 
     validarCamposRequeridos(){
         var result = true;
-        if(this.state.name==" " ||
-            this.state.selectedCategoria==" " ||
-            this.state.titulo==" " ||
-            this.state.history==" "){
+        if(!this.props.name ||
+            !this.state.selectedCategoria ||
+            !this.state.titulo ||
+            !this.state.history){
             alert("Debe completar todos los campos");
             result = false;
         }
