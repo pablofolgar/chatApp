@@ -80,7 +80,7 @@ class VerHistorias extends React.Component{
     getHistoriasPorTitulo(titulo){
         for (var i = this.state.historias.length - 1; i >= 0; i--) {
             if(this.state.historias[i].titulo==titulo){
-                this.setState({text:this.state.historias[i].historia});
+                this.setState({text:this.state.historias[i].historia,selectedCategoria:'Seleccione una categoría'});
                 break;
             }
             
