@@ -43,7 +43,7 @@ class Home extends React.Component{
                             name:this.state.name,
                         });
                     }}>
-                        Next
+                        Ingresar
                     </Text>
                 </TouchableOpacity>
             </View>

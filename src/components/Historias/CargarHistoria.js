@@ -32,7 +32,7 @@ class CargarHistoria extends React.Component{
                             Cargar Texto
                         </Text>
                     </TouchableOpacity>
-
+                    {/*
                     <TouchableOpacity>
                         <Text style={style.buttonText}
                         onPress={() => {
@@ -43,6 +43,7 @@ class CargarHistoria extends React.Component{
                             Cargar Audio
                         </Text>
                     </TouchableOpacity>
+                    */}
                 </View>
             );
         }
