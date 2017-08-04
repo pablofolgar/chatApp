@@ -38,6 +38,7 @@ var styles = StyleSheet.create({
         buttonText:{
             marginLeft:20,
             fontSize:20,
+            height:50,
         },
         action: {
             backgroundColor: constants.actionColor,

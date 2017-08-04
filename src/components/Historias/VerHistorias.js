@@ -52,12 +52,15 @@ class VerHistorias extends React.Component{
                     <Picker
                       selectedValue={this.state.selectedTitulo}
                       onValueChange={ (titulo) => {this.setState({selectedTitulo:titulo});this.limpiarSeleccionTitulo();this.getHistoriasPorTitulo(titulo)} }
-                      mode="dropdown">
+                      mode="dropdown"
+                      style={{height:50,}}>
                       {tituloItems}
                     </Picker>
                     
+                    <Text style={{fontSize: 20,height:40,fontWeight: 'bold',textAlign: 'center',color:'red'}}>
+                        Historia
+                    </Text>
                     <Text>
-                        Historia:
                         {this.state.text==" "?"No hay historias":this.state.text}
                     </Text>
             </View>

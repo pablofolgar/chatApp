@@ -44,7 +44,7 @@ class CargarHistoriaTexto extends React.Component{
 
             return(
                 <View>
-                    <Text> Seleccione una categoria</Text>
+                    <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',}}> Seleccione una categoria</Text>
 
 
                     <Picker
@@ -54,7 +54,7 @@ class CargarHistoriaTexto extends React.Component{
                       {categoryItems}
                     </Picker>
 
-                    <Text> Ingrese un titulo para su historia</Text>
+                    <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',}}> Ingrese un titulo para su historia</Text>
 
                     <TextInput style={style.nameInput}
                         placeholder='Vacaciones'
@@ -66,7 +66,7 @@ class CargarHistoriaTexto extends React.Component{
                         value= {this.state.titulo}
                     />
 
-                    <Text> Ingrese su historia</Text>
+                    <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',}}> Ingrese su historia</Text>
 
                     <TextInput
                             style={{height: 100, borderColor: 'gray', borderWidth: 1}}
