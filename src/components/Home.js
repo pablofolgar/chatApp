@@ -6,12 +6,18 @@ import {
     TextInput,
     TouchableOpacity,
     Alert,
+    Image,
 } from 'react-native';
 
 import {
     Actions,
 } from 'react-native-router-flux';
+
 import ActionButton from  './ActionButton';
+
+
+/*var Fondo = require('./imagenes/huellas1.jpg');*/
+
 const style = require('./styles.js');
 
 class Home extends React.Component{
@@ -21,20 +27,21 @@ class Home extends React.Component{
 
     render(){
         return(
-            <View>
-                <Text style={style.title} >
+
+             <View style={style.container}>
+
+                {/*<Text style={style.title} >
                     Ingrese su nombre :
-                </Text>
+                </Text>*/}
 
                 <TextInput style={style.nameInput}
-                placeholder='Pablo Folgar'
+                placeholder='USUARIO'
                 onChangeText={ (text) => {
                     this.setState({
                         name:text,
                     })
                 }}
                 value= {this.state.name}
-
                 />
 
                 <ActionButton title="Ingresar"
@@ -54,7 +61,7 @@ class Home extends React.Component{
                             });
                         }
                     }}/>
-
+           
             </View>
         );
     }

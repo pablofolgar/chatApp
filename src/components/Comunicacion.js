@@ -17,8 +17,8 @@ class Comunicacion extends React.Component{
                     <FlatList
 
                         data={[
-                        {key: 'Chat'},
-                        {key: 'Historias'},
+                        {key: 'CHAT'},
+                        {key: 'HISTORIAS'},
                         ]}
 
                         renderItem={
@@ -26,10 +26,10 @@ class Comunicacion extends React.Component{
                             <Text style={style.item}
                             onPress={() =>{
                             switch(item.key){
-                                case 'Chat':
+                                case 'CHAT':
                                     Actions.contacto({name:this.state.name,});
                                     break;
-                                case 'Historias':
+                                case 'HISTORIAS':
                                     Actions.historias({name:this.state.name,});
                                     break;
                                 default:

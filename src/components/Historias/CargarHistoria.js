@@ -20,16 +20,16 @@ class CargarHistoria extends React.Component{
 
     render(){
             return(
-                <View>
+                <View style={style.container}>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity style={style.touchableItem}>
                         <Text style={style.buttonText}
                         onPress={() => {
                             Actions.cargarHistoriaTexto({
                                 name:this.state.name,
                             });
                         }}>
-                            Cargar Texto
+                            ESCRIBIR HISTORIA
                         </Text>
                     </TouchableOpacity>
                     {/*

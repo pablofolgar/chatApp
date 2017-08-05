@@ -7,8 +7,11 @@ const constants = {
 var styles = StyleSheet.create({
   container: {
      flex: 1,
-     paddingTop: 22
+     paddingTop: 22,
+     backgroundColor: '#006599',
+
     },
+
     sectionHeader: {
       paddingTop: 2,
       paddingLeft: 10,
@@ -18,44 +21,88 @@ var styles = StyleSheet.create({
       fontWeight: 'bold',
       backgroundColor: 'rgba(247,247,247,1.0)',
     },
+
     item: {
       padding: 10,
-      fontSize: 18,
-      height: 44,
+      fontSize: 35,
+      height: 70,
+      textAlign: 'center',
+      borderWidth: 2,
+      borderRadius:10,
+      marginBottom:20,
+      backgroundColor: '#99ff99',
+      color:'black',
+      fontFamily: 'monospace',
     },
+
+    touchableItem:{
+        height: 70,
+        backgroundColor: '#99ff99',
+        borderWidth:2,
+        borderColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        marginTop:5,
+        marginBottom:20,
+    },
+
     title:{
-            marginTop: 20,
-            marginLeft: 20,
-            fontSize: 20,
+        marginTop: 20,
+        marginLeft: 20,
+        fontSize: 25,
         },
-        nameInput:{
-            padding:5,
-            height:40,
-            borderWidth:2,
-            borderColor: 'black',
-            margin: 20,
+
+    nameInput:{
+        padding:5,
+        height:60,
+        fontSize:28,
+        borderWidth:2,
+        borderColor: 'black',
+        margin: 20,
+        backgroundColor: '#ffffff',
+        borderRadius:5,
+
+    },
+    buttonText:{
+        //marginLeft:20,
+        textAlign: 'center',
+        fontSize:30,
+        color:'black',
+        fontFamily: 'monospace',
+    },
+    touchableIngresar:{
+        height: 75,
+        width: 200,
+        backgroundColor: '#99ff99',
+        borderWidth:1,
+        borderColor: 'black',
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        marginTop: 5,
+        
+      },
+
+    action: {
+        backgroundColor: constants.actionColor,
+        borderColor: 'transparent',
+        borderWidth: 1,
+        paddingLeft: 16,
+        paddingTop: 14,
+        paddingBottom: 16,
+      },
+
+      actionText: {
+          color: '#fff',
+          fontSize: 16,
+          textAlign: 'center',
+
         },
-        buttonText:{
-            marginLeft:20,
-            fontSize:20,
-            height:50,
-        },
-        action: {
-            backgroundColor: constants.actionColor,
-            borderColor: 'transparent',
-            borderWidth: 1,
-            paddingLeft: 16,
-            paddingTop: 14,
-            paddingBottom: 16,
+        listview: {
+            flex: 1,
           },
-          actionText: {
-              color: '#fff',
-              fontSize: 16,
-              textAlign: 'center',
-            },
-            listview: {
-                flex: 1,
-              },
 })
 
 module.exports = styles

@@ -26,16 +26,16 @@ class App extends React.Component{
         return(
             <Router>
                 <Scene key='root' style={{paddingTop: Platform.OS === 'ios' ? 54 : 64}}>
-                    <Scene key='home' component={Home} title='Home'/>
-                    <Scene key='menu' component={Menu} title='Menu'/>
-                    <Scene key='comunicacion' component={Comunicacion} title='Comunicacion'/>
-                    <Scene key='chat' component={Chat} title='Chat'/>
-                    <Scene key='historias' component={Historias} title='Historias'/>
-                    <Scene key='contacto' component={Contacto} title='Contactos'/>
-                    <Scene key='verHistorias' component={VerHistorias} title='Ver Historias'/>
-                    <Scene key='cargarHistoria' component={CargarHistoria} title='Cargar Historia'/>
-                    <Scene key='cargarHistoriaTexto' component={CargarHistoriaTexto} title='Cargar Historia Texto'/>
-                    <Scene key='cargarHistoriaAudio' component={CargarHistoriaAudio} title='Cargar Historia Audio'/>
+                    <Scene key='home' component={Home} title='INICIO'/>
+                    <Scene key='menu' component={Menu} title='MENÚ'/>
+                    <Scene key='comunicacion' component={Comunicacion} title='COMUNICACIÓN'/>
+                    <Scene key='chat' component={Chat} title='CHAT'/>
+                    <Scene key='historias' component={Historias} title='HISTORIAS'/>
+                    <Scene key='contacto' component={Contacto} title='CONTACTOS'/>
+                    <Scene key='verHistorias' component={VerHistorias} title='VER HISTORIAS'/>
+                    <Scene key='cargarHistoria' component={CargarHistoria} title='CARGAR HISTORIA'/>
+                    <Scene key='cargarHistoriaTexto' component={CargarHistoriaTexto} title='CARGAR HISTORIA TEXTO'/>
+                    <Scene key='cargarHistoriaAudio' component={CargarHistoriaAudio} title='CARGAR HISTORIA AUDIO'/>
                 </Scene>
             </Router>
         );
