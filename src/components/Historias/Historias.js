@@ -20,27 +20,27 @@ class Historias extends React.Component{
 
     render(){
             return(
-                <View>
+                <View style={style.container}>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity style={style.touchableItem}>
                         <Text style={style.buttonText}
                         onPress={() => {
                             Actions.cargarHistoria({
                                 name:this.state.name,
                             });
                         }}>
-                            Cargar Historia
+                            HACER UNA HISTORIA
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity style={style.touchableItem}>
                         <Text style={style.buttonText}
                         onPress={() => {
                             Actions.verHistorias({
                                 name:this.state.name,
                             });
                         }}>
-                            Ver Historias
+                            VER HISTORIAS
                         </Text>
                     </TouchableOpacity>
                 </View>

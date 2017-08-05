@@ -5,12 +5,14 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
+    Image,
 } from 'react-native';
 
 import {
     Actions,
 } from 'react-native-router-flux';
 
+/*var Fondo = require('./imagenes/huellas1.jpg');*/
 const style = require('./styles.js');
 
 class Home extends React.Component{
@@ -20,32 +22,40 @@ class Home extends React.Component{
 
     render(){
         return(
-            <View>
-                <Text style={style.title} >
-                    Ingrese su nombre :
-                </Text>
+            <View style={style.container}>
 
-                <TextInput style={style.nameInput}
-                placeholder='Pablo Folgar'
-                onChangeText={ (text) => {
-                    this.setState({
-                        name:text,
-                    })
-                }}
-                value= {this.state.name}
+{/*                <Image 
+                style={ {flex:1, width: null, height: null, resizeMode: 'cover'} }
+                source={Fondo}
+                >*/}
 
-                />
+                   {/*<Text style={style.title} >
+                        ESCRIBA SU USUARIO:
+                    </Text>*/} 
 
-                <TouchableOpacity>
-                    <Text style={style.buttonText}
-                    onPress={() => {
-                        Actions.menu({
-                            name:this.state.name,
-                        });
-                    }}>
-                        Ingresar
-                    </Text>
-                </TouchableOpacity>
+                    <TextInput style={style.nameInput}
+                    placeholder='USUARIO'
+                    onChangeText={ (text) => {
+                        this.setState({
+                            name:text,
+                        })
+                    }}
+                    value= {this.state.name}
+
+                    />
+
+
+                    <TouchableOpacity style={style.touchableIngresar}>
+                        <Text style={style.buttonText}
+                        onPress={() => {
+                            Actions.menu({
+                                name:this.state.name,
+                            });
+                        }}>
+                            INGRESAR
+                        </Text>
+                    </TouchableOpacity>
+{/*                </Image>*/}
             </View>
         );
     }
