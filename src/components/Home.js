@@ -5,12 +5,13 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
+    Alert,
 } from 'react-native';
 
 import {
     Actions,
 } from 'react-native-router-flux';
-
+import ActionButton from  './ActionButton';
 const style = require('./styles.js');
 
 class Home extends React.Component{
@@ -22,7 +23,7 @@ class Home extends React.Component{
         return(
             <View>
                 <Text style={style.title} >
-                    Enter your name :
+                    Ingrese su nombre :
                 </Text>
 
                 <TextInput style={style.nameInput}
@@ -33,18 +34,27 @@ class Home extends React.Component{
                     })
                 }}
                 value= {this.state.name}
+
                 />
 
-                <TouchableOpacity>
-                    <Text style={style.buttonText}
+                <ActionButton title="Ingresar"
                     onPress={() => {
-                        Actions.menu({
-                            name:this.state.name,
-                        });
-                    }}>
-                        Next
-                    </Text>
-                </TouchableOpacity>
+                        if(this.state.name===''){
+                            Alert.alert(
+                              'Campo obligartorio',
+                              'Debe ingresar el nombre para comenzar',
+                              [
+                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                              ],
+                              { cancelable: false }
+                            )
+                        }else{
+                            Actions.menu({
+                                name:this.state.name,
+                            });
+                        }
+                    }}/>
+
             </View>
         );
     }

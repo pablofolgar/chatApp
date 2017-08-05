@@ -4,7 +4,7 @@ import React from 'react';
 
 import {GiftedChat} from 'react-native-gifted-chat';
 
-import Backend from '../Backend';
+import Backend from '../../Backend';
 
 class Chat extends React.Component{
 

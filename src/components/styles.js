@@ -38,7 +38,24 @@ var styles = StyleSheet.create({
         buttonText:{
             marginLeft:20,
             fontSize:20,
+            height:50,
         },
+        action: {
+            backgroundColor: constants.actionColor,
+            borderColor: 'transparent',
+            borderWidth: 1,
+            paddingLeft: 16,
+            paddingTop: 14,
+            paddingBottom: 16,
+          },
+          actionText: {
+              color: '#fff',
+              fontSize: 16,
+              textAlign: 'center',
+            },
+            listview: {
+                flex: 1,
+              },
 })
 
 module.exports = styles
