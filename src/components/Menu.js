@@ -20,6 +20,7 @@ class Menu extends React.Component{
                     {key: 'Comunicacion'},
                     {key: 'Eventos'},
                     {key: 'Perfil'},
+                    {key: 'Notificaciones'},
                     ]}
 
                     renderItem={
@@ -29,6 +30,9 @@ class Menu extends React.Component{
                             switch(item.key){
                                 case 'Comunicacion':
                                     Actions.comunicacion({name:this.state.name,});
+                                    break;
+                                case 'Notificaciones':
+                                    Actions.notificacion({name:this.state.name,});
                                     break;
                                 default:
                                     alert("El menu "+item.key+" no esta disponible");

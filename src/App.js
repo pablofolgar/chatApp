@@ -10,7 +10,7 @@ import VerHistorias from './components/Historias/VerHistorias';
 import CargarHistoria from './components/Historias/CargarHistoria';
 import CargarHistoriaTexto from './components/Historias/CargarHistoriaTexto';
 import CargarHistoriaAudio from './components/Historias/CargarHistoriaAudio';
-
+import Notificacion from './components/Monitoreo/Notificacion';
 
 import {
     Platform
@@ -36,6 +36,7 @@ class App extends React.Component{
                     <Scene key='cargarHistoria' component={CargarHistoria} title='Cargar Historia'/>
                     <Scene key='cargarHistoriaTexto' component={CargarHistoriaTexto} title='Cargar Historia Texto'/>
                     <Scene key='cargarHistoriaAudio' component={CargarHistoriaAudio} title='Cargar Historia Audio'/>
+                    <Scene key='notificacion' component={Notificacion} title='Notificaciones'/>
                 </Scene>
             </Router>
         );
