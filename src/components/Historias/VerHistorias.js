@@ -4,6 +4,7 @@ import {
     Text,
     Picker,
     TextInput,
+    ScrollView,
 } from 'react-native';
 import Backend from '../../Backend';
 import ActionButton from  '../ActionButton';
@@ -41,7 +42,7 @@ class VerHistorias extends React.Component{
         });
 
         return(
-            <View>
+            <View style={style.container}>
                     <Picker
                       selectedValue={this.state.selectedCategoria}
                       onValueChange={ (category) => {this.setState({selectedCategoria:category});this.limpiarSeleccionCategoria();this.getHistoriasPorCategoria(category)} }
@@ -60,9 +61,11 @@ class VerHistorias extends React.Component{
                     <Text style={{fontSize: 20,height:40,fontWeight: 'bold',textAlign: 'center',color:'red'}}>
                         Historia
                     </Text>
-                    <Text>
-                        {this.state.text==" "?"No hay historias":this.state.text}
-                    </Text>
+                    <ScrollView>
+                        <Text>
+                            {this.state.text==" "?"No hay historias":this.state.text}
+                        </Text>
+                    </ScrollView>
             </View>
         );
     }

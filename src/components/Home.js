@@ -7,6 +7,8 @@ import {
     TouchableOpacity,
     Alert,
     Image,
+    KeyboardAvoidingView,
+    ScrollView,
 } from 'react-native';
 
 import {
@@ -27,42 +29,43 @@ class Home extends React.Component{
 
     render(){
         return(
-
-             <View style={style.container}>
-
-                {/*<Text style={style.title} >
-                    Ingrese su nombre :
-                </Text>*/}
-
-                <TextInput style={style.nameInput}
-                placeholder='USUARIO'
-                onChangeText={ (text) => {
-                    this.setState({
-                        name:text,
-                    })
-                }}
-                value= {this.state.name}
-                />
-
-                <ActionButton title="Ingresar"
-                    onPress={() => {
-                        if(this.state.name===''){
-                            Alert.alert(
-                              'Campo obligartorio',
-                              'Debe ingresar el nombre para comenzar',
-                              [
-                                {text: 'OK', onPress: () => console.log('OK Pressed')},
-                              ],
-                              { cancelable: false }
-                            )
-                        }else{
-                            Actions.menu({
-                                name:this.state.name,
-                            });
-                        }
-                    }}/>
            
-            </View>
+                /*<Image source={require('./imagenes/difuminado1.jpg')} style={style.backgroundImage}>*/
+                    <ScrollView style={style.container}>
+                        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} >
+
+                            <TextInput style={style.nameInput}
+                            placeholder='USUARIO'
+                            onChangeText={ (text) => {
+                                this.setState({
+                                    name:text,
+                                })
+                            }}
+                            value= {this.state.name}
+                            />
+
+                            <ActionButton title="Ingresar"
+                                onPress={() => {
+                                    if(this.state.name===''){
+                                        Alert.alert(
+                                          'Campo obligartorio',
+                                          'Debe ingresar el nombre para comenzar',
+                                          [
+                                            {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                          ],
+                                          { cancelable: false }
+                                        )
+                                    }else{
+                                        Actions.menu({
+                                            name:this.state.name,
+                                        });
+                                    }
+                                }}/>
+                       
+                        </KeyboardAvoidingView>
+                    </ScrollView>
+                /*</Image>*/
+           
         );
     }
 }

@@ -7,6 +7,9 @@ import {
     TouchableOpacity,
     Picker,
      Alert,
+     KeyboardAvoidingView,
+     ScrollView,
+     Image,
 } from 'react-native';
 import Categorias from './CategoriasHistorias';
 import ActionButton from  '../ActionButton';
@@ -29,6 +32,9 @@ class CargarHistoriaTexto extends React.Component{
         categorias: ['Seleccione una categoría','Música', 'Teatro', 'Cine', 'Literatura', 'Historia Nacional','Historia Internacional','Actividades Manuales','Cocina','Deportes','Miscelaneouss'],
         titulo:'',
         history:'',
+        word:'',
+        text:'',
+        
     };
 
 
@@ -36,6 +42,18 @@ class CargarHistoriaTexto extends React.Component{
 
     }
 
+    _updateText(event) { 
+        /*this.setState({word:text+'\n'}); */
+
+            const { cursorPosition } = this.state;
+            let newText = event.nativeEvent.text;
+            const ar = newText.split('');
+            ar.splice(cursorPosition, 0, '\n');
+            newText = ar.join('');
+            this.setState({ text: newText });
+
+
+    }
 
     render(){
             let categoryItems = this.state.categorias.map( (s, i) => {
@@ -43,47 +61,60 @@ class CargarHistoriaTexto extends React.Component{
             });
 
             return(
-                <View>
-                    <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',}}> Seleccione una categoria</Text>
+                <Image source={require('../imagenes/huellas1.jpg')} style={style.backgroundImage}>
+                    <ScrollView>
+
+                         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} >
+
+                            <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',backgroundColor:'white',}}> Seleccione una categoria</Text>
 
 
-                    <Picker
-                      selectedValue={this.state.selectedCategoria}
-                      onValueChange={ (category) => {this.setState({selectedCategoria:category});} }
-                      mode="dropdown">
-                      {categoryItems}
-                    </Picker>
+                            <Picker
+                               style={{ backgroundColor:'white',}}
+                              selectedValue={this.state.selectedCategoria}
+                              onValueChange={ (category) => {this.setState({selectedCategoria:category});} }
+                              mode="dropdown">
+                              {categoryItems}
+                            </Picker>
 
-                    <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',}}> Ingrese un titulo para su historia</Text>
+                            <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',backgroundColor:'white',}}> Ingrese un titulo para su historia</Text>
+                            <ScrollView>
+                                <TextInput 
+                                    style={style.nameInputTitulo}
+                                    placeholder='Vacaciones'
+                                    onChangeText={ (text) => {
+                                        this.setState({
+                                            titulo:text,
+                                        })
+                                    }}
+                                    value= {this.state.titulo}
+                                />
+                            </ScrollView>
+                            <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',backgroundColor:'white',}}> Ingrese su historia</Text>
 
-                    <TextInput style={style.nameInput}
-                        placeholder='Vacaciones'
-                        onChangeText={ (text) => {
-                            this.setState({
-                                titulo:text,
-                            })
-                        }}
-                        value= {this.state.titulo}
-                    />
+                            <TextInput
+                                    style={style.historiaInput}
+                                    onChangeText={(historia) => this.setState({history:historia})}
+                                    multiline={true}
+                                    blurOnSubmit={false}
+                                    onSelectionChange={(event) => this.setState({ cursorPosition: event.nativeEvent.selection.start })}
+                                    onSubmitEditing = {(event) => {this._updateText(event)} }
+                                    defaultValue={this.state.text}
+                                    
+                            />
 
-                    <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',}}> Ingrese su historia</Text>
+                            <ActionButton title="Agregar"
+                                onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                                if(camposRequeridosOk){
+                                                    this.agregarHistoria();
+                                                    }
+                                                }
 
-                    <TextInput
-                            style={{height: 100, borderColor: 'gray', borderWidth: 1}}
-                            onChangeText={(historia) => this.setState({history:historia})}
-                            value={this.state.history}
-                    />
-
-                    <ActionButton title="Agregar"
-                        onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
-                                        if(camposRequeridosOk){
-                                            this.agregarHistoria();
-                                            }
                                         }
-
-                                }
-                        />
-                </View>
+                                />
+                        </KeyboardAvoidingView>
+                    </ScrollView>
+                </Image>
             );
         }
 

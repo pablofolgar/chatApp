@@ -9,8 +9,13 @@ var styles = StyleSheet.create({
      flex: 1,
      paddingTop: 22,
      backgroundColor: '#006599',
-
     },
+
+   backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', // or 'stretch'
+
+  },
 
     sectionHeader: {
       paddingTop: 2,
@@ -55,15 +60,36 @@ var styles = StyleSheet.create({
 
     nameInput:{
         padding:5,
-        height:60,
+        height:70,
         fontSize:28,
         borderWidth:2,
         borderColor: 'black',
-        margin: 20,
         backgroundColor: '#ffffff',
         borderRadius:5,
-
+        flexWrap:'wrap',
     },
+
+    nameInputTitulo:{
+        padding:5,
+        height:70,
+        fontSize:28,
+        borderWidth:2,
+        borderColor: 'black',
+        backgroundColor: '#ffffff',
+        borderRadius:5,
+        flexWrap:'wrap',
+    },
+
+
+    historiaInput:{
+        flexWrap: 'wrap', 
+        height: 300,
+        borderColor: 'grey',
+        backgroundColor:'white', 
+        borderWidth: 1,
+        textAlignVertical: 'top',
+},
+
     buttonText:{
         //marginLeft:20,
         textAlign: 'center',
