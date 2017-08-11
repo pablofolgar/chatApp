@@ -34,6 +34,9 @@ class Menu extends React.Component{
                                 case 'Notificaciones':
                                     Actions.notificacion({name:this.state.name,});
                                     break;
+                                case 'Eventos':
+                                    Actions.evento({name:this.state.name,});
+                                    break;
                                 default:
                                     alert("El menu "+item.key+" no esta disponible");
                                 }

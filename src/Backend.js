@@ -4,6 +4,7 @@ class Backend{
     uid='';
     messageRef=null;
     historyRef=null;
+    eventosRef=null;
     //initialize Firebase Backend
     constructor(){
         firebase.initializeApp({
@@ -95,7 +96,7 @@ class Backend{
 
     }
 
-    //Send message to the backend
+    //Send histories to the backend
     sendHistory(name,categoria,titulo,history){
             this.getHistoryRef();
             this.historyRef.push({
@@ -116,6 +117,32 @@ class Backend{
 
     closeHist(){
         this.close(this.historyRef);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Desde aca se escribe lo referido a los eventos
+    //Send eventos to the backend
+    sendEvento(name,evento,barrio,fecha){
+        console.log('fecha: '+fecha);
+            this.getEventoRef();
+            this.eventosRef.push({
+                evento: evento,
+                barrio: barrio,
+                fecha: fecha,
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                user:{
+                  _id: this.getUid(),
+                  name: name,
+                }
+            });
+    }
+
+    getEventoRef(){
+        this.eventosRef = firebase.database().ref('eventos');
+    }
+
+    closeEventos(){
+        this.close(this.eventosRef);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

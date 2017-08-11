@@ -3,7 +3,7 @@ import {FlatList, StyleSheet, Text, View,Picker,AppState, Platform } from 'react
 import {Actions,} from 'react-native-router-flux';
 import PushController from './PushController';  
 import PushNotification from 'react-native-push-notification';
-
+import ActionButton from  '../ActionButton';
 const style = require('.././styles.js');
 
 class Notificacion extends React.Component{
@@ -18,14 +18,14 @@ class Notificacion extends React.Component{
     constructor(props) {
         super(props);
 
-        this.handleAppStateChange = this.handleAppStateChange.bind(this);
+        //this.handleAppStateChange = this.handleAppStateChange.bind(this);
         this.state = {
           seconds: 5,
         };
     }
     
 
-    componentWillUnmount() {
+   /* componentWillUnmount() {
         AppState.removeEventListener('change',this.handleAppStateChange);
     }
 
@@ -46,7 +46,7 @@ class Notificacion extends React.Component{
             date,
           });
         }
-  }
+  }*/
 
     render(){
             return(
@@ -63,6 +63,17 @@ class Notificacion extends React.Component{
                       <Picker.Item label="10" value={10} />
                       <Picker.Item label="15" value={15} />
                     </Picker>
+                    <ActionButton title="Agregar"
+                        onPress={() => {
+                                          let date = new Date(Date.now());
+                                          PushNotification.localNotificationSchedule({
+                                            message: "My Notification Message",
+                                            date,
+                                          });
+                                        }
+
+                                }
+                        />
                     <PushController />
                 </View>
             );
