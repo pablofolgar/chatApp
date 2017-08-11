@@ -18,9 +18,8 @@ import {
 import ActionButton from  './ActionButton';
 
 
-/*var Fondo = require('./imagenes/huellas1.jpg');*/
-
 const style = require('./styles.js');
+
 
 class Home extends React.Component{
     state={
@@ -30,41 +29,69 @@ class Home extends React.Component{
     render(){
         return(
            
-                /*<Image source={require('./imagenes/difuminado1.jpg')} style={style.backgroundImage}>*/
-                    <ScrollView style={style.container}>
-                        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} >
+             // <Image source={require('./imagenes/difuminado1.jpg')} style={style.backgroundImage}>
+            <ScrollView style={style.container} >
 
-                            <TextInput style={style.nameInput}
-                            placeholder='USUARIO'
-                            onChangeText={ (text) => {
-                                this.setState({
-                                    name:text,
-                                })
-                            }}
-                            value= {this.state.name}
-                            />
+                <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={700} >
 
-                            <ActionButton title="Ingresar"
-                                onPress={() => {
-                                    if(this.state.name===''){
-                                        Alert.alert(
-                                          'Campo obligartorio',
-                                          'Debe ingresar el nombre para comenzar',
-                                          [
-                                            {text: 'OK', onPress: () => console.log('OK Pressed')},
-                                          ],
-                                          { cancelable: false }
-                                        )
-                                    }else{
-                                        Actions.menu({
-                                            name:this.state.name,
-                                        });
-                                    }
-                                }}/>
-                       
-                        </KeyboardAvoidingView>
-                    </ScrollView>
-                /*</Image>*/
+                    <View>
+
+                        <View>
+
+                            <View>
+                                <Text style={style.tituloInicio}>
+                                    HUELLAS {'\n'} EN RED
+                                </Text>
+                            </View>
+
+                            <View style={style.logoImageView}>
+                                <Image source={require('./imagenes/huellas2.jpg')} style={style.logoImage}/>
+                            </View>
+
+                         </View>
+
+                        <View>
+                            <View  style={style.singleInputView}>
+                                <TextInput style={style.singleInputText}
+                                placeholder='INGRESE SU USUARIO'
+                                onChangeText={ (text) => {
+                                    this.setState({
+                                        name:text,
+                                    })
+                                }}
+                                value= {this.state.name}
+                                />
+                            </View>
+
+                            <View>
+                                <ActionButton 
+                                    title="ENTRAR"
+                                    onPress={() => {
+                                        if(this.state.name===''){
+                                            Alert.alert(
+                                              'CAMPO OBLIGATORIO',
+                                              'DEBE INGRESAR SU USUARIO PARA COMENZAR.',
+                                              [
+                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                              ],
+                                              { cancelable: false }
+                                            )
+                                        }else{
+                                            Actions.menu({
+                                                name:this.state.name,
+                                            });
+                                        }
+                                    }}/>
+                
+                            </View>
+                        </View>
+                    </View>
+
+
+                </KeyboardAvoidingView>
+            
+            </ScrollView>
+        //</Image>
            
         );
     }

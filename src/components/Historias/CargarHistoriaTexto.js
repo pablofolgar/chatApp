@@ -29,7 +29,7 @@ class CargarHistoriaTexto extends React.Component{
 
     state={
         selectedCategoria: ' ',
-        categorias: ['Seleccione una categoría','Música', 'Teatro', 'Cine', 'Literatura', 'Historia Nacional','Historia Internacional','Actividades Manuales','Cocina','Deportes','Miscelaneouss'],
+        categorias: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
         titulo:'',
         history:'',
         word:'',
@@ -61,27 +61,27 @@ class CargarHistoriaTexto extends React.Component{
             });
 
             return(
-                <Image source={require('../imagenes/huellas1.jpg')} style={style.backgroundImage}>
-                    <ScrollView>
+               // <Image source={require('../imagenes/huellas1.jpg')} style={style.backgroundImage}>
+                    <ScrollView  style={style.container}> 
 
                          <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} >
 
-                            <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',backgroundColor:'white',}}> Seleccione una categoria</Text>
+                            {/*<Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',backgroundColor:'white',}}> Seleccione una categoria</Text>*/}
 
-
-                            <Picker
-                               style={{ backgroundColor:'white',}}
-                              selectedValue={this.state.selectedCategoria}
-                              onValueChange={ (category) => {this.setState({selectedCategoria:category});} }
-                              mode="dropdown">
-                              {categoryItems}
-                            </Picker>
-
-                            <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',backgroundColor:'white',}}> Ingrese un titulo para su historia</Text>
-                            <ScrollView>
+                            <View style={style.viewPicker}>
+                                <Picker
+                                    selectedValue={this.state.selectedCategoria}
+                                    onValueChange={ (category) => {this.setState({selectedCategoria:category});} }
+                                    mode="dialog">
+                                    {categoryItems}
+                                </Picker>
+                            </View>
+                            {/*<Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',backgroundColor:'white',}}> Ingrese un titulo para su historia</Text>*/}
+                            
+                            <View style={style.singleInputView}>
                                 <TextInput 
-                                    style={style.nameInputTitulo}
-                                    placeholder='Vacaciones'
+                                    style={style.singleInputText}
+                                    placeholder='"MI TÍTULO"'
                                     onChangeText={ (text) => {
                                         this.setState({
                                             titulo:text,
@@ -89,21 +89,28 @@ class CargarHistoriaTexto extends React.Component{
                                     }}
                                     value= {this.state.titulo}
                                 />
-                            </ScrollView>
-                            <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',backgroundColor:'white',}}> Ingrese su historia</Text>
+                            </View>
 
-                            <TextInput
-                                    style={style.historiaInput}
-                                    onChangeText={(historia) => this.setState({history:historia})}
-                                    multiline={true}
-                                    blurOnSubmit={false}
-                                    onSelectionChange={(event) => this.setState({ cursorPosition: event.nativeEvent.selection.start })}
-                                    onSubmitEditing = {(event) => {this._updateText(event)} }
-                                    defaultValue={this.state.text}
-                                    
-                            />
+                            <View>
+                                <Text style={style.textTituloHistoria}>
+                                   ESCRIBA LA HISTORIA
+                                 </Text>
+                            </View>
 
-                            <ActionButton title="Agregar"
+                            <View style={style.MultiLineInputView}> 
+                                <TextInput
+                                        style={style.multilineInputText}
+                                        onChangeText={(historia) => this.setState({history:historia})}
+                                        multiline={true}
+                                        blurOnSubmit={false}
+                                        onSelectionChange={(event) => this.setState({ cursorPosition: event.nativeEvent.selection.start })}
+                                        onSubmitEditing = {(event) => {this._updateText(event)} }
+                                        defaultValue={this.state.text}
+                                        
+                                />
+                            </View>
+
+                            <ActionButton title="CREAR"
                                 onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
                                                 if(camposRequeridosOk){
                                                     this.agregarHistoria();
@@ -111,34 +118,36 @@ class CargarHistoriaTexto extends React.Component{
                                                 }
 
                                         }
-                                />
+                            />
+
                         </KeyboardAvoidingView>
+
                     </ScrollView>
-                </Image>
+               // </Image>
             );
         }
 
     agregarHistoria() {
       Alert.alert(
-        'Esta por cargar su historia',
+        'PARA CREAR DEFINITIVAMENTE SU HISTORIA APRIETE "AGREGAR"',
         null,
         [
+          {text: 'VOLVER', onPress: (t) => console.log('Cancel')},
           {
-            text: 'Agregar',
+            text: 'AGREGAR',
             onPress: (t) => {
               Backend.sendHistory(this.props.name,this.state.selectedCategoria,
                                       this.state.titulo,this.state.history);
               this.limpiarCampos();
             }
           },
-          {text: 'Cancelar', onPress: (t) => console.log('Cancel')}
         ],
         'plain-text'
       );
     }
 
     limpiarCampos(){
-        this.setState({history: '' ,titulo:'',selectedCategoria:'Seleccione una categoría'})
+        this.setState({history: '' ,titulo:'',selectedCategoria:'SELECCIONAR CATEGORÍA',text:''})
     }
 
     validarCamposRequeridos(){
@@ -147,7 +156,7 @@ class CargarHistoriaTexto extends React.Component{
             !this.state.selectedCategoria ||
             !this.state.titulo ||
             !this.state.history){
-            alert("Debe completar todos los campos");
+            alert("DEBE COMPLETAR TODOS LOS CAMPOS");
             result = false;
         }
         return result;

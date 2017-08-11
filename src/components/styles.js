@@ -1,135 +1,245 @@
 const React = require('react-native')
 const {StyleSheet} = React
 const constants = {
-  actionColor: '#24CE84'
+  actionColor: '#bbe0ff'
 };
 
 var styles = StyleSheet.create({
-  container: {
-     flex: 1,
-     paddingTop: 22,
-     backgroundColor: '#006599',
-    },
+  //LAYOUT APP
+  container:{
+   flex: 1,
+   backgroundColor: '#006BC0',
+   //backgroundColor: '#006BC0',
+   //paddingTop: 22,
+  },
 
-   backgroundImage: {
+/*  //BACKGROUND IMAGE
+  backgroundImage:{
     flex: 1,
     resizeMode: 'cover', // or 'stretch'
+    paddingTop: 22,
+  },*/
+
+  //TÍTULO "HUELLAS EN RED"
+  tituloInicio:{
+    fontSize:35,
+    fontWeight: 'bold',
+    color:'white',
+    marginTop:110,
+    textAlign:'center',
+  },
+
+  //LOGO VIEW
+  logoImageView:{
+    elevation:10,
+    height:183,
+    width:183,
+    borderRadius:100,
+    borderWidth:0,
+    marginTop:30,
+    marginBottom:95,
+    alignSelf:'center',
+  },
+
+  //LOGO IMAGE
+  logoImage:{
+    alignSelf: 'center',
+    borderRadius:100,
+    // marginTop:30,
+    // marginBottom:95,
+    height:180,
+    width:180,
+    borderColor: 'black',
+    borderWidth:1,
+  },
+
+  //SINGLE INPUT VIEW
+  singleInputView:{
+    elevation:10,
+    padding:4,
+    height:70,
+    borderWidth:2,
+    borderColor: 'black',
+    backgroundColor: '#ffffff',
+    borderRadius:5,
+    marginTop: 5,
+    marginLeft:15,
+    marginRight:15,
+    marginBottom:10,
+  },
+
+  //SINGLE INPUT TEXT
+  singleInputText:{
+    fontSize:28,
+  },
+
+  //MULTILINE INPUT VIEW
+  MultiLineInputView:{
+    elevation:10,
+    backgroundColor:'white', 
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius:10,
+    marginTop:10,
+    marginRight:15,
+    marginLeft:15,
+    marginBottom:10,
+  },
+
+  //MULTILINE INPUT TEXT
+  multilineInputText:{
+    fontSize:25,
+    textAlignVertical: 'top',
+    height: 250,
+    flexWrap: 'wrap', 
+  },
+
+  //BOTONES-LISTAS VIEW
+  ButtonsView:{
+    elevation:10,
+    borderWidth:0,
+    borderRadius:15,
+    borderColor: 'grey',
+    marginTop:10,
+    marginLeft:10,
+    marginRight:10,
+    marginBottom:12,
+    backgroundColor: '#bbe0ff',
+    height: 80,
+    alignItems:'center',
+    justifyContent:'center',
+  },
+
+  //BOTONES-LISTAS TEXT
+  ButtonsText:{
+    fontSize: 35,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color:'black',
+    fontFamily: 'monospace',
+  },
+
+  //BOTONES-ACTION VIEW
+  action: {
+    elevation:10,
+    backgroundColor: constants.actionColor,
+    borderColor: 'transparent',
+    borderWidth: 1,
+    borderRadius:10,
+    height: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft:15,
+    marginRight:15,
+    marginBottom:25,
+  },
+
+  //BOTONES-ACTION TEXT
+  actionText:{
+    color: '#000',
+    fontSize: 32,
+    textAlign: 'center',
+  },
+  
+
+
+  //SELECTS.
+  viewPicker:{
+    elevation:10,
+    marginTop:30,
+    marginLeft:15,
+    marginRight:15,
+    marginBottom:10,
+    height:55,
+    backgroundColor:'white',
+    borderRadius:5,
+    borderWidth: 1,
+    borderColor:'grey',
 
   },
 
-    sectionHeader: {
-      paddingTop: 2,
-      paddingLeft: 10,
-      paddingRight: 10,
-      paddingBottom: 2,
-      fontSize: 14,
-      fontWeight: 'bold',
-      backgroundColor: 'rgba(247,247,247,1.0)',
-    },
+  //TEXTO ARRIBA DE LA HISTORIA
+  textTituloHistoria:{
+    alignSelf:'center',
+    fontSize:27,
+    fontWeight:'bold',
+    color:'white',
+    marginTop: 40,
+    marginBottom:5,
+    textDecorationLine:'underline',
 
-    item: {
-      padding: 10,
-      fontSize: 35,
-      height: 70,
-      textAlign: 'center',
-      borderWidth: 2,
-      borderRadius:10,
-      marginBottom:20,
-      backgroundColor: '#99ff99',
-      color:'black',
-      fontFamily: 'monospace',
-    },
+  },
 
-    touchableItem:{
-        height: 70,
-        backgroundColor: '#99ff99',
-        borderWidth:2,
-        borderColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 10,
-        marginTop:5,
-        marginBottom:20,
-    },
+  //VISTA VER HISTORIA
+  storyView:{
+    elevation:10,
+    backgroundColor:'white', 
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius:10,
+    marginTop:10,
+    marginRight:15,
+    marginLeft:15,
+    marginBottom:10,
+    height:350,
+  },
 
-    title:{
-        marginTop: 20,
-        marginLeft: 20,
-        fontSize: 25,
-        },
+  //TEXTO VER HISTORIA
+  storyText:{
+    fontSize:23,
+    color:'black',
+  },
 
-    nameInput:{
-        padding:5,
-        height:70,
-        fontSize:28,
-        borderWidth:2,
-        borderColor: 'black',
-        backgroundColor: '#ffffff',
-        borderRadius:5,
-        flexWrap:'wrap',
-    },
+  //No sé.
+  sectionHeader:{
+    paddingTop: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 14,
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(247,247,247,1.0)',
+  },
 
-    nameInputTitulo:{
-        padding:5,
-        height:70,
-        fontSize:28,
-        borderWidth:2,
-        borderColor: 'black',
-        backgroundColor: '#ffffff',
-        borderRadius:5,
-        flexWrap:'wrap',
-    },
+  //No sé
+  title:{
+    marginTop: 20,
+    marginLeft: 20,
+    fontSize: 25,
+  },
+
+  //No sé
+  listview:{
+    flex: 1,
+  },
 
 
-    historiaInput:{
-        flexWrap: 'wrap', 
-        height: 300,
-        borderColor: 'grey',
-        backgroundColor:'white', 
-        borderWidth: 1,
-        textAlignVertical: 'top',
-},
-
-    buttonText:{
-        //marginLeft:20,
-        textAlign: 'center',
-        fontSize:30,
-        color:'black',
-        fontFamily: 'monospace',
-    },
-    touchableIngresar:{
-        height: 75,
-        width: 200,
-        backgroundColor: '#99ff99',
-        borderWidth:1,
-        borderColor: 'black',
-        alignSelf: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 10,
-        marginTop: 5,
-        
-      },
-
-    action: {
-        backgroundColor: constants.actionColor,
-        borderColor: 'transparent',
-        borderWidth: 1,
-        paddingLeft: 16,
-        paddingTop: 14,
-        paddingBottom: 16,
-      },
-
-      actionText: {
-          color: '#fff',
-          fontSize: 16,
-          textAlign: 'center',
-
-        },
-        listview: {
-            flex: 1,
-          },
 })
 
 module.exports = styles
 module.exports.constants = constants;
+
+
+/*                EQUIPO_503 
+                                _._
+                              _/:|:
+                             /||||||.
+                             ||||||||.
+                            /|||||||||:
+                           /|||||||||||
+                          .|||||||||||||
+                          | ||||||||||||:
+                        _/| |||||||||||||:_=---.._
+                        | | |||||:'''':||  '~-._  '-.
+                      _/| | ||'         '-._   _:    ;
+                      | | | '               '~~     _;
+                      | '                _.=._    _-~
+                   _.~                  {     '-_'
+           _.--=.-~       _.._          {_       }
+       _.-~   @-,        {    '-._     _. '~==+  |
+      ('          }       \_      \_.=~       |  |
+      `,,,,,,,'  /_         ~-_    )         <_oo_>
+        `-----~~/ /'===...===' +   /
+               <_oo_>         /  //
+                             /  //
+                            <_oo_>                          */

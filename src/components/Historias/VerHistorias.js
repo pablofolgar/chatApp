@@ -16,9 +16,9 @@ class VerHistorias extends React.Component{
         super(props);
         this.state = {
                 text: ' ',
-                categorias: ['Seleccione una categoría','Música', 'Teatro', 'Cine', 'Literatura', 'Historia Nacional','Historia Internacional','Actividades Manuales','Cocina','Deportes','Miscelaneouss'],
+                categorias: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
                 selectedCategoria: ' ',
-                titulos:['Seleccione un título'],
+                titulos:['SELECCIONE TÍTULO'],
                 selectedTitulo: ' ',
                 historias:[]
             };
@@ -43,29 +43,41 @@ class VerHistorias extends React.Component{
 
         return(
             <View style={style.container}>
+
+                <View style={style.viewPicker}>
                     <Picker
                       selectedValue={this.state.selectedCategoria}
                       onValueChange={ (category) => {this.setState({selectedCategoria:category});this.limpiarSeleccionCategoria();this.getHistoriasPorCategoria(category)} }
-                      mode="dropdown">
+                      mode="dialog">
                       {categoryItems}
                     </Picker>
+                </View>
 
+                <View style={style.viewPicker}>
                     <Picker
                       selectedValue={this.state.selectedTitulo}
                       onValueChange={ (titulo) => {this.setState({selectedTitulo:titulo});this.limpiarSeleccionTitulo();this.getHistoriasPorTitulo(titulo)} }
-                      mode="dropdown"
+                      mode="dialog"
                       style={{height:50,}}>
                       {tituloItems}
                     </Picker>
+                </View>
                     
-                    <Text style={{fontSize: 20,height:40,fontWeight: 'bold',textAlign: 'center',color:'red'}}>
+                <View>
+                    <Text style={style.textTituloHistoria}>
                         Historia
                     </Text>
+                </View>
+
+
+                <View style={style.storyView}>
                     <ScrollView>
-                        <Text>
-                            {this.state.text==" "?"No hay historias":this.state.text}
+                        <Text style={style.storyText}>
+                            {this.state.text==" "?"NO HAY HISTORIAS":this.state.text}
                         </Text>
                     </ScrollView>
+                </View>
+
             </View>
         );
     }
@@ -86,7 +98,7 @@ class VerHistorias extends React.Component{
     getHistoriasPorTitulo(titulo){
         for (var i = this.state.historias.length - 1; i >= 0; i--) {
             if(this.state.historias[i].titulo==titulo){
-                this.setState({text:this.state.historias[i].historia,selectedCategoria:'Seleccione una categoría'});
+                this.setState({text:this.state.historias[i].historia});
                 break;
             }
             
@@ -98,7 +110,7 @@ class VerHistorias extends React.Component{
     }
 
     limpiarSeleccionCategoria(){
-        this.setState({titulos:['Seleccione un título'],text:" "});
+        this.setState({titulos:['SELECCIONE TÍTULO'],text:" "});
     }
 
     limpiarSeleccionTitulo(){

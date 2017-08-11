@@ -24,8 +24,8 @@ class Menu extends React.Component{
 
                     renderItem={
                         ({item}) =>
-                        <View>
-                            <Text   style={style.item}
+                        <View style={style.ButtonsView}>
+                            <Text   style={style.ButtonsText}
                                     onPress={() =>{
                                 switch(item.key){
                                     case 'COMUNICACIÓN':
