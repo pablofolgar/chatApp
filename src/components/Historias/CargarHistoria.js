@@ -4,7 +4,7 @@ import {
     Text,
     StyleSheet,
     TextInput,
-    TouchableOpacity,
+    TouchableHighlight,
 } from 'react-native';
 
 import {
@@ -20,21 +20,22 @@ class CargarHistoria extends React.Component{
 
     render(){
             return(
-                <View>
+                <View style={style.container}>
 
-                    <TouchableOpacity>
-                        <Text style={style.buttonText}
-                        onPress={() => {
-                            Actions.cargarHistoriaTexto({
-                                name:this.state.name,
-                            });
-                        }}>
-                            Cargar Texto
-                        </Text>
-                    </TouchableOpacity>
+
+                    <View style={style.ButtonsView}>
+                            <Text style={style.ButtonsText}
+                            onPress={() => {
+                                Actions.cargarHistoriaTexto({
+                                    name:this.state.name,
+                                });
+                            }}>
+                                ESCRIBIR HISTORIA
+                            </Text>
+                    </View>
                     {/*
-                    <TouchableOpacity>
-                        <Text style={style.buttonText}
+                    <View style={style.ButtonsView}>
+                        <Text style={style.ButtonsText}
                         onPress={() => {
                             Actions.cargarHistoriaAudio({
                                 name:this.state.name,
@@ -42,7 +43,7 @@ class CargarHistoria extends React.Component{
                         }}>
                             Cargar Audio
                         </Text>
-                    </TouchableOpacity>
+                    </View>
                     */}
                 </View>
             );

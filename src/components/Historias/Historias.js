@@ -20,29 +20,32 @@ class Historias extends React.Component{
 
     render(){
             return(
-                <View>
+                <View style={style.container}>
 
-                    <TouchableOpacity>
-                        <Text style={style.buttonText}
-                        onPress={() => {
-                            Actions.cargarHistoria({
-                                name:this.state.name,
-                            });
-                        }}>
-                            Cargar Historia
-                        </Text>
-                    </TouchableOpacity>
+                    <View style={style.ButtonsView}>
+                            <Text 
+                            style={style.ButtonsText}
+                            onPress={() => {
+                                Actions.cargarHistoria({
+                                    name:this.state.name,
+                                });
+                            }}>
+                                CREAR HISTORIA
+                            </Text>
+                    </View>
 
-                    <TouchableOpacity>
-                        <Text style={style.buttonText}
-                        onPress={() => {
-                            Actions.verHistorias({
-                                name:this.state.name,
-                            });
-                        }}>
-                            Ver Historias
-                        </Text>
-                    </TouchableOpacity>
+                    <View style={style.ButtonsView}>
+                            <Text 
+                            style={style.ButtonsText}
+                            onPress={() => {
+                                Actions.verHistorias({
+                                    name:this.state.name,
+                                });
+                            }}>
+                                VER HISTORIAS
+                            </Text>
+                    </View>
+
                 </View>
             );
         }

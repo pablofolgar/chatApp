@@ -17,28 +17,30 @@ class Comunicacion extends React.Component{
                     <FlatList
 
                         data={[
-                        {key: 'Chat'},
-                        {key: 'Historias'},
+                        {key: 'CHAT'},
+                        {key: 'HISTORIAS'},
                         ]}
 
                         renderItem={
                             ({item}) =>
-                            <Text style={style.item}
-                            onPress={() =>{
-                            switch(item.key){
-                                case 'Chat':
-                                    Actions.contacto({name:this.state.name,});
-                                    break;
-                                case 'Historias':
-                                    Actions.historias({name:this.state.name,});
-                                    break;
-                                default:
-                                    alert("El menu "+item.key+" no esta disponible");
-                                }
-                            }}
-                            >
-                                {item.key}
-                             </Text>
+                            <View style={style.ButtonsView} >
+                                <Text style={style.ButtonsText}
+                                onPress={() =>{
+                                switch(item.key){
+                                    case 'CHAT':
+                                        Actions.contacto({name:this.state.name,});
+                                        break;
+                                    case 'HISTORIAS':
+                                        Actions.historias({name:this.state.name,});
+                                        break;
+                                    default:
+                                        alert("El menu "+item.key+" no esta disponible");
+                                    }
+                                }}
+                                >
+                                    {item.key}
+                                 </Text>
+                            </View>
                         }
 
                     />

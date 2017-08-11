@@ -16,11 +16,11 @@ class Menu extends React.Component{
                 <FlatList
 
                     data={[
-                    {key: 'Catalogo'},
-                    {key: 'Comunicacion'},
-                    {key: 'Eventos'},
-                    {key: 'Perfil'},
-                    {key: 'Notificaciones'},
+                    {key: 'CATÁLOGO'},
+                    {key: 'COMUNICACIÓN'},
+                    {key: 'EVENTOS'},
+                    {key: 'PERFIL'},
+                    {key: 'NOTIFICACIONES'},
                     ]}
 
                     renderItem={
@@ -28,13 +28,13 @@ class Menu extends React.Component{
                         <Text style={style.item}
                         onPress={() =>{
                             switch(item.key){
-                                case 'Comunicacion':
+                                case 'COMUNICACIÓN':
                                     Actions.comunicacion({name:this.state.name,});
                                     break;
-                                case 'Notificaciones':
+                                case 'NOTIFICACIONES':
                                     Actions.notificacion({name:this.state.name,});
                                     break;
-                                case 'Eventos':
+                                case 'EVENTOS':
                                     Actions.evento({name:this.state.name,});
                                     break;
                                 default:
