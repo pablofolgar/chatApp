@@ -135,23 +135,40 @@ class Backend{
             });
     }
 
-    buscarEventoPorBarrio(callback,barrio){
+    // buscarEventoPorBarrio(callback,barrio){
+        buscarEventoPorBarrio(callback){
+        // this.getEventoRef();
+        // this.eventosRef.orderByChild("barrio").equalTo(barrio).limitToLast(20).once('value',function(snapshot){
+        //         snapshot.forEach(function(childSnapshot) {
+        //         const evento = childSnapshot.val();
+        //             callback({
+                                // evento: evento.evento,
+                                // barrio: evento.barrio,
+                                // fecha: evento.fecha,
+                                // createdAt: evento.createdAt,
+                                // user:{
+                                //     _id: evento.user._id,
+                                //     name: evento.user.name,
+                                // }
+        //              });
+        //         });
+        //     });
         this.getEventoRef();
-        this.eventosRef.orderByChild("barrio").equalTo(barrio).limitToLast(20).once('value',function(snapshot){
-                snapshot.forEach(function(childSnapshot) {
-                const evento = childSnapshot.val();
-                    callback({
-                                evento: evento.evento,
-                                barrio: evento.barrio,
-                                fecha: evento.fecha,
-                                createdAt: evento.createdAt,
-                                user:{
-                                    _id: evento.user._id,
-                                    name: evento.user.name,
-                                }
-                     });
-                });
+        this.eventosRef.off();
+        const onReceive = (data) => {
+            const evento = data.val();
+            callback({
+                    evento: evento.evento,
+                    barrio: evento.barrio,
+                    fecha: evento.fecha,
+                    createdAt: evento.createdAt,
+                    user:{
+                        _id: evento.user._id,
+                        name: evento.user.name,
+                    }
             });
+        };
+        this.eventosRef.limitToLast(20).on('child_added', onReceive);
 
     }
 
@@ -167,16 +184,19 @@ class Backend{
     //Desde aca se escribe lo referido a los usuarios
     //Guardar usuarios
     agregarUsuario(user){
-        console.log('Id: '+user.id+' - name: '+user.name+' - intereses: '+user.intereses+' - perfil: '+user.perfil+' -barrio: '+ user.barrio+ ' -createdAt: '+user.createdAt);
-        // this.getUsuarioRef();
-        // this.usuarioRef.push({
-        //         _id: this.getUid(),
-        //         name: name,
-        //         intereses: ['Musica','Teatro','Cine'],
-        //         perfil: 'usuario',
-        //         barrio: 'wilde',
-        //         createdAt: firebase.database.ServerValue.TIMESTAMP,
-        // });
+        this.getUsuarioRef();
+        this.usuarioRef.push({
+                _id: this.getUid(),
+                name: 'Juan',
+                //Para centros
+                // voluntarios: [''],
+                // actividades: [''],
+                //Para usuarios
+                intereses:['Literatura'],
+                perfil: 'usuario',
+                barrio: 'wilde',
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+        });
     }
 
     buscarUsuarioLogueado(callback,name){
@@ -203,6 +223,22 @@ class Backend{
     closePerfil(){
         this.close(this.usuarioRef);
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Desde aca se escribe lo referido a los centros
+    //Guardar Centros
+    agregarCentro(user){
+        this.getUsuarioRef();
+        this.usuarioRef.push({
+                _id: this.getUid(),
+                name: 'Centro1',
+                voluntarios: [''],
+                actividades: [''],
+                perfil: 'centro',
+                barrio: 'wilde',
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+        });
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     close(ref){
         if(this.ref){

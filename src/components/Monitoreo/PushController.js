@@ -13,7 +13,7 @@ export default class PushController extends React.Component{
             },
 
             // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
-            senderID: "YOUR GCM SENDER ID",
+            // senderID: "YOUR GCM SENDER ID",
         });
     }
     
