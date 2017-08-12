@@ -5,6 +5,7 @@ class Backend{
     messageRef=null;
     historyRef=null;
     eventosRef=null;
+    usuarioRef=null;
     //initialize Firebase Backend
     constructor(){
         firebase.initializeApp({
@@ -92,8 +93,6 @@ class Backend{
                      });
                 });
             });
-
-
     }
 
     //Send histories to the backend
@@ -123,7 +122,6 @@ class Backend{
     //Desde aca se escribe lo referido a los eventos
     //Send eventos to the backend
     sendEvento(name,evento,barrio,fecha){
-        console.log('fecha: '+fecha);
             this.getEventoRef();
             this.eventosRef.push({
                 evento: evento,
@@ -137,6 +135,26 @@ class Backend{
             });
     }
 
+    buscarEventoPorBarrio(callback,barrio){
+        this.getEventoRef();
+        this.eventosRef.orderByChild("barrio").equalTo(barrio).limitToLast(20).once('value',function(snapshot){
+                snapshot.forEach(function(childSnapshot) {
+                const evento = childSnapshot.val();
+                    callback({
+                                evento: evento.evento,
+                                barrio: evento.barrio,
+                                fecha: evento.fecha,
+                                createdAt: evento.createdAt,
+                                user:{
+                                    _id: evento.user._id,
+                                    name: evento.user.name,
+                                }
+                     });
+                });
+            });
+
+    }
+
     getEventoRef(){
         this.eventosRef = firebase.database().ref('eventos');
     }
@@ -145,6 +163,46 @@ class Backend{
         this.close(this.eventosRef);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Desde aca se escribe lo referido a los usuarios
+    //Guardar usuarios
+    agregarUsuario(user){
+        console.log('Id: '+user.id+' - name: '+user.name+' - intereses: '+user.intereses+' - perfil: '+user.perfil+' -barrio: '+ user.barrio+ ' -createdAt: '+user.createdAt);
+        // this.getUsuarioRef();
+        // this.usuarioRef.push({
+        //         _id: this.getUid(),
+        //         name: name,
+        //         intereses: ['Musica','Teatro','Cine'],
+        //         perfil: 'usuario',
+        //         barrio: 'wilde',
+        //         createdAt: firebase.database.ServerValue.TIMESTAMP,
+        // });
+    }
+
+    buscarUsuarioLogueado(callback,name){
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("name").equalTo(name).limitToLast(20).once('value',function(snapshot){
+                snapshot.forEach(function(childSnapshot) {
+                const user = childSnapshot.val();
+                callback({
+                            id: user._id,
+                            name:  user.name ,
+                            intereses:  user.intereses,
+                            perfil:  user.perfil,
+                            barrio:  user.barrio,
+                            createdAt:  user.createdAt,
+                });
+            });
+        });
+    }
+
+    getUsuarioRef(){
+        this.usuarioRef = firebase.database().ref('usuario');
+    }
+
+    closePerfil(){
+        this.close(this.usuarioRef);
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     close(ref){
         if(this.ref){

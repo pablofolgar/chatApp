@@ -136,7 +136,7 @@ class CargarHistoriaTexto extends React.Component{
           {
             text: 'AGREGAR',
             onPress: (t) => {
-              Backend.sendHistory(this.props.name,this.state.selectedCategoria,
+              Backend.sendHistory(this.props.user.name,this.state.selectedCategoria,
                                       this.state.titulo,this.state.history);
               this.limpiarCampos();
             }
@@ -152,7 +152,7 @@ class CargarHistoriaTexto extends React.Component{
 
     validarCamposRequeridos(){
         var result = true;
-        if(!this.props.name ||
+        if(!this.props.user.name ||
             !this.state.selectedCategoria ||
             !this.state.titulo ||
             !this.state.history){

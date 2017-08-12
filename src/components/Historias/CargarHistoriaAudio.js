@@ -15,14 +15,14 @@ const style = require('./../styles.js');
 
 class CargarHistoriaAudio extends React.Component{
     state={
-        name:this.props.name,
+        user:this.props.user,
     };
 
     render(){
             return(
                 <View>
                     <Text style={style.title} >
-                    <Text> Nombre </Text> {this.state.name }
+                    <Text> Nombre </Text> {this.state.user.name}
                 </Text>
 
                 </View>

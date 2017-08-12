@@ -6,8 +6,9 @@ import {
 
 const style = require('./styles.js');
 class Menu extends React.Component{
+    
     state={
-        name:this.props.name,
+        user:this.props.user,
     };
 
     render(){
@@ -30,14 +31,18 @@ class Menu extends React.Component{
                             onPress={() =>{
                                 switch(item.key){
                                     case 'COMUNICACIÓN':
-                                        Actions.comunicacion({name:this.state.name,});
+                                        Actions.comunicacion({user:this.state.user,});
                                         break;
                                     case 'NOTIFICACIONES':
-                                        Actions.notificacion({name:this.state.name,});
+                                        Actions.notificacion({user:this.state.user,});
                                         break;
                                     case 'EVENTOS':
-                                        Actions.evento({name:this.state.name,});
+                                        Actions.evento({user:this.state.user,});
                                         break;
+                                    case 'PERFIL':
+                                        Actions.perfil({user:this.state.user,});
+                                        break;
+
                                     default:
                                         alert("El menu "+item.key+" no esta disponible");
                                     }

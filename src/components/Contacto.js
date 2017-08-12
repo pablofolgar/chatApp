@@ -9,7 +9,7 @@ const style = require('./styles.js');
 
 class Contacto extends React.Component{
     state={
-        name:this.props.name,
+        user:this.props.user,
     };
 
     render(){
@@ -29,7 +29,7 @@ class Contacto extends React.Component{
                             ({item}) =>
                             <Text style={style.item}
                             onPress={() => {
-                                Actions.chat({name:this.state.name,});}}>
+                                Actions.chat({user:this.state.user,});}}>
                                 {item.key}
                              </Text>
                         }

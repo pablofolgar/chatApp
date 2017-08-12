@@ -1,83 +1,41 @@
 import React from 'react';
-import {FlatList, StyleSheet, Text, View,Picker,AppState, Platform } from 'react-native';
+import { StyleSheet, Text, View, } from 'react-native';
 import {Actions,} from 'react-native-router-flux';
-import PushController from './PushController';  
-import PushNotification from 'react-native-push-notification';
-import ActionButton from  '../ActionButton';
 const style = require('.././styles.js');
+import Backend from '../../Backend';
 
-class Notificacion extends React.Component{
+export default class Notificacion extends React.Component{
 
-    /*state={
-        name:this.props.name,
-        seconds:5,
-        appState: AppState.currentState,
-        
-    };*/
+    state={
+        user:this.props.user,
+        notificaciones:[],
+    };
 
-    constructor(props) {
-        super(props);
-
-        //this.handleAppStateChange = this.handleAppStateChange.bind(this);
-        this.state = {
-          seconds: 5,
-        };
-    }
-    
-
-   /* componentWillUnmount() {
-        AppState.removeEventListener('change',this.handleAppStateChange);
+    componentWillUnmount() {
+        Backend.closeEventos();
     }
 
     componentDidMount() {
-        AppState.addEventListener('change', this.handleAppStateChange);
+        Backend.buscarEventoPorBarrio((noti)=>{
+                                                for (var i = this.state.user.intereses.length - 1; i >= 0; i--) {
+                                                    if(this.state.user.intereses[i]==noti.evento){
+                                                        this.setState({
+                                                            notificaciones: this.state.notificaciones.concat([noti.evento]),
+                                                      });
+                                                    }
+                                                };
+                                            }
+                                            ,this.state.user.barrio);
     }
 
-    handleAppStateChange(appState) {
-        if (appState === 'background') {
-          let date = new Date(Date.now() + (this.state.seconds * 1000));
-
-          if (Platform.OS === 'ios') {
-            date = date.toISOString();
-          }
-
-          PushNotification.localNotificationSchedule({
-            message: "My Notification Message",
-            date,
-          });
-        }
-  }*/
 
     render(){
             return(
                 <View style={style.container}>
-                    <Text >
-                      Choose your notification time in seconds.
+                    <Text style={style.storyText}>
+                        {this.state.notificaciones.length==0?"NO HAY HISTORIAS":this.state.notificaciones}
                     </Text>
-                    <Picker
-                      style={{width:100}}
-                      selectedValue={this.state.seconds}
-                      onValueChange={(seconds) => this.setState({ seconds })}
-                    >
-                      <Picker.Item label="5" value={5} />
-                      <Picker.Item label="10" value={10} />
-                      <Picker.Item label="15" value={15} />
-                    </Picker>
-                    <ActionButton title="Agregar"
-                        onPress={() => {
-                                          let date = new Date(Date.now());
-                                          PushNotification.localNotificationSchedule({
-                                            message: "My Notification Message",
-                                            date,
-                                          });
-                                        }
-
-                                }
-                        />
-                    <PushController />
                 </View>
             );
         }
 }
-
-export default Notificacion;

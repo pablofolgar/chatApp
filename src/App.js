@@ -12,6 +12,7 @@ import CargarHistoriaTexto from './components/Historias/CargarHistoriaTexto';
 import CargarHistoriaAudio from './components/Historias/CargarHistoriaAudio';
 import Notificacion from './components/Monitoreo/Notificacion';
 import Evento from './components/Eventos/CrearEvento';
+import Perfil from './components/Perfil/CrearPerfil';
 
 import {
     Platform
@@ -39,6 +40,7 @@ class App extends React.Component{
                     <Scene key='cargarHistoriaAudio' component={CargarHistoriaAudio} title='HISTORIA EN AUDIO'/>
                     <Scene key='notificacion' component={Notificacion} title='NOTIFICACIONES '/>
                     <Scene key='evento' component={Evento} title='EVENTOS'/>
+                    <Scene key='perfil' component={Perfil} title='PERFIL'/>
                 </Scene>
             </Router>
         );

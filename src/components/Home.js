@@ -16,14 +16,24 @@ import {
 } from 'react-native-router-flux';
 
 import ActionButton from  './ActionButton';
+import Backend from '../Backend';
 
 
 const style = require('./styles.js');
 
 
 class Home extends React.Component{
+    constructor(){
+        super();
+
+        console.ignoredYellowBox = [
+            'Setting a timer'
+        ]
+    }
+
     state={
         name:'',
+        user:'',
     };
 
     render(){
@@ -77,9 +87,7 @@ class Home extends React.Component{
                                               { cancelable: false }
                                             )
                                         }else{
-                                            Actions.menu({
-                                                name:this.state.name,
-                                            });
+                                            this.cargarDatosUsuarioLogueado();
                                         }
                                     }}/>
                 
@@ -95,6 +103,28 @@ class Home extends React.Component{
            
         );
     }
+
+    cargarDatosUsuarioLogueado(){
+        Backend.buscarUsuarioLogueado((usuario)=>{
+            // if(usuario._id){
+                Actions.menu({
+                                user:usuario,
+                                // name:usuario.name
+                            });
+            // }else{
+            //     return Alert.alert(
+            //       'USUARIO INEXISTENTE',
+            //       'EL USUARIO NO EXISTE EN EL SISTEMA',
+            //       [
+            //         {text: 'OK', onPress: () => console.log('OK Pressed')},
+            //       ],
+            //       { cancelable: false }
+            //     )
+            // }
+        },this.state.name);
+    }
+
+    
 }
 
 export default Home;
