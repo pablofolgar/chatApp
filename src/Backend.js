@@ -121,55 +121,85 @@ class Backend{
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los eventos
     //Send eventos to the backend
-    sendEvento(name,evento,barrio,fecha){
+    sendEvento(user,categoria,barrio,fecha){
             this.getEventoRef();
-            this.eventosRef.push({
-                evento: evento,
+            //Agrego el evento en la tabla
+            var mensajeAlertaId = this.getRandomInt(0,10000);
+            var eventoId = this.eventosRef.push({
+                categoria: categoria,
                 barrio: barrio,
                 fecha: fecha,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
+                mensajeAlertaId:mensajeAlertaId,
                 user:{
                   _id: this.getUid(),
-                  name: name,
+                  name: user.name,
                 }
-            });
+            }).key;
+            var evento = {
+                eventoId: eventoId,
+                categoria: categoria,
+                barrio: barrio,
+                fecha: fecha,
+                mensajeAlertaId:mensajeAlertaId,
+                user:{
+                      _id: this.getUid(),
+                      name: user.name,
+                    }
+
+            };
+            //Agrego el evento como notificacipn para cada usuario
+           this.agregarNotificacionParaUsuario(user,evento);
     }
 
-    // buscarEventoPorBarrio(callback,barrio){
-        buscarEventoPorBarrio(callback){
-        // this.getEventoRef();
-        // this.eventosRef.orderByChild("barrio").equalTo(barrio).limitToLast(20).once('value',function(snapshot){
-        //         snapshot.forEach(function(childSnapshot) {
-        //         const evento = childSnapshot.val();
-        //             callback({
-                                // evento: evento.evento,
-                                // barrio: evento.barrio,
-                                // fecha: evento.fecha,
-                                // createdAt: evento.createdAt,
-                                // user:{
-                                //     _id: evento.user._id,
-                                //     name: evento.user.name,
-                                // }
-        //              });
-        //         });
-        //     });
-        this.getEventoRef();
-        this.eventosRef.off();
-        const onReceive = (data) => {
-            const evento = data.val();
-            callback({
-                    evento: evento.evento,
-                    barrio: evento.barrio,
-                    fecha: evento.fecha,
-                    createdAt: evento.createdAt,
-                    user:{
-                        _id: evento.user._id,
-                        name: evento.user.name,
-                    }
-            });
-        };
-        this.eventosRef.limitToLast(20).on('child_added', onReceive);
+    //     buscarEventoPorBarrio(callback){
+    //     this.getEventoRef();
+    //     this.eventosRef.off();
+    //     const onReceive = (data) => {
+    //         const evento = data.val();
+    //         callback({
+    //                 evento: evento.evento,
+    //                 barrio: evento.barrio,
+    //                 fecha: evento.fecha,
+    //                 createdAt: evento.createdAt,
+    //                 user:{
+    //                     _id: evento.user._id,
+    //                     name: evento.user.name,
+    //                 }
+    //         });
+    //     };
+    //     this.eventosRef.limitToLast(20).on('child_added', onReceive);
 
+    // }
+
+    agregarNotificacionParaUsuario(userCreador,evento){
+        //Buscar los usuarios que esten interesados en participar del evento
+        this.getUsuarioRef();
+        //Busco los usuarios que coincidan con el barrio del evento
+        this.usuarioRef.orderByChild("barrio").equalTo(evento.barrio).limitToLast(20).once('value',function(snapshot){
+            snapshot.forEach(function(childSnapshot) {
+                const user = childSnapshot.val();
+                const userKey = childSnapshot.key;
+                //Busco si el usuario tiene intereses que coincidan con el evento
+                if((userCreador.key != userKey) && user.intereses && user.intereses.includes(evento.categoria)){
+                    //Guardar en cada usuario la notificacion en su lista de notificaciones
+                    var notificacion={
+                        eventoId:evento.eventoId,
+                        categoria: evento.categoria,
+                        barrio: evento.barrio,
+                        fecha: evento.fecha,
+                        user: evento.user,
+                        mensajeAlertaId:evento.mensajeAlertaId,
+                    };
+                    // Get a key for a new Post.
+                    var newPostKey = firebase.database().ref('usuario').push().key;
+                    
+                    var updates = {};
+                    updates[userKey+'/notificaciones/'+newPostKey] = notificacion;
+                    firebase.database().ref('usuario').update(updates);
+                }
+            });
+        });
     }
 
     getEventoRef(){
@@ -205,15 +235,29 @@ class Backend{
                 snapshot.forEach(function(childSnapshot) {
                 const user = childSnapshot.val();
                 callback({
-                            id: user._id,
+                            key:childSnapshot.key,
+                            _id: user._id,
                             name:  user.name ,
                             intereses:  user.intereses,
                             perfil:  user.perfil,
                             barrio:  user.barrio,
                             createdAt:  user.createdAt,
+                            notificaciones:user.notificaciones,
                 });
             });
         });
+    }
+
+    buscarNotificacionesPorUsuarioLogueado(callback,name){
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("name").equalTo(name).limitToLast(20).on("child_changed", function(snapshot) {
+          var user = snapshot.val();
+          console.log('Buscandoooooo');
+          callback({
+                    notificaciones:user.notificaciones,
+                });
+        });
+
     }
 
     getUsuarioRef(){
@@ -244,6 +288,10 @@ class Backend{
         if(this.ref){
             this.ref.off();
         }
+    }
+
+    getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }
 

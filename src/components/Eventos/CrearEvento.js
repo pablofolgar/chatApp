@@ -110,7 +110,7 @@ export default class CrearEvento extends React.Component{
           {
             text: 'Agregar',
             onPress: (t) => {
-              Backend.sendEvento(this.props.name,this.state.selectedTipoEvento,
+              Backend.sendEvento(this.props.user,this.state.selectedTipoEvento,
                                       this.state.barrio,this.state.fecha);
               this.limpiarCampos();
               this.notificar
