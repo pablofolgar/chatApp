@@ -226,6 +226,7 @@ class Backend{
                 perfil: 'usuario',
                 barrio: 'wilde',
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
+                fechaUltimoAcceso:'',
         });
     }
 
@@ -243,21 +244,41 @@ class Backend{
                             barrio:  user.barrio,
                             createdAt:  user.createdAt,
                             notificaciones:user.notificaciones,
+                            usuarios:user.usuarios,
                 });
             });
         });
+    }
+
+    actualizarFechaUltimoAcceso(user){
+        this.getUsuarioRef();
+        var updates = {};
+        updates[user.key+'/fechaUltimoAcceso/'] = firebase.database.ServerValue.TIMESTAMP;
+        this.usuarioRef.update(updates);
     }
 
     buscarNotificacionesPorUsuarioLogueado(callback,name){
         this.getUsuarioRef();
         this.usuarioRef.orderByChild("name").equalTo(name).limitToLast(20).on("child_changed", function(snapshot) {
           var user = snapshot.val();
-          console.log('Buscandoooooo');
           callback({
                     notificaciones:user.notificaciones,
                 });
         });
 
+    }
+
+    buscarUsuarioPorCentro(callback,centro){
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("centro").equalTo(centro).limitToLast(20).once("value", function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var user = childSnapshot.val();
+                callback({
+                        name:user.name,
+                        fechaUltimoAcceso:user.fechaUltimoAcceso,
+                    });
+                }) 
+        });
     }
 
     getUsuarioRef(){
@@ -293,6 +314,7 @@ class Backend{
     getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+
 }
 
 export default new Backend();

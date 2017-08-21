@@ -106,6 +106,7 @@ class Home extends React.Component{
 
     cargarDatosUsuarioLogueado(){
         Backend.buscarUsuarioLogueado((usuario)=>{
+            Backend.actualizarFechaUltimoAcceso(usuario);
             // if(usuario._id){
                 Actions.menu({
                                 user:usuario,
