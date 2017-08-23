@@ -1,14 +1,17 @@
 import React from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    Picker,
-     Alert,
-     DatePickerAndroid,
-     TouchableWithoutFeedback,
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Picker,
+  Alert,
+  DatePickerAndroid,
+  TouchableWithoutFeedback,
+  TouchableHighlight,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import ActionButton from  '../ActionButton';
 import Backend from '../../Backend';
@@ -27,11 +30,11 @@ export default class CrearEvento extends React.Component{
 
     state={
         selectedTipoEvento: ' ',
-        eventos: ['Seleccione un evento','Música', 'Teatro', 'Cine', 'Literatura', 'Historia Nacional','Historia Internacional','Actividades Manuales','Cocina','Deportes','Miscelaneouss'],
+        eventos: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
         barrio:'',
         fecha:'',
         simpleDate: new Date(Date.now()),
-        simpleText: 'Seleccione una fecha',
+        simpleText: 'FECHA DEL EVENTO',
     };
 
 
@@ -40,7 +43,7 @@ export default class CrearEvento extends React.Component{
           var newState = {};
           const {action, year, month, day} = await DatePickerAndroid.open(options);
           if (action === DatePickerAndroid.dismissedAction) {
-            newState[stateKey + 'Text'] = 'dismissed';
+            newState[stateKey + 'Text'] = 'FECHA DEL EVENTO';
           } else {
             var date = new Date(year, month, day);
             newState[stateKey + 'Text'] = date.toLocaleDateString();
@@ -59,21 +62,38 @@ export default class CrearEvento extends React.Component{
             });
 
             return(
-                <View>
-                    <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',}}> Seleccione un evento</Text>
+              <ScrollView  style={style.container}> 
 
+                <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} >
+                  
+{/*                  <View style={style.TituloIndicativoView}>
+                    <Text style={style.TituloIndicativoText}> 
+                      CATEGORÍA:
+                    </Text>
+                  </View>*/}
 
+                  <View style={style.viewPicker}>
                     <Picker
                       selectedValue={this.state.selectedTipoEvento}
                       onValueChange={ (evento) => {this.setState({selectedTipoEvento:evento});} }
-                      mode="dropdown">
+                      mode="dialog">
                       {eventostems}
                     </Picker>
+                  </View>
 
-                    <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',}}> Ingrese un barrio </Text>
+              
+                  <View style={style.TituloIndicativoView}>
+                    <Text style={style.TituloIndicativoText}> 
+                      BARRIO:
+                    </Text>
+                  </View>
 
-                    <TextInput style={style.nameInput}
-                        placeholder='Vacaciones'
+
+                  <View style={style.singleInputView}>
+                    <TextInput 
+                        autoCapitalize="characters"
+                        style={style.singleInputText}
+                        placeholder='BARRIO DEL EVENTO'
                         onChangeText={ (text) => {
                             this.setState({
                                 barrio:text,
@@ -81,34 +101,46 @@ export default class CrearEvento extends React.Component{
                         }}
                         value= {this.state.barrio}
                     />
+                  </View>
+         
+                  <View style={style.TituloIndicativoView}>
+                    <Text style={style.TituloIndicativoText}> 
+                      FECHA:
+                    </Text>
+                  </View>
 
-                    <Text style={{fontWeight: 'bold',fontSize: 20,color:'blue',}}> Ingrese una fecha</Text>
+                  <View style={style.DatePickerView}>
+                    <TouchableOpacity
+                      onPress={this.showPicker.bind(this, 'simple', {date: this.state.simpleDate})}>
+                      <Text style={style.DatePickerText}>
+                        {this.state.simpleText}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
 
-                    <TouchableWithoutFeedback
-                        onPress={this.showPicker.bind(this, 'simple', {date: this.state.simpleDate})}>
-                        <Text>{this.state.simpleText}</Text>
-                      </TouchableWithoutFeedback>
+                  <ActionButton title="CREAR"
+                      onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                      if(camposRequeridosOk){
+                                          this.agregarEvento();
+                                          }
+                                      }
 
-                    <ActionButton title="Agregar"
-                        onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
-                                        if(camposRequeridosOk){
-                                            this.agregarEvento();
-                                            }
-                                        }
+                              }
+                      />
+                </KeyboardAvoidingView>
 
-                                }
-                        />
-                </View>
+              </ScrollView>
             );
         }
 
     agregarEvento() {
       Alert.alert(
-        'Esta por cargar su evento',
+        'ESTÁ POR CREAR SU EVENTO.',
         null,
         [
+          {text: 'CANCELAR', onPress: (t) => console.log('Cancel')},
           {
-            text: 'Agregar',
+            text: 'CREAR',
             onPress: (t) => {
               Backend.sendEvento(this.props.user,this.state.selectedTipoEvento,
                                       this.state.barrio,this.state.fecha);
@@ -116,14 +148,14 @@ export default class CrearEvento extends React.Component{
               this.notificar
             }
           },
-          {text: 'Cancelar', onPress: (t) => console.log('Cancel')}
+          //TODO: hacer que cancele.
         ],
         'plain-text'
       );
     }
 
     limpiarCampos(){
-        this.setState({barrio:'',selectedTipoEvento:'Seleccione un evento'})
+        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA'})
     }
 
     validarCamposRequeridos(){
@@ -133,7 +165,7 @@ export default class CrearEvento extends React.Component{
             !this.state.selectedTipoEvento ||
             !this.state.barrio ||
             !this.state.fecha){
-            alert("Debe completar todos los campos");
+            alert("DEBE COMPLETAR TODOS LOS CAMPOS");
             result = false;
         }
         return result;

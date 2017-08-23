@@ -1,5 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View,ListView, } from 'react-native';
+import { 
+    StyleSheet, 
+    Text,
+    View,
+    ListView,
+    ScrollView,
+     } from 'react-native';
 import {Actions,} from 'react-native-router-flux';
 const style = require('.././styles.js');
 import Backend from '../../Backend';
@@ -66,7 +72,7 @@ export default class Notificacion extends React.Component{
                         let date = new Date(Date.now());
                         PushNotification.localNotificationSchedule({
                         id: notificacionesActuales[keyAct].mensajeAlertaId,
-                        message: "Se agrego el evento "+notificacionesActuales[keyAct].categoria,
+                        message: "SE AGREGÓ EL EVENTO "+notificacionesActuales[keyAct].categoria,
                         date,
                         });
                         //Agrego el id del evento al listado de las precargadas
@@ -109,15 +115,19 @@ export default class Notificacion extends React.Component{
 
     render(){
             return(
-                <View style={style.container}>
-                {/* 
+                <ScrollView  style={style.container}> 
+                    
+                    <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} />
+                    <PushController />
+                
+
+                {/* SI NO HAY NOTIFICACIONES 
                     <Text style={style.storyText}>
                         {this.state.notificaciones.length==0?"NO HAY NOTIFICACIONES":this.state.notificaciones}
                     </Text>
                 */}
-                    <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} />
-                    <PushController />
-                </View>
+
+                </ScrollView>
             );
     }
 
