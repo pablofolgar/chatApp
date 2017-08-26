@@ -226,7 +226,7 @@ class Backend{
                 perfil: 'usuario',
                 barrio: 'wilde',
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
-                fechaUltimoAcceso:'',
+                fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
         });
     }
 
