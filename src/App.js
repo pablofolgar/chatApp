@@ -13,6 +13,9 @@ import CargarHistoriaAudio from './components/Historias/CargarHistoriaAudio';
 import Notificacion from './components/Monitoreo/Notificacion';
 import Evento from './components/Eventos/CrearEvento';
 import Perfil from './components/Perfil/CrearPerfil';
+import Catalogo from './components/Catalogo/Catalogo';
+import VerCatalogo from './components/Catalogo/VerCatalogo';
+import CargarCatalogo from './components/Catalogo/CargarCatalogo';
 
 import {
     Platform
@@ -41,6 +44,9 @@ class App extends React.Component{
                     <Scene key='notificacion' component={Notificacion} title='NOTIFICACIONES '/>
                     <Scene key='evento' component={Evento} title='EVENTOS'/>
                     <Scene key='perfil' component={Perfil} title='PERFIL'/>
+                    <Scene key='catalogo' component={Catalogo} title='CATALOGO'/>
+                    <Scene key='verCatalogo' component={VerCatalogo} title='VER CATALOGO'/>
+                    <Scene key='cargarCatalogo' component={CargarCatalogo} title='CARGAR CATALOGO'/>
                 </Scene>
             </Router>
         );
