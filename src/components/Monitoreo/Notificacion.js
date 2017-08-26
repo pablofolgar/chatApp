@@ -35,7 +35,7 @@ export default class Notificacion extends React.Component{
         var items = [];
 
         //******************************** PERFIL USUARIO o VOLUNTARIO ******************************************** 
-            if(this.state.user.perfil=='usuario' || this.state.user.perfil=='voluntario'){
+            if(this.state.user.perfil.toUpperCase()=='USUARIO' || this.state.user.perfil.toUpperCase()=='VOLUNTARIO'){
             Backend.buscarUsuarioLogueado((usuario)=>{
                 for(var keyPre in usuario.notificaciones){
                 //Agrego los ids de los eventos que ya revise
@@ -88,7 +88,7 @@ export default class Notificacion extends React.Component{
             },this.state.user.name);
         }
         //******************************** PERFIL CENTRO ********************************************
-        else if(this.state.user.perfil=='centro'){
+        else if(this.state.user.perfil.toUpperCase()=='CENTRO'){
                 Backend.buscarUsuarioPorCentro((user)=>{
                     // var diasDeDiferencia = this.timeDifference(this.state.user.usuarios[key].fechaUltimoAcceso,Backend.getFechaServidor());
                     var diasDeDiferencia = this.timeDifference(new Date(),user.fechaUltimoAcceso);
@@ -103,10 +103,10 @@ export default class Notificacion extends React.Component{
                             });
                     }
                     
-                },this.state.user.name);
+                },this.state.user.name.toUpperCase());
         }
         //******************************** PERFIL ADMINISTRADOR ********************************************
-        else if(this.state.user.perfil=='admin'){
+        else if(this.state.user.perfil.toUpperCase()=='ADMIN'){
 
         }
         
