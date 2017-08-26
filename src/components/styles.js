@@ -20,6 +20,21 @@ var styles = StyleSheet.create({
     paddingTop: 22,
   },*/
 
+  //TÍTULOS INDICATIVOS DE LA APP VIEW
+  TituloIndicativoView:{
+    marginTop: 10,
+    marginLeft:15,
+    marginRight:15,
+    marginBottom:0,
+  },
+
+  //TÍTULOS INDICATIVOS DE LA APP TEXT
+  TituloIndicativoText:{
+    fontSize:25,
+    color:'white',
+    fontWeight:'bold',
+  },
+
   //TÍTULO "HUELLAS EN RED"
   tituloInicio:{
     fontSize:35,
@@ -94,6 +109,29 @@ var styles = StyleSheet.create({
     flexWrap: 'wrap', 
   },
 
+  //DATE-PICKER VIEW
+  DatePickerView:{
+    elevation:10,
+    padding:4,
+    height:70,
+    borderWidth:2,
+    borderColor: 'black',
+    backgroundColor: '#ffffff',
+    borderRadius:5,
+    marginTop: 5,
+    marginLeft:15,
+    marginRight:15,
+    marginBottom:20,
+    justifyContent:'center',
+    //alignItems:'center',
+  },
+
+  //DATE-PICKER TEXT
+  DatePickerText:{
+    fontSize:26,
+    color:'grey',
+  },
+
   //BOTONES-LISTAS VIEW
   ButtonsView:{
     elevation:10,
@@ -112,6 +150,84 @@ var styles = StyleSheet.create({
 
   //BOTONES-LISTAS TEXT
   ButtonsText:{
+    fontSize: 35,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color:'black',
+    fontFamily: 'monospace',
+  },
+
+  //NOTIFICACIONES VIEW
+  GralNotifView:{
+    flex:1,
+    borderWidth:0,
+    borderRadius:4,
+    borderColor: 'grey',
+    marginTop:6,
+    marginLeft:5,
+    marginRight:5,
+    marginBottom:0,
+    backgroundColor: '#ffe6ff',
+    height: 120,
+  },
+
+  //TÍTULO-NOTIFICACIONES VIEW
+  TitNotifView:{
+    alignItems:'center',
+    marginBottom:3,
+    backgroundColor: '#66ffcc',
+  },
+
+  //TÍTULO-NOTIFICACIONES TEXT
+  TitNotifText:{
+    fontSize:20,
+    color:'#b300b3',
+    fontWeight:'bold',
+
+  },
+
+  //BLOQUE DE DATOS-NOTIFICACIONES VIEW
+  BlockDataNotiView:{
+    flex:1,
+  },
+
+  CatNotifView:{
+    alignSelf:'center',
+    flex:1,
+
+  },
+
+  //DATOS-NOTIFICACIONES VIEW
+  DataNotifView:{
+    marginLeft:8,
+    flex:1,
+  },
+  
+  //DATOS-NOTIFICACIONES TEXT
+  DataNotifText:{
+    fontSize:19,
+    color:'black',
+    fontWeight:'bold',
+  },
+  
+  //BOTON-USUARIOS-CHAT VIEW
+  ChatUserView:{
+    elevation:0,
+    borderWidth:1,
+    borderRadius:0,
+    borderColor: 'grey',
+    marginTop:10,
+    marginLeft:10,
+    marginRight:10,
+    marginBottom:0,
+    backgroundColor: '#fff',
+    height: 65,
+    alignItems:'center',
+    justifyContent:'center',
+  },
+
+  //BOTON-USUARIOS-CHAT TEXT
+  ChatUserText:{
     fontSize: 35,
     textAlign: 'center',
     textAlignVertical: 'center',

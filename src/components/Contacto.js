@@ -9,7 +9,7 @@ const style = require('./styles.js');
 
 class Contacto extends React.Component{
     state={
-        name:this.props.name,
+        user:this.props.user,
     };
 
     render(){
@@ -20,18 +20,20 @@ class Contacto extends React.Component{
                         data={[
                         {key: 'Carla'},
                         {key: 'Gabriel'},
-                        {key: 'Matias'},
+                        {key: 'Matías'},
                         {key: 'Pablo'},
                         {key: 'Paula'},
                         ]}
 
                         renderItem={
                             ({item}) =>
-                            <Text style={style.item}
-                            onPress={() => {
-                                Actions.chat({name:this.state.name,});}}>
-                                {item.key}
-                             </Text>
+                            <View style={style.ChatUserView}>
+                                <Text style={style.ChatUserText}
+                                onPress={() => {
+                                    Actions.chat({user:this.state.user,});}}>
+                                    {item.key}
+                                 </Text>
+                            </View>
                         }
 
                     />

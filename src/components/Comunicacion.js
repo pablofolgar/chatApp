@@ -8,7 +8,7 @@ const style = require('./styles.js');
 
 class Comunicacion extends React.Component{
     state={
-        name:this.props.name,
+        user:this.props.user,
     };
 
     render(){
@@ -28,10 +28,10 @@ class Comunicacion extends React.Component{
                                 onPress={() =>{
                                 switch(item.key){
                                     case 'CHAT':
-                                        Actions.contacto({name:this.state.name,});
+                                        Actions.contacto({user:this.state.user,});
                                         break;
                                     case 'HISTORIAS':
-                                        Actions.historias({name:this.state.name,});
+                                        Actions.historias({user:this.state.user,});
                                         break;
                                     default:
                                         alert("El menu "+item.key+" no esta disponible");

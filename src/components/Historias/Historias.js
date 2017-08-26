@@ -15,7 +15,7 @@ const style = require('./../styles.js');
 
 class Historias extends React.Component{
     state={
-        name:this.props.name,
+        user:this.props.user,
     };
 
     render(){
@@ -27,7 +27,7 @@ class Historias extends React.Component{
                             style={style.ButtonsText}
                             onPress={() => {
                                 Actions.cargarHistoria({
-                                    name:this.state.name,
+                                    user:this.state.user,
                                 });
                             }}>
                                 CREAR HISTORIA
@@ -39,7 +39,7 @@ class Historias extends React.Component{
                             style={style.ButtonsText}
                             onPress={() => {
                                 Actions.verHistorias({
-                                    name:this.state.name,
+                                    user:this.state.user,
                                 });
                             }}>
                                 VER HISTORIAS
