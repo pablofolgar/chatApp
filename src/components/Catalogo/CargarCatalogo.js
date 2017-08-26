@@ -33,18 +33,6 @@ export default class CargarCatalogo extends React.Component{
                                 ESCRIBIR HISTORIA
                             </Text>
                     </View>
-                    {/*
-                    <View style={style.ButtonsView}>
-                        <Text style={style.ButtonsText}
-                        onPress={() => {
-                            Actions.cargarHistoriaAudio({
-                                user:this.state.user,
-                            });
-                        }}>
-                            Cargar Audio
-                        </Text>
-                    </View>
-                    */}
                 </View>
             );
         }

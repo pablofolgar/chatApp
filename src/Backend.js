@@ -288,7 +288,7 @@ class Backend{
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los centros
     //Guardar Centros
-    agregarCentro(user){
+    agregarCentro(){
         this.getUsuarioRef();
         this.usuarioRef.push({
                 _id: this.getUid(),
@@ -296,6 +296,21 @@ class Backend{
                 voluntarios: ['JUAN','PABLO'],
                 actividades: [''],
                 perfil: 'CENTRO',
+                barrio: 'WILDE',
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+        });
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Desde aca se escribe lo referido a los ADMIN
+    //Guardar Usuario perfil admin
+    agregarAdmin(){
+        this.getUsuarioRef();
+        this.usuarioRef.push({
+                _id: this.getUid(),
+                name: 'ADMIN1',
+                //voluntarios: ['JUAN','PABLO'],
+                //actividades: [''],
+                perfil: 'ADMIN',
                 barrio: 'WILDE',
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
         });

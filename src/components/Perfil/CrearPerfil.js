@@ -45,7 +45,8 @@ export default class CrearPerfil extends React.Component{
                                     title="AGREGAR"
                                     onPress={()=>{
                                                     Backend.agregarUsuario(this.props.user);
-                                                    //Backend.agregarCentro(this.props.user);
+                                                    //Backend.agregarCentro();
+                                                    // Backend.agregarAdmin();
                                                 }
                                             }
                                 />
