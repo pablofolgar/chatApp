@@ -6,6 +6,7 @@ class Backend{
     historyRef=null;
     eventosRef=null;
     usuarioRef=null;
+    imageRef  =null;
     //initialize Firebase Backend
     constructor(){
         firebase.initializeApp({
@@ -314,6 +315,17 @@ class Backend{
                 barrio: 'WILDE',
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
         });
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Desde aca se escribe lo referido al guardado de imagenes en el storage
+    getImageRef(){
+        this.imageRef = firebase.storage().ref('images');
+    }
+
+    setImageUrl(user, url){
+        let userNamePath = 'usuario/'+user.key+'/details/url';
+        firebase.database().ref(userNamePath).set(url);
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
