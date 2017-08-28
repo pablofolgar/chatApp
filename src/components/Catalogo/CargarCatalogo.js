@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     Image,
     Platform,
+    Alert,
 } from 'react-native';
 
 import {
@@ -32,7 +33,6 @@ const uploadImage = (uri, imageName, mime = 'image/jpg') => {
     console.log('uri '+ uri)
     return new Promise((resolve,reject) => {
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-        console.log('uploadUri '+ uploadUri)
         let uploadBlob = null
         Backend.getImageRef();
         const imageRef = Backend.imageRef.child(imageName)
@@ -63,10 +63,13 @@ export default class CargarCatalogo extends React.Component{
         selectedCategoria: ' ',
         categorias: ['SELECCIONAR CATEGORÍA','SALUD Y BIENESTAR', 'COSMETICA', 'LIBROS', 'ROPA', 'SERVICIOS PERSONALIZADOS','OTROS'],
         selectedMedioPago: ' ',
-        medioPago: ['SELECCIONAR CATEGORÍA','EFECTIVO', 'TARJETA', 'MERCADO PAGO', 'OTRO'],
+        medioPago: ['SELECCIONAR MEDIO DE PAGO','EFECTIVO', 'TARJETA', 'MERCADO PAGO', 'OTRO'],
         avatarSource: null,
         videoSource: null,
         path: null,
+        empressa: null,
+        producto:null,
+        imageTimeStamp:null,
     };
 
     render(){
@@ -81,7 +84,16 @@ export default class CargarCatalogo extends React.Component{
             <View style={style.container}>
 
                 <Text>EMPRESA</Text>
-                <TextInput></TextInput>
+                <TextInput 
+                  style={style.singleInputText}
+                  placeholder='"EMPRESA"'
+                  onChangeText={ (text) => {
+                      this.setState({
+                          empresa:text,
+                      })
+                  }}
+                  value= {this.state.empresa}
+                />    
 
                 <Text>CATEGORIA</Text>
                 <Picker
@@ -92,7 +104,16 @@ export default class CargarCatalogo extends React.Component{
                 </Picker>
 
                 <Text>PRODUCTO</Text>
-                <TextInput></TextInput>
+                <TextInput 
+                  style={style.singleInputText}
+                  placeholder='"PRODUCTO"'
+                  onChangeText={ (text) => {
+                      this.setState({
+                          producto:text,
+                      })
+                  }}
+                  value= {this.state.producto}
+                />   
             {/*
                 <Text>PRECIO</Text>
                 <TextInput></TextInput>
@@ -108,21 +129,11 @@ export default class CargarCatalogo extends React.Component{
                 <View style={style.container}>
                     <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
                       <View style={[style.avatar, style.avatarContainer, {marginBottom: 20}]}>
-                      { this.state.avatarSource === null ? <Text>Select a Photo</Text> :
+                      { this.state.avatarSource === null ? <Text>Seleccione una foto</Text> :
                         <Image style={style.avatar} source={this.state.avatarSource} />
                       }
                       </View>
                     </TouchableOpacity>
-
-                    <TouchableOpacity onPress={this.selectVideoTapped.bind(this)}>
-                      <View style={[style.avatar, style.avatarContainer]}>
-                        <Text>Select a Video</Text>
-                      </View>
-                    </TouchableOpacity>
-
-                    { this.state.videoSource &&
-                      <Text style={{margin: 8, textAlign: 'center'}}>{this.state.videoSource}</Text>
-                    }
                 </View>
 
                 <Text>MEDIOS DE PAGO</Text>
@@ -140,17 +151,12 @@ export default class CargarCatalogo extends React.Component{
                 <TextInput></TextInput>
  */}
                 <ActionButton title="CREAR"
-                                onPress={() => {
-                                                console.log('Subiendo imagen');
-                                                this.state.avatarSource ? 
-                                                    uploadImage(this.state.path, this.state.user.name+'.jpg')
-                                                    .then((responseData)=> {
-                                                        Backend.setImageUrl(this.state.user,responseData)
-                                                    })
-                                                    .done()
-                                                : null
-                                            }
-                                }
+                                onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                                 if(camposRequeridosOk){
+                                                      this.crearCatologo();
+                                                  }
+                                                }
+                                          }
                 />
                 
             </View>
@@ -181,44 +187,61 @@ export default class CargarCatalogo extends React.Component{
           }
           else {
             let source = { uri: response.uri };
-
             // You can also display the image using data:
             // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
             this.setState({
               avatarSource: source,
               path: response.path,
+              imageTimeStamp: response.timestamp,
             });
           }
         });
       }
 
-    selectVideoTapped() {
-        const options = {
-          title: 'Video Picker',
-          takePhotoButtonTitle: 'Take Video...',
-          mediaType: 'video',
-          videoQuality: 'medium'
-        };
+      crearCatologo(){
+        Alert.alert(
+        'PARA CREAR DEFINITIVAMENTE SU CATALOGO APRIETE "AGREGAR"',
+        null,
+        [
+          {text: 'VOLVER', onPress: (t) => console.log('Cancel')},
+          {
+            text: 'AGREGAR',
+            onPress: (t) => {
+              this.state.avatarSource ? 
+                uploadImage(this.state.path, this.state.empresa+'_'+this.state.producto+'_'+this.state.imageTimeStamp+'.jpg')
+                .then((responseData)=> {
+                    Backend.cargarCatologo(this.state.user,responseData,this.state.empresa,
+                      this.state.selectedCategoria, this.state.producto)
+                })
+                .then(()=>{
+                    this.limpiarCampos();
+                })
+                .done()
+              : null
+            }
+          },
+        ],
+        'plain-text'
+        );      
+      }
 
-        ImagePicker.showImagePicker(options, (response) => {
-          console.log('Response = ', response);
-
-          if (response.didCancel) {
-            console.log('User cancelled video picker');
-          }
-          else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
-          }
-          else if (response.customButton) {
-            console.log('User tapped custom button: ', response.customButton);
-          }
-          else {
-            this.setState({
-              videoSource: response.uri
-            });
-          }
-        });
+      validarCamposRequeridos(){
+        var result = true;
+        if(!this.state.path ||
+            !this.state.empresa ||
+            !this.state.producto ||
+            !this.state.imageTimeStamp||
+            !this.state.user ||
+            !this.state.selectedCategoria){
+            alert("DEBE COMPLETAR TODOS LOS CAMPOS");
+            result = false;
+        }
+        return result;
     }
 
+    limpiarCampos(){
+        this.setState({selectedMedioPago:'SELECCIONAR MEDIO DE PAGO',selectedCategoria:'SELECCIONAR CATEGORÍA',empresa:null,producto:null,
+                      avatarSource:  null,path: null,imageTimeStamp: null,})
+    }
  }

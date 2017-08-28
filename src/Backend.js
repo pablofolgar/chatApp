@@ -7,6 +7,7 @@ class Backend{
     eventosRef=null;
     usuarioRef=null;
     imageRef  =null;
+    catalogoRef=null;
     //initialize Firebase Backend
     constructor(){
         firebase.initializeApp({
@@ -283,7 +284,7 @@ class Backend{
         this.usuarioRef = firebase.database().ref('usuario');
     }
 
-    closePerfil(){
+    closeUsuarioRef(){
         this.close(this.usuarioRef);
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -322,10 +323,27 @@ class Backend{
         this.imageRef = firebase.storage().ref('images');
     }
 
-    setImageUrl(user, url){
-        let userNamePath = 'usuario/'+user.key+'/details/url';
-        firebase.database().ref(userNamePath).set(url);
+    cargarCatologo(user, url, empresa, categoria, producto){
+        // let userNamePath = 'usuario/'+user.key+'/details/url';
+        // firebase.database().ref(userNamePath).set(url);
+        this.getCatalogoRef();
+        this.catalogoRef.push({
+            empresa: empresa,
+            categoria: categoria,
+            imagenUrl: url,
+            producto: producto,
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            createdUser: user.key,
+        });
 
+    }
+
+    getCatalogoRef(){
+        this.catalogoRef = firebase.database().ref('catalogo');
+    }
+
+    closeCatalogoRef(){
+        this.close(this.catalogoRef);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -334,7 +352,8 @@ class Backend{
             this.ref.off();
         }
     }
-
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
     }
