@@ -52,7 +52,7 @@ var styles = StyleSheet.create({
     borderRadius:100,
     borderWidth:0,
     marginTop:30,
-    marginBottom:95,
+    marginBottom:45,
     alignSelf:'center',
   },
 
@@ -111,6 +111,8 @@ var styles = StyleSheet.create({
 
   //DATE-PICKER VIEW
   DatePickerView:{
+    flex:1,
+    flexDirection:'row',
     elevation:10,
     padding:4,
     height:70,
@@ -122,8 +124,26 @@ var styles = StyleSheet.create({
     marginLeft:15,
     marginRight:15,
     marginBottom:20,
-    justifyContent:'center',
     //alignItems:'center',
+  },
+
+  //IMAGEN-CALENDARIO VIEW
+  DatePickerImageView:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+
+  //IMAGEN-CALENDARIO IMAGE
+  DatePickerImage:{
+    width:50,
+    height:50,
+  },
+
+  //BOTON FECHA
+  DatePickerButton:{
+    flex:4,
+    justifyContent:'center',
   },
 
   //DATE-PICKER TEXT

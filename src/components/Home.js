@@ -9,6 +9,7 @@ import {
     Image,
     KeyboardAvoidingView,
     ScrollView,
+    ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -34,6 +35,7 @@ class Home extends React.Component{
     state={
         name:'',
         user:'',
+        spinner:false,
     };
 
     render(){
@@ -58,6 +60,14 @@ class Home extends React.Component{
                                 <Image source={require('./imagenes/huellas2.jpg')} style={style.logoImage}/>
                             </View>
 
+                         </View>
+
+                         <View >
+                            <ActivityIndicator 
+                                animating={this.state.spinner}
+                                size={50}
+                                color='black'
+                            />
                          </View>
 
                         <View>
@@ -88,6 +98,7 @@ class Home extends React.Component{
                                             )
                                         }else{
                                             this.cargarDatosUsuarioLogueado();
+                                            this.setState({spinner:true});
                                         }
                                     }}/>
                 
