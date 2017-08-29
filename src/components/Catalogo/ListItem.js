@@ -6,7 +6,7 @@ const { View, TouchableHighlight, Text } = ReactNative;
 class ListItem extends Component {
   render() {
     return (
-      <TouchableHighlight>
+      <TouchableHighlight onPress={this.props.onPress}>
         <View style={style.CatNotifView}>
           <Text style={style.DataNotifText}>EMPRESA:{this.props.item.empresa} - CATEGORIA:{this.props.item.categoria} - PRODUCTO:{this.props.item.producto} </Text>
           <Image

@@ -23,6 +23,7 @@ import ImagePicker from 'react-native-image-picker';
 
 import RNFetchBlob from 'react-native-fetch-blob';
 import Backend from '../../Backend';
+import renderIf from './../RenderIf';
 
 const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;  
@@ -30,7 +31,6 @@ window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
 window.Blob = Blob;
 
 const uploadImage = (uri, imageName, mime = 'image/jpg') => {
-    console.log('uri '+ uri)
     return new Promise((resolve,reject) => {
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
         let uploadBlob = null
@@ -58,25 +58,29 @@ const uploadImage = (uri, imageName, mime = 'image/jpg') => {
 }
 
 export default class CargarCatalogo extends React.Component{
-    state={
-        user:this.props.user,
-        selectedCategoria: ' ',
-        categorias: ['SELECCIONAR CATEGORÍA','SALUD Y BIENESTAR', 'COSMETICA', 'LIBROS', 'ROPA', 'SERVICIOS PERSONALIZADOS','OTROS'],
-        selectedMedioPago: ' ',
-        medioPago: ['SELECCIONAR MEDIO DE PAGO','EFECTIVO', 'TARJETA', 'MERCADO PAGO', 'OTRO'],
-        avatarSource: null,
-        videoSource: null,
-        path: null,
-        empressa: null,
-        producto:null,
-        imageTimeStamp:null,
-    };
 
+  constructor(props) {
+        super(props);
+        this.state = {
+            user:this.props.user,
+            selectedCategoria: this.props.catalogo? this.props.catalogo.categoria : ' ',
+            categorias: ['SELECCIONAR CATEGORÍA','SALUD Y BIENESTAR', 'COSMETICA', 'LIBROS', 'ROPA', 'SERVICIOS PERSONALIZADOS','OTROS'],
+            selectedMedioPago: this.props.catalogo ? this.props.catalogo.medioPago : ' ',
+            medioPago: ['SELECCIONAR MEDIO DE PAGO','EFECTIVO', 'TARJETA', 'MERCADO PAGO', 'OTRO'],
+            avatarSource: this.props.catalogo ? { uri: this.props.catalogo.imagenUrl } : null,
+            path: null,
+            empresa: this.props.catalogo ? this.props.catalogo.empresa : ' ',
+            producto: this.props.catalogo ? this.props.catalogo.producto : ' ',
+            imageTimeStamp:null,
+            };
+    }
+
+    
     render(){
         let categoryItems = this.state.categorias.map( (s, i) => {
                 return <Picker.Item key={i} value={s} label={s} />
             });
-        let medioPagotems = this.state.medioPago.map( (s, i) => {
+        let medioPagoItems = this.state.medioPago.map( (s, i) => {
                 return <Picker.Item key={i} value={s} label={s} />
             });
 
@@ -127,21 +131,22 @@ export default class CargarCatalogo extends React.Component{
             */}
                 <Text>IMAGEN</Text>
                 <View style={style.container}>
-                    <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
-                      <View style={[style.avatar, style.avatarContainer, {marginBottom: 20}]}>
-                      { this.state.avatarSource === null ? <Text>Seleccione una foto</Text> :
-                        <Image style={style.avatar} source={this.state.avatarSource} />
-                      }
-                      </View>
-                    </TouchableOpacity>
+
+                      <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+                        <View style={[style.avatar, style.avatarContainer, {marginBottom: 20}]}>
+                        { this.state.avatarSource === null ? <Text>Seleccione una foto</Text> :
+                          <Image style={style.avatar} source={this.state.avatarSource} />
+                        }
+                        </View>
+                      </TouchableOpacity>
                 </View>
 
                 <Text>MEDIOS DE PAGO</Text>
                  <Picker
-                    selectedValue={this.state.medioPagotems}
-                    onValueChange={ (category) => {this.setState({medioPagotems:category});} }
+                    selectedValue={this.state.selectedMedioPago}
+                    onValueChange={ (medioPago) => {this.setState({selectedMedioPago:medioPago});} }
                     mode="dialog">
-                    {medioPagotems}
+                    {medioPagoItems}
                 </Picker>
 {/*
                 <Text>MEDIO DE ENTREGA</Text>
@@ -150,15 +155,66 @@ export default class CargarCatalogo extends React.Component{
                 <Text>HORARIO ATENCION</Text>
                 <TextInput></TextInput>
  */}
-                <ActionButton title="CREAR"
-                                onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
-                                                 if(camposRequeridosOk){
-                                                      this.crearCatologo();
+
+                {renderIf(!this.props.catalogo, 
+                  <ActionButton title="CREAR"
+                                  onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                                   if(camposRequeridosOk){
+                                                        this.crearCatologo();
+                                                    }
                                                   }
+                                            }
+                  />
+                  )}
+
+                {renderIf(this.props.catalogo,
+                  <ActionButton title="MODIFICAR"
+                                  onPress={() => {
+                                                  Alert.alert(
+                                                  'PARA MODIFICAR DEFINITIVAMENTE SU CATALOGO APRIETE "MODIFICAR"',
+                                                  null,
+                                                  [
+                                                    {text: 'VOLVER',  onPress: (t) => console.log('Cancel')},
+                                                    {text: 'MODIFICAR', onPress: (t) => {
+                                                                                        var camposRequeridosOk=this.validarCamposRequeridos();
+                                                                                        if(camposRequeridosOk){
+                                                                                          this.modificarCatalogo();
+                                                                                          Actions.verCatalogo({
+                                                                                                user:this.state.user,
+                                                                                            });
+                                                                                        }
+                                                                                    }
+                                                    }
+                                                  ],
+                                                  'plain-text'
+                                                  );
+                                                  }
+                                            }
+                  />
+                )}
+
+                {renderIf(this.props.catalogo,
+                  <ActionButton title="BORRAR"
+                                  onPress={() => {
+                                                  Alert.alert(
+                                                  'PARA BORRAR DEFINITIVAMENTE SU CATALOGO APRIETE "BORRAR"',
+                                                  null,
+                                                  [
+                                                    {text: 'VOLVER',  onPress: (t) => console.log('Cancel')},
+                                                    {text: 'BORRAR', onPress: (t) => {
+                                                                                        Backend.borrarCatalogo(this.props.catalogo);
+                                                                                        Actions.verCatalogo({
+                                                                                              user:this.state.user,
+                                                                                          });
+                                                                                    }
+                                                    }
+                                                  ],
+                                                  'plain-text'
+                                                  );
                                                 }
                                           }
-                />
-                
+                  />
+                )}
             </View>
         );
     }
@@ -212,7 +268,9 @@ export default class CargarCatalogo extends React.Component{
                 uploadImage(this.state.path, this.state.empresa+'_'+this.state.producto+'_'+this.state.imageTimeStamp+'.jpg')
                 .then((responseData)=> {
                     Backend.cargarCatologo(this.state.user,responseData,this.state.empresa,
-                      this.state.selectedCategoria, this.state.producto)
+                      this.state.selectedCategoria, 
+                      this.state.producto,this.state.empresa+'_'+this.state.producto+'_'+this.state.imageTimeStamp+'.jpg',//Nombre de la foto subida
+                      this.state.selectedMedioPago)
                 })
                 .then(()=>{
                     this.limpiarCampos();
@@ -226,14 +284,37 @@ export default class CargarCatalogo extends React.Component{
         );      
       }
 
+      modificarCatalogo(){
+        if(this.state.avatarSource){
+          if(this.state.path){
+            //Si tiene seteada la variable path significa que cambio la imagen, entonces tengo que subirla y modificar el catalogo
+            uploadImage(this.state.path, this.state.empresa+'_'+this.state.producto+'_'+this.state.imageTimeStamp+'.jpg')
+            .then((responseData)=> {
+                Backend.modificarCatalogo(this.state.user,responseData,this.state.empresa,
+                  this.state.selectedCategoria, 
+                  this.state.producto,this.state.empresa+'_'+this.state.producto+'_'+this.state.imageTimeStamp+'.jpg',//Nombre de la foto subida
+                  this.state.selectedMedioPago,this.props.catalogo)
+            })
+            .done()
+          }else{
+            //Si no cambio la imagen solo modifico el resto de los campos
+            //para este caso no voy a tener ni la imagen ni el nombre de la imagen para pasar como parametro
+            Backend.modificarCatalogo(this.state.user,null,this.state.empresa,
+                    this.state.selectedCategoria, 
+                    this.state.producto,null,//Nombre de la foto subida
+                    this.state.selectedMedioPago,this.props.catalogo)
+          }
+        }
+      }
+
       validarCamposRequeridos(){
         var result = true;
-        if(!this.state.path ||
+        if(
             !this.state.empresa ||
             !this.state.producto ||
-            !this.state.imageTimeStamp||
             !this.state.user ||
-            !this.state.selectedCategoria){
+            !this.state.selectedCategoria||
+            !this.state.selectedMedioPago){
             alert("DEBE COMPLETAR TODOS LOS CAMPOS");
             result = false;
         }

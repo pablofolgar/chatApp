@@ -6,11 +6,16 @@ import {
     TextInput,
     ScrollView,
     ListView,
+    Alert,
 } from 'react-native';
 import Backend from '../../Backend';
 import ActionButton from  '../ActionButton';
 const style = require('./../styles.js');
 import ListItem from './ListItem';
+import renderIf from './../RenderIf';
+import {
+    Actions,
+} from 'react-native-router-flux';
 
 export default class VerCatalogo extends React.Component{
 
@@ -52,21 +57,63 @@ export default class VerCatalogo extends React.Component{
 
 
                 <View style={style.storyView}>
-                    <ScrollView>
-                       <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} />
-                    </ScrollView>
+                    {renderIf(this.props.user.perfil==='ADMIN', 
+                       <ListView dataSource={this.state.dataSource} renderRow={this._renderItemAdmin.bind(this)} />
+                    )}
+                    {renderIf(this.props.user.perfil!='ADMIN', 
+                        <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} />
+                    )}
                 </View>
 
             </View>
         );
     }
 
-    _renderItem(item) {
+    _renderItemAdmin(item) {
+        const onPress = () => {
+                  Alert.alert(
+                    'PARA EDITAR DEFINITIVAMENTE SU CATALOGO APRIETE "EDITAR"',
+                    null,
+                    [
+                      {text: 'EDITAR', onPress: (text) => {
+                                                            console.log('Editar'); 
+                                                            this.setState({
+                                                                            selectedCategoria:'SELECCIONAR CATEGORÍA',
+                                                                            dataSource: this.state.dataSource.cloneWithRows([]),
+                                                                        });
+                                                            Actions.cargarCatalogo({catalogo:item, user:this.state.user}); 
+                                                        }
+                        },
+                      // {text: 'BORRAR', onPress: (text) => { 
+                                                            // Backend.getCatalogoRef();
+                                                            // Backend.catalogoRef.child(item.key).remove()
+                                                            // .then(()=>{
+                                                            //     Backend.getImageRef();
+                                                                
+                                                            //     Backend.imageRef.child(item.imageName).delete().then(()=>{
+                                                            //         console.log('Archivo eliminado correctamente: '+item.imageName);
+                                                            //     }).catch(function(error) {
+                                                            //         console.log('Error: '+error);
+                                                            //     })
+                                                            // })
+                                                            // .done()
+                                                            // }
+                      //   },
+                      {text: 'CANCELAR', onPress: (text) => console.log('Cancel')}
+                    ],
+                    'default'
+                  );
+                };
         return (
-              <ListItem item={item} />
+              <ListItem item={item} onPress={onPress}/>
             );
     }
 
+    _renderItem(item) {
+        return (
+              <ListItem item={item}/>
+            );
+    }
 
     componentDidMount(){
     }
@@ -79,7 +126,9 @@ export default class VerCatalogo extends React.Component{
                 empresa: cat.empresa.toUpperCase(),
                 categoria: cat.categoria.toUpperCase(),
                 imagenUrl: cat.imagenUrl,
+                imageName: cat.imageName,
                 producto: cat.producto.toUpperCase(),
+                medioPago: cat.medioPago.toUpperCase(),
             });
              this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(items)

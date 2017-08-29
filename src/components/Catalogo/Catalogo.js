@@ -16,6 +16,7 @@ const style = require('./../styles.js');
 export default class Catalogo extends React.Component{
     state={
         user:this.props.user,
+        catalogo:this.props.catalogo,
     };
 
     render(){
@@ -29,6 +30,7 @@ export default class Catalogo extends React.Component{
                                 onPress={() => {
                                     Actions.cargarCatalogo({
                                         user:this.state.user,
+                                        catalogo: this.state.catalogo,
                                     });
                                 }}>
                                     CARGAR CATALOGO

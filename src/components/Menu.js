@@ -43,7 +43,7 @@ class Menu extends React.Component{
                                         Actions.perfil({user:this.state.user,});
                                         break;
                                     case 'CATÁLOGO':
-                                        Actions.catalogo({user:this.state.user,});
+                                        Actions.catalogo({user:this.state.user,catalogo:null});
                                         break;  
 
                                     default:
