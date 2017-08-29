@@ -328,21 +328,40 @@ class Backend{
         // firebase.database().ref(userNamePath).set(url);
         this.getCatalogoRef();
         this.catalogoRef.push({
-            empresa: empresa,
-            categoria: categoria,
+            empresa: empresa.toUpperCase(),
+            categoria: categoria.toUpperCase(),
             imagenUrl: url,
-            producto: producto,
+            producto: producto.toUpperCase(),
             createdAt: firebase.database.ServerValue.TIMESTAMP,
             createdUser: user.key,
         });
 
     }
 
+    getCatalogosPorCategoria(callback,categoria){
+            this.getCatalogoRef();
+            this.catalogoRef.orderByChild("categoria").equalTo(categoria.toUpperCase()).limitToLast(20).once('value',function(snapshot){
+                snapshot.forEach(function(childSnapshot) {
+                const cat = childSnapshot.val();
+                    callback({
+                                key: childSnapshot.key,
+                                empresa: cat.empresa.toUpperCase(),
+                                categoria: cat.categoria.toUpperCase(),
+                                imagenUrl: cat.imagenUrl,
+                                producto: cat.producto.toUpperCase(),
+                                createdAt: new Date(cat.createdAt),
+                                createdUser: cat.createdUser,
+                                
+                     });
+                });
+            });
+    }
+
     getCatalogoRef(){
         this.catalogoRef = firebase.database().ref('catalogo');
     }
 
-    closeCatalogoRef(){
+    closeCatalogo(){
         this.close(this.catalogoRef);
     }
 

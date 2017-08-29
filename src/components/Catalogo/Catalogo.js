@@ -36,19 +36,17 @@ export default class Catalogo extends React.Component{
                         </View>
                     )}
 
-                    {renderIf(this.props.user.perfil!='ADMIN', 
-                        <View style={style.ButtonsView}>
-                                <Text 
-                                style={style.ButtonsText}
-                                onPress={() => {
-                                    Actions.verCatalogo({
-                                        user:this.state.user,
-                                    });
-                                }}>
-                                    VER CATALOGO
-                                </Text>
-                        </View>
-                    )}
+                    <View style={style.ButtonsView}>
+                            <Text 
+                            style={style.ButtonsText}
+                            onPress={() => {
+                                Actions.verCatalogo({
+                                    user:this.state.user,
+                                });
+                            }}>
+                                VER CATALOGO
+                            </Text>
+                    </View>
 
                 </View>
             );

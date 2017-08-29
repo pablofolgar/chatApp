@@ -5,76 +5,55 @@ import {
     Picker,
     TextInput,
     ScrollView,
+    ListView,
 } from 'react-native';
 import Backend from '../../Backend';
 import ActionButton from  '../ActionButton';
 const style = require('./../styles.js');
+import ListItem from './ListItem';
 
 export default class VerCatalogo extends React.Component{
 
     constructor(props){
         super(props);
         this.state = {
-                text: ' ',
-                categorias: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
+                user:this.props.user,
                 selectedCategoria: ' ',
-                titulos:['SELECCIONE TÍTULO'],
-                selectedTitulo: ' ',
-                historias:[]
+                categorias: ['SELECCIONAR CATEGORÍA','SALUD Y BIENESTAR', 'COSMETICA', 'LIBROS', 'ROPA', 'SERVICIOS PERSONALIZADOS','OTROS'],
+                dataSource: new ListView.DataSource({
+                    rowHasChanged: (row1, row2) => row1 !== row2}),
             };
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
     }
 
-    componentWillMount() {
-
-      }
-
 
     render(){
       
         let categoryItems = this.state.categorias.map( (s, i) => {
-            return <Picker.Item key={i} value={s} label={s} />
-        });
-        let tituloItems = this.state.titulos.map( (s, i) => {
-            return <Picker.Item key={i} value={s} label={s} />
-        });
+                return <Picker.Item key={i} value={s} label={s} />
+            });
+        // let medioPagotems = this.state.medioPago.map( (s, i) => {
+        //         return <Picker.Item key={i} value={s} label={s} />
+        //     });
 
         return(
             <View style={style.container}>
 
                 <View style={style.viewPicker}>
-                    <Picker
-                      selectedValue={this.state.selectedCategoria}
-                      onValueChange={ (category) => {this.setState({selectedCategoria:category});this.limpiarSeleccionCategoria();this.getHistoriasPorCategoria(category)} }
-                      mode="dialog">
-                      {categoryItems}
-                    </Picker>
-                </View>
-
-                <View style={style.viewPicker}>
-                    <Picker
-                      selectedValue={this.state.selectedTitulo}
-                      onValueChange={ (titulo) => {this.setState({selectedTitulo:titulo});this.limpiarSeleccionTitulo();this.getHistoriasPorTitulo(titulo)} }
-                      mode="dialog"
-                      style={{height:50,}}>
-                      {tituloItems}
-                    </Picker>
-                </View>
-                    
-                <View>
-                    <Text style={style.textTituloHistoria}>
-                        Historia
-                    </Text>
+                <Picker
+                    selectedValue={this.state.selectedCategoria}
+                    onValueChange={ (category) => {this.setState({selectedCategoria:category});this.getCatalogoPorCategoria(category)} }
+                    mode="dialog">
+                    {categoryItems}
+                </Picker>
                 </View>
 
 
                 <View style={style.storyView}>
                     <ScrollView>
-                        <Text style={style.storyText}>
-                            {this.state.text==" "?"NO HAY HISTORIAS":this.state.text}
-                        </Text>
+                       <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} />
                     </ScrollView>
                 </View>
 
@@ -82,39 +61,34 @@ export default class VerCatalogo extends React.Component{
         );
     }
 
+    _renderItem(item) {
+        return (
+              <ListItem item={item} />
+            );
+    }
+
 
     componentDidMount(){
     }
 
-    getHistoriasPorCategoria(category) {
-            Backend.loadHistories((historia) => {
-                this.setState({
-                    titulos: this.state.titulos.concat([historia.titulo]),
-                    historias: this.state.historias.concat([{categoria: historia.category,titulo:historia.titulo,historia:historia.text}]),
-                });
-            }, category);
+    getCatalogoPorCategoria(category) {
+        var items = [];
+        Backend.getCatalogosPorCategoria((cat) => {
+            items.push({
+                key: cat.key,
+                empresa: cat.empresa.toUpperCase(),
+                categoria: cat.categoria.toUpperCase(),
+                imagenUrl: cat.imagenUrl,
+                producto: cat.producto.toUpperCase(),
+            });
+             this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(items)
+                      });
+        }, category);
     }
 
-    getHistoriasPorTitulo(titulo){
-        for (var i = this.state.historias.length - 1; i >= 0; i--) {
-            if(this.state.historias[i].titulo==titulo){
-                this.setState({text:this.state.historias[i].historia});
-                break;
-            }
-            
-        }
-    }
 
     componentWillUnMount(){
-        Backend.closeHist();
+        Backend.closeCatalogo();
     }
-
-    limpiarSeleccionCategoria(){
-        this.setState({titulos:['SELECCIONE TÍTULO'],text:" "});
-    }
-
-    limpiarSeleccionTitulo(){
-        this.setState({text:" "});
-    }
-
 }
