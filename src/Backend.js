@@ -45,11 +45,11 @@ class Backend{
             const message = data.val();
             callback({
                 _id: data.key,
-                text: message.text,
+                text: message.text.toUpperCase(),
                 createdAt: new Date(message.createdAt),
                 user:{
                     _id: message.user._id,
-                    name: message.user.name,
+                    name: message.user.name.toUpperCase(),
                 },
             });
         };
@@ -61,8 +61,8 @@ class Backend{
     sendMessage(message){
         for(let i = 0; i < message.length; i++){
             this.messageRef.push({
-                text: message[i].text,
-                user: message[i].user,
+                text: message[i].text.toUpperCase(),
+                user: message[i].user.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
             });
         }
@@ -77,18 +77,18 @@ class Backend{
    //Desde aca se escribe lo referido a las historias
     loadHistories(callback,categoria){
             this.getHistoryRef();
-            this.historyRef.orderByChild("category").equalTo(categoria).limitToLast(20).once('value',function(snapshot){
+            this.historyRef.orderByChild("category").equalTo(categoria.toUpperCase()).limitToLast(20).once('value',function(snapshot){
                 snapshot.forEach(function(childSnapshot) {
                 const hist = childSnapshot.val();
                     callback({
                                 _id: childSnapshot.key,
-                                text: hist.text,
-                                category: hist.category,
-                                titulo: hist.titulo,
+                                text: hist.text.toUpperCase(),
+                                category: hist.category.toUpperCase(),
+                                titulo: hist.titulo.toUpperCase(),
                                 createdAt: new Date(hist.createdAt),
                                 user:{
                                     _id: hist.user._id,
-                                    name: hist.user.name,
+                                    name: hist.user.name.toUpperCase(),
                                 }
                      });
                 });
@@ -99,13 +99,13 @@ class Backend{
     sendHistory(name,categoria,titulo,history){
             this.getHistoryRef();
             this.historyRef.push({
-                text: history,
-                category: categoria,
-                titulo: titulo,
+                text: history.toUpperCase(),
+                category: categoria.toUpperCase(),
+                titulo: titulo.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 user:{
                   _id: this.getUid(),
-                  name: name,
+                  name: name.toUpperCase(),
                 }
             });
     }
@@ -126,25 +126,25 @@ class Backend{
             //Agrego el evento en la tabla
             var mensajeAlertaId = this.getRandomInt(0,10000);
             var eventoId = this.eventosRef.push({
-                categoria: categoria,
-                barrio: barrio,
-                fecha: fecha,
+                categoria: categoria.toUpperCase(),
+                barrio: barrio.toUpperCase(),
+                fecha: fecha.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 mensajeAlertaId:mensajeAlertaId,
                 user:{
                   _id: this.getUid(),
-                  name: user.name,
+                  name: user.name.toUpperCase(),
                 }
             }).key;
             var evento = {
-                eventoId: eventoId,
-                categoria: categoria,
-                barrio: barrio,
-                fecha: fecha,
+                eventoId: eventoId.toUpperCase(),
+                categoria: categoria.toUpperCase(),
+                barrio: barrio.toUpperCase(),
+                fecha: fecha.toUpperCase(),
                 mensajeAlertaId:mensajeAlertaId,
                 user:{
                       _id: this.getUid(),
-                      name: user.name,
+                      name: user.name.toUpperCase(),
                     }
 
             };
@@ -176,12 +176,12 @@ class Backend{
         //Buscar los usuarios que esten interesados en participar del evento
         this.getUsuarioRef();
         //Busco los usuarios que coincidan con el barrio del evento
-        this.usuarioRef.orderByChild("barrio").equalTo(evento.barrio).limitToLast(20).once('value',function(snapshot){
+        this.usuarioRef.orderByChild("barrio").equalTo(evento.barrio.toUpperCase()).limitToLast(20).once('value',function(snapshot){
             snapshot.forEach(function(childSnapshot) {
                 const user = childSnapshot.val();
                 const userKey = childSnapshot.key;
-                //Busco si el usuario tiene intereses que coincidan con el evento
-                if((userCreador.key != userKey) && user.intereses && user.intereses.includes(evento.categoria)){
+                //Busco si el usuario tiene intereses que coincidan con el evento y que no sea el mismo
+                if((userCreador.key != userKey) && user.intereses && user.intereses.includes(evento.categoria.toUpperCase())){
                     //Guardar en cada usuario la notificacion en su lista de notificaciones
                     var notificacion={
                         eventoId:evento.eventoId,
@@ -217,31 +217,28 @@ class Backend{
         this.getUsuarioRef();
         this.usuarioRef.push({
                 _id: this.getUid(),
-                name: 'Juan',
-                //Para centros
-                // voluntarios: [''],
-                // actividades: [''],
-                //Para usuarios
-                intereses:['Literatura'],
-                perfil: 'usuario',
-                barrio: 'wilde',
+                name: 'PABLO',
+                intereses:['CINE','TEATRO','HISTORIA'],
+                perfil: 'USUARIO',
+                barrio: 'WILDE',
+                centro: ['CENTRO1'],
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
-                fechaUltimoAcceso:'',
+                fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
         });
     }
 
     buscarUsuarioLogueado(callback,name){
         this.getUsuarioRef();
-        this.usuarioRef.orderByChild("name").equalTo(name).limitToLast(20).once('value',function(snapshot){
+        this.usuarioRef.orderByChild("name").equalTo(name.toUpperCase()).limitToLast(20).once('value',function(snapshot){
                 snapshot.forEach(function(childSnapshot) {
                 const user = childSnapshot.val();
                 callback({
                             key:childSnapshot.key,
                             _id: user._id,
-                            name:  user.name ,
+                            name:  user.name.toUpperCase(),
                             intereses:  user.intereses,
                             perfil:  user.perfil,
-                            barrio:  user.barrio,
+                            barrio:  user.barrio.toUpperCase(),
                             createdAt:  user.createdAt,
                             notificaciones:user.notificaciones,
                             usuarios:user.usuarios,
@@ -259,7 +256,7 @@ class Backend{
 
     buscarNotificacionesPorUsuarioLogueado(callback,name){
         this.getUsuarioRef();
-        this.usuarioRef.orderByChild("name").equalTo(name).limitToLast(20).on("child_changed", function(snapshot) {
+        this.usuarioRef.orderByChild("name").equalTo(name.toUpperCase()).limitToLast(20).on("child_changed", function(snapshot) {
           var user = snapshot.val();
           callback({
                     notificaciones:user.notificaciones,
@@ -270,11 +267,11 @@ class Backend{
 
     buscarUsuarioPorCentro(callback,centro){
         this.getUsuarioRef();
-        this.usuarioRef.orderByChild("centro").equalTo(centro).limitToLast(20).once("value", function(snapshot) {
+        this.usuarioRef.orderByChild("centro").equalTo(centro.toUpperCase()).limitToLast(20).once("value", function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var user = childSnapshot.val();
                 callback({
-                        name:user.name,
+                        name:user.name.toUpperCase(),
                         fechaUltimoAcceso:user.fechaUltimoAcceso,
                     });
                 }) 
@@ -295,11 +292,11 @@ class Backend{
         this.getUsuarioRef();
         this.usuarioRef.push({
                 _id: this.getUid(),
-                name: 'Centro1',
-                voluntarios: [''],
+                name: 'CENTRO1',
+                voluntarios: ['JUAN','PABLO'],
                 actividades: [''],
-                perfil: 'centro',
-                barrio: 'wilde',
+                perfil: 'CENTRO',
+                barrio: 'WILDE',
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
         });
     }
