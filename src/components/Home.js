@@ -72,7 +72,9 @@ class Home extends React.Component{
 
                         <View>
                             <View  style={style.singleInputView}>
-                                <TextInput style={style.singleInputText}
+                                <TextInput 
+                                style={style.singleInputText}
+                                autoCapitalize="characters"
                                 placeholder='INGRESE SU USUARIO'
                                 onChangeText={ (text) => {
                                     this.setState({

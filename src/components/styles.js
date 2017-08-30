@@ -214,12 +214,17 @@ var styles = StyleSheet.create({
   CatNotifView:{
     alignSelf:'center',
     flex:1,
-
   },
 
-  //DATOS-NOTIFICACIONES VIEW
+  //DATOS-NOTIFICACIONES VIEW EVENTOS
   DataNotifView:{
     marginLeft:8,
+    flex:1,
+  },
+
+    //DATOS-NOTIFICACIONES VIEW USUARIO AUSENTE
+  DataNotifView2:{
+    alignSelf:'center',
     flex:1,
   },
   
