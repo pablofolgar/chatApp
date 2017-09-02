@@ -58,10 +58,10 @@ export default class VerCatalogo extends React.Component{
 
                 <View style={style.storyView}>
                     {renderIf(this.props.user.perfil==='ADMIN', 
-                       <ListView dataSource={this.state.dataSource} renderRow={this._renderItemAdmin.bind(this)} />
+                       <ListView dataSource={this.state.dataSource} renderRow={this._renderItemAdmin.bind(this)} enableEmptySections={true}/>
                     )}
                     {renderIf(this.props.user.perfil!='ADMIN', 
-                        <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} />
+                        <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} enableEmptySections={true}/>
                     )}
                 </View>
 
@@ -120,6 +120,9 @@ export default class VerCatalogo extends React.Component{
 
     getCatalogoPorCategoria(category) {
         var items = [];
+        this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(items)
+                      });
         Backend.getCatalogosPorCategoria((cat) => {
             items.push({
                 key: cat.key,

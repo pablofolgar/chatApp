@@ -69,8 +69,8 @@ export default class CargarCatalogo extends React.Component{
             medioPago: ['SELECCIONAR MEDIO DE PAGO','EFECTIVO', 'TARJETA', 'MERCADO PAGO', 'OTRO'],
             avatarSource: this.props.catalogo ? { uri: this.props.catalogo.imagenUrl } : null,
             path: null,
-            empresa: this.props.catalogo ? this.props.catalogo.empresa : ' ',
-            producto: this.props.catalogo ? this.props.catalogo.producto : ' ',
+            empresa: this.props.catalogo ? this.props.catalogo.empresa : '',
+            producto: this.props.catalogo ? this.props.catalogo.producto : '',
             imageTimeStamp:null,
             };
     }
