@@ -24,6 +24,7 @@ export default class Notificacion extends React.Component{
             user:this.props.user,
             notificaciones:[],
         };
+        this._rendering = this._renderItem.bind(this);
     }
 
     componentWillUnmount() {
@@ -117,7 +118,7 @@ export default class Notificacion extends React.Component{
             return(
                 <ScrollView  style={style.container}> 
                     
-                    <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} />
+                    <ListView dataSource={this.state.dataSource} renderRow={this._rendering} enableEmptySections={true}/>
                     <PushController />
                 
 

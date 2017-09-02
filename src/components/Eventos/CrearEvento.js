@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
+  Image,
 } from 'react-native';
 import ActionButton from  '../ActionButton';
 import Backend from '../../Backend';
@@ -110,12 +111,19 @@ export default class CrearEvento extends React.Component{
                   </View>
 
                   <View style={style.DatePickerView}>
-                    <TouchableOpacity
-                      onPress={this.showPicker.bind(this, 'simple', {date: this.state.simpleDate})}>
-                      <Text style={style.DatePickerText}>
-                        {this.state.simpleText}
-                      </Text>
-                    </TouchableOpacity>
+
+                    <View style={style.DatePickerImageView}>
+                      <Image source={require('../imagenes/calendar1600.png')} style={style.DatePickerImage}/>
+                    </View>
+
+                    <View style={style.DatePickerButton}>
+                      <TouchableOpacity
+                        onPress={this.showPicker.bind(this, 'simple', {date: this.state.simpleDate})}>
+                        <Text style={style.DatePickerText}>
+                          {this.state.simpleText}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
 
                   <ActionButton title="CREAR"

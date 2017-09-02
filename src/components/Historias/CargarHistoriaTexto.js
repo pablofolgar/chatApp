@@ -100,6 +100,7 @@ class CargarHistoriaTexto extends React.Component{
                             <View style={style.MultiLineInputView}> 
                                 <TextInput
                                         style={style.multilineInputText}
+                                        autoCapitalize="characters"
                                         onChangeText={(historia) => this.setState({history:historia})}
                                         multiline={true}
                                         blurOnSubmit={false}
