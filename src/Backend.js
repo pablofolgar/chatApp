@@ -154,26 +154,6 @@ class Backend{
            this.agregarNotificacionParaUsuario(user,evento);
     }
 
-    //     buscarEventoPorBarrio(callback){
-    //     this.getEventoRef();
-    //     this.eventosRef.off();
-    //     const onReceive = (data) => {
-    //         const evento = data.val();
-    //         callback({
-    //                 evento: evento.evento,
-    //                 barrio: evento.barrio,
-    //                 fecha: evento.fecha,
-    //                 createdAt: evento.createdAt,
-    //                 user:{
-    //                     _id: evento.user._id,
-    //                     name: evento.user.name,
-    //                 }
-    //         });
-    //     };
-    //     this.eventosRef.limitToLast(20).on('child_added', onReceive);
-
-    // }
-
     agregarNotificacionParaUsuario(userCreador,evento){
         //Buscar los usuarios que esten interesados en participar del evento
         this.getUsuarioRef();
@@ -226,6 +206,7 @@ class Backend{
                 centro: ['CENTRO1'],
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
+                puntaje:0,
         });
     }
 
@@ -244,6 +225,8 @@ class Backend{
                             createdAt:  user.createdAt,
                             notificaciones:user.notificaciones,
                             usuarios:user.usuarios,
+                            centro:user.centro,
+                            puntaje:user.puntaje
                 });
             });
         });
@@ -277,6 +260,25 @@ class Backend{
                         fechaUltimoAcceso:user.fechaUltimoAcceso,
                     });
                 }) 
+        });
+    }
+
+    buscarPerfilUsuarioParaCalificar(callback,user){
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(20).once("value", function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var usuario = childSnapshot.val();
+                if(user._id  != usuario._id && usuario.centro && user.centro === usuario.centro){
+                    callback({
+                            key:childSnapshot.key,
+                            _id: usuario._id,
+                            name:  usuario.name.toUpperCase(),
+                            perfil:  usuario.perfil,
+                            barrio:  usuario.barrio.toUpperCase(),
+                            puntaje: usuario.puntaje,
+                        });
+                    }//Cierra IF
+                })//Cierra foreach
         });
     }
 

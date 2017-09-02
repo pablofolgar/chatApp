@@ -366,6 +366,16 @@ var styles = StyleSheet.create({
     width: 150,
     height: 150
   },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
 
 
 })

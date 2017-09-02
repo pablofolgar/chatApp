@@ -22,6 +22,7 @@ class Menu extends React.Component{
                     {key: 'EVENTOS'},
                     {key: 'PERFIL'},
                     {key: 'NOTIFICACIONES'},
+                    {key: 'VALORACIÓN'},
                     ]}
 
                     renderItem={
@@ -44,6 +45,9 @@ class Menu extends React.Component{
                                         break;
                                     case 'CATÁLOGO':
                                         Actions.catalogo({user:this.state.user,catalogo:null});
+                                        break; 
+                                    case 'VALORACIÓN':
+                                        Actions.verUsuarioValoracion({user:this.state.user,});
                                         break;  
 
                                     default:
