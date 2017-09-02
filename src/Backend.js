@@ -6,6 +6,8 @@ class Backend{
     historyRef=null;
     eventosRef=null;
     usuarioRef=null;
+    imageRef  =null;
+    catalogoRef=null;
     //initialize Firebase Backend
     constructor(){
         firebase.initializeApp({
@@ -282,13 +284,13 @@ class Backend{
         this.usuarioRef = firebase.database().ref('usuario');
     }
 
-    closePerfil(){
+    closeUsuarioRef(){
         this.close(this.usuarioRef);
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los centros
     //Guardar Centros
-    agregarCentro(user){
+    agregarCentro(){
         this.getUsuarioRef();
         this.usuarioRef.push({
                 _id: this.getUid(),
@@ -300,6 +302,151 @@ class Backend{
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
         });
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Desde aca se escribe lo referido a los ADMIN
+    //Guardar Usuario perfil admin
+    agregarAdmin(){
+        this.getUsuarioRef();
+        this.usuarioRef.push({
+                _id: this.getUid(),
+                name: 'ADMIN1',
+                //voluntarios: ['JUAN','PABLO'],
+                //actividades: [''],
+                perfil: 'ADMIN',
+                barrio: 'WILDE',
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+        });
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Desde aca se escribe lo referido al guardado de imagenes en el storage
+    getImageRef(){
+        this.imageRef = firebase.storage().ref('images');
+    }
+
+    cargarCatologo(user, url, empresa, categoria, producto, imageName, medioPago){
+        // let userNamePath = 'usuario/'+user.key+'/details/url';
+        // firebase.database().ref(userNamePath).set(url);
+        this.getCatalogoRef();
+        this.catalogoRef.push({
+            empresa: empresa.toUpperCase(),
+            categoria: categoria.toUpperCase(),
+            imagenUrl: url,
+            imageName: imageName,
+            producto: producto.toUpperCase(),
+            medioPago:medioPago.toUpperCase(),
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            createdUser: user.key,
+        });
+
+    }
+
+    getCatalogosPorCategoria(callback,categoria){
+            this.getCatalogoRef();
+            this.catalogoRef.orderByChild("categoria").equalTo(categoria.toUpperCase()).limitToLast(20).once('value',function(snapshot){
+                snapshot.forEach(function(childSnapshot) {
+                const cat = childSnapshot.val();
+                    callback({
+                                key: childSnapshot.key,
+                                empresa: cat.empresa.toUpperCase(),
+                                categoria: cat.categoria.toUpperCase(),
+                                imagenUrl: cat.imagenUrl,
+                                producto: cat.producto.toUpperCase(),
+                                medioPago:cat.medioPago.toUpperCase(),
+                                imageName: cat.imageName,
+                                createdAt: new Date(cat.createdAt),
+                                createdUser: cat.createdUser,
+                                
+                     });
+                });
+            });
+    }
+
+    borrarCatalogo(catalogo){
+    this.getCatalogoRef();
+    this.catalogoRef.child(catalogo.key).remove()
+                  .then(()=>{
+                      this.getImageRef();
+                      this.imageRef.child(catalogo.imageName).delete().then(()=>{
+                          console.log('Archivo eliminado correctamente: '+item.imageName);
+                      }).catch(function(error) {
+                          console.log('Error: '+error);
+                      })
+                  })
+                  .done()
+    }
+
+    modificarCatalogo(user, url, empresa, categoria, producto, imageName, medioPago,catalogo){
+        var imagenUrlAux;
+        var empresaAux;
+        var categoriaAux;
+        var imageNameAux;
+        var productoAux;
+        var medioPagoAux;
+
+        if(categoria != catalogo.categoria)
+            categoriaAux= categoria.toUpperCase()
+        else
+            categoriaAux= catalogo.categoria.toUpperCase()
+        
+        if(empresa != catalogo.empresa)
+            empresaAux = empresa.toUpperCase()
+        else
+            empresaAux = catalogo.empresa.toUpperCase()
+
+        if(imageName!=null)//Si la imageName es null no se cambio la foto del catalogo
+            imageNameAux= imageName
+        else
+            imageNameAux= catalogo.imageName
+
+        if(url!=null)//Si la url es null no se cambio la foto del catalogo
+            imagenUrlAux= url
+        else
+            imagenUrlAux= catalogo.imagenUrl
+
+        if(medioPago != catalogo.medioPago)
+            medioPagoAux=medioPago.toUpperCase()
+        else
+            medioPagoAux=catalogo.medioPago.toUpperCase()
+
+        if(producto != catalogo.producto)
+            productoAux= producto.toUpperCase()
+        else
+            productoAux= catalogo.producto.toUpperCase()
+
+        var catalogoAux={
+            categoria:categoriaAux,
+            createdAt:firebase.database.ServerValue.TIMESTAMP,
+            createdUser:user.key,
+            empresa:empresaAux,
+            imageName:imageNameAux,
+            imagenUrl:imagenUrlAux,
+            medioPago:medioPagoAux,
+            producto:productoAux,
+        }
+                    
+        var updates = {};
+        updates[catalogo.key+'/'] = catalogoAux;
+        this.getCatalogoRef();
+        this.catalogoRef.update(updates).then(()=>{
+                    if(imageName!=null){//Si la imageName es null no se cambio la foto del catalogo
+                          this.getImageRef();
+                          this.imageRef.child(catalogo.imageName).delete().then(()=>{
+                              console.log('Archivo eliminado correctamente: '+catalogo.imageName);
+                          }).catch(function(error) {
+                              console.log('Error: '+error);
+                          })
+                      }
+                  })
+                  .done();
+    }
+
+    getCatalogoRef(){
+        this.catalogoRef = firebase.database().ref('catalogo');
+    }
+
+    closeCatalogo(){
+        this.close(this.catalogoRef);
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     close(ref){
@@ -307,7 +454,8 @@ class Backend{
             this.ref.off();
         }
     }
-
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
     }

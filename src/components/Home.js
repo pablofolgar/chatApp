@@ -118,6 +118,7 @@ class Home extends React.Component{
     }
 
     cargarDatosUsuarioLogueado(){
+        console.log('********************** Logueando usuario: '+this.state.name+' ***************************************')
         Backend.buscarUsuarioLogueado((usuario)=>{
             Backend.actualizarFechaUltimoAcceso(usuario);
             // if(usuario._id){

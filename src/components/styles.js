@@ -1,5 +1,5 @@
 const React = require('react-native')
-const {StyleSheet} = React
+const {StyleSheet,PixelRatio,} = React
 const constants = {
   actionColor: '#bbe0ff'
 };
@@ -352,6 +352,19 @@ var styles = StyleSheet.create({
   //No sé
   listview:{
     flex: 1,
+  },
+
+  //Styles para los componentes de la libreira Image picker usada para el catalogo
+  avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1 / PixelRatio.get(),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  avatar: {
+    borderRadius: 75,
+    width: 150,
+    height: 150
   },
 
 

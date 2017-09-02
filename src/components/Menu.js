@@ -42,6 +42,9 @@ class Menu extends React.Component{
                                     case 'PERFIL':
                                         Actions.perfil({user:this.state.user,});
                                         break;
+                                    case 'CATÁLOGO':
+                                        Actions.catalogo({user:this.state.user,catalogo:null});
+                                        break;  
 
                                     default:
                                         alert("El menu "+item.key+" no esta disponible");
