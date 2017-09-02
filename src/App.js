@@ -42,7 +42,7 @@ class App extends React.Component{
                     <Scene key='cargarHistoriaTexto' component={CargarHistoriaTexto} title='HISTORIA EN TEXTO'/>
                     <Scene key='cargarHistoriaAudio' component={CargarHistoriaAudio} title='HISTORIA EN AUDIO'/>
                     <Scene key='notificacion' component={Notificacion} title='NOTIFICACIONES '/>
-                    <Scene key='evento' component={Evento} title='EVENTOS'/>
+                    <Scene key='evento' component={Evento} title='CREAR EVENTOS'/>
                     <Scene key='perfil' component={Perfil} title='PERFIL'/>
                     <Scene key='catalogo' component={Catalogo} title='CATALOGO'/>
                     <Scene key='verCatalogo' component={VerCatalogo} title='VER CATALOGO'/>

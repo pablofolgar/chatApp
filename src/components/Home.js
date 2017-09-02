@@ -9,6 +9,7 @@ import {
     Image,
     KeyboardAvoidingView,
     ScrollView,
+    ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -34,6 +35,7 @@ class Home extends React.Component{
     state={
         name:'',
         user:'',
+        spinner:false,
     };
 
     render(){
@@ -60,9 +62,19 @@ class Home extends React.Component{
 
                          </View>
 
+                         <View >
+                            <ActivityIndicator 
+                                animating={this.state.spinner}
+                                size={50}
+                                color='black'
+                            />
+                         </View>
+
                         <View>
                             <View  style={style.singleInputView}>
-                                <TextInput style={style.singleInputText}
+                                <TextInput 
+                                style={style.singleInputText}
+                                autoCapitalize="characters"
                                 placeholder='INGRESE SU USUARIO'
                                 onChangeText={ (text) => {
                                     this.setState({
@@ -88,6 +100,7 @@ class Home extends React.Component{
                                             )
                                         }else{
                                             this.cargarDatosUsuarioLogueado();
+                                            this.setState({spinner:true});
                                         }
                                     }}/>
                 
