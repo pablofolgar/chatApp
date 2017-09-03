@@ -282,6 +282,12 @@ class Backend{
         });
     }
 
+    guardarValoracion(user, puntaje){
+        this.getUsuarioRef();
+        var updates = {};
+        updates[user.key+'/puntaje/'] = puntaje;
+        this.usuarioRef.update(updates);
+    }
     getUsuarioRef(){
         this.usuarioRef = firebase.database().ref('usuario');
     }

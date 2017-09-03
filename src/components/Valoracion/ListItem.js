@@ -11,7 +11,7 @@ class ListItem extends Component {
         <View style={style.CatNotifView}>
           <Text style={style.DataNotifText}>NOMBRE:{this.props.item.user.name}</Text>
           <StarRating
-            disabled={false}
+            disabled={true}
             maxStars={5}
             rating={Number(this.props.item.user.puntaje)}
         />

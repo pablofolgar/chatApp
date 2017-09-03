@@ -70,7 +70,7 @@ export default class Valorar extends React.Component {
                                                             this.setState({
                                                                             dataSource: this.state.dataSource.cloneWithRows([]),
                                                                         });
-                                                            Actions.valorar({usuario:item}); 
+                                                            Actions.valorar({userValorar:item,user:this.state.user,}); 
                                                         }
                         },
                       {text: 'CANCELAR', onPress: (text) => console.log('Cancel')}

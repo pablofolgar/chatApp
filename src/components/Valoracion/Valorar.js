@@ -6,6 +6,7 @@ import {
   Text,
   View,
   Picker,
+  Alert,
 } from 'react-native';
 
 import StarRating from 'react-native-star-rating';
@@ -15,14 +16,16 @@ const style = require('.././styles.js');
 import {
     Actions,
 } from 'react-native-router-flux';
+import ActionButton from  '../ActionButton';
 
 export default class Valorar extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      user:this.props.usuario.user,
-      generalStarCount: this.props.usuario.user.puntaje,
+      userValorar:this.props.userValorar.user,
+      generalStarCount: this.props.userValorar.user ? this.props.userValorar.user.puntaje : 0,
+      user:this.props.user,
     };
   }
 
@@ -32,23 +35,19 @@ export default class Valorar extends React.Component {
     });
   }
 
-  componentWillMount(){
-    console.log(1);
-    console.log('nombre '+this.state.user)
-  }
   render() {
-console.log(2);
     return (
       <View style={style.container}>
 
+      
         <Text style={style.welcome}>
-          React Native Star Rating Component
-        </Text>
-        <Text style={style.welcome}>
-          General Star Demo
+          EL PARTICIPANTE {this.state.userValorar.name} 
         </Text>
         <Text style={style.instructions}>
-          {this.state.generalStarCount} of stars is displayed
+          TIENE UNA VALORACIÓN de {this.state.userValorar.puntaje} ESTRELLAS
+        </Text>
+        <Text style={style.instructions}>
+          USTED LE ESTA ASIGNANDO {this.state.generalStarCount} ESTRELLAS
         </Text>
         <StarRating
           disabled={false}
@@ -56,8 +55,49 @@ console.log(2);
           rating={Number(this.state.generalStarCount)}
           selectedStar={(rating) => this.onGeneralStarRatingPress(rating)}
         />
+
+        <ActionButton title="GUARDAR VALORACIÓN"
+                                  onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                                   if(camposRequeridosOk){
+                                                        this.guardarValoracion();
+                                                    }
+                                                  }
+                                            }
+                  />
         
       </View>
     );
   }
+
+  validarCamposRequeridos(){
+        var result = true;
+        if(
+            !this.state.generalStarCount ||
+            this.state.generalStarCount === 0 
+            ){
+            alert("DEBE COMPLETAR TODOS LOS CAMPOS");
+            result = false;
+        }
+        return result;
+    }
+
+    guardarValoracion(){
+      Alert.alert(
+        'PARA VALORAR AL PARTICIPANTE APRIETE "GUARDAR"',
+        null,
+        [
+          {text: 'VOLVER', onPress: (t) => console.log('Cancel')},
+          {
+            text: 'GUARDAR',
+            onPress: (t) => {
+              var puntaje = Number(this.state.userValorar.puntaje) === 0 ?  Number(this.state.generalStarCount) : Number(((this.state.generalStarCount+this.state.userValorar.puntaje)/2))
+              Backend.guardarValoracion(this.state.userValorar,puntaje);
+              Actions.verUsuarioValoracion({user:this.state.user,});
+            }
+          },
+        ],
+        'plain-text'
+        );      
+    }
+
 }
