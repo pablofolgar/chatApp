@@ -268,7 +268,52 @@ class Backend{
         this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(20).once("value", function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var usuario = childSnapshot.val();
+                //El usuario que califica no se puede calificar asi mismo, tiene que tener un centro y ser del mismo centro
+                //del usuario que puede calificar
                 if(user._id  != usuario._id && usuario.centro && user.centro === usuario.centro){
+                    callback({
+                            key:childSnapshot.key,
+                            _id: usuario._id,
+                            name:  usuario.name.toUpperCase(),
+                            perfil:  usuario.perfil,
+                            barrio:  usuario.barrio.toUpperCase(),
+                            puntaje: usuario.puntaje,
+                        });
+                    }//Cierra IF
+                })//Cierra foreach
+        });
+    }
+
+    buscarPerfilVoluntarioParaCalificar(callback,user){
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(20).once("value", function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var usuario = childSnapshot.val();
+                //El voluntario que califica no se puede calificar a el mismo, tiene que tener un centro y ser del mismo centro
+                //del usuario que puede calificar y solo puede calificar a perfiles usuario
+                if(user._id  != usuario._id 
+                    && usuario.centro && user.centro === usuario.centro
+                    && usuario.perfil==='USUARIO'){
+                    callback({
+                            key:childSnapshot.key,
+                            _id: usuario._id,
+                            name:  usuario.name.toUpperCase(),
+                            perfil:  usuario.perfil,
+                            barrio:  usuario.barrio.toUpperCase(),
+                            puntaje: usuario.puntaje,
+                        });
+                    }//Cierra IF
+                })//Cierra foreach
+        });
+    }
+
+    buscarPerfilCentroParaCalificar(callback,user){
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(20).once("value", function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var usuario = childSnapshot.val();
+                //El centro que califica no se puede calificar asi mismo y solo puede calificar a USUARIOS o VOLUNTARIOS que pertenezcan
+                if(user._id  != usuario._id && usuario.centro && usuario.centro != '' && user.name.toUpperCase()=== usuario.centro){
                     callback({
                             key:childSnapshot.key,
                             _id: usuario._id,

@@ -33,7 +33,7 @@ export default class Valorar extends React.Component {
 
   componentDidMount(){
     var items = [];
-    //El perfil USUARIO califica a VOLUNTARIOS o CENTROS
+    //El perfil USUARIO califica a VOLUNTARIOS
     if(this.state.user.perfil=='USUARIO'){
       Backend.buscarPerfilUsuarioParaCalificar((usuario)=>{
           items.push({
@@ -46,6 +46,29 @@ export default class Valorar extends React.Component {
         ,this.state.user);
     }
     //El perfil de VOLUNTARIO califica a USUARIO
+    else if(this.state.user.perfil=='VOLUNTARIO'){
+      Backend.buscarPerfilVoluntarioParaCalificar((usuario)=>{
+          items.push({
+                    user:usuario,
+                  });
+          this.setState({
+                      dataSource: this.state.dataSource.cloneWithRows(items)
+                    });
+          }
+        ,this.state.user);
+    }
+    //El perfil de CENTRO califica a USUARIOS  o VOLUNTARIOS
+    else if(this.state.user.perfil=='CENTRO'){
+      Backend.buscarPerfilCentroParaCalificar((usuario)=>{
+          items.push({
+                    user:usuario,
+                  });
+          this.setState({
+                      dataSource: this.state.dataSource.cloneWithRows(items)
+                    });
+          }
+        ,this.state.user);
+    }
   }
 
   render() {
