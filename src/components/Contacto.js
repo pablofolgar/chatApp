@@ -29,7 +29,7 @@ class Contacto extends React.Component{
                             ({item}) =>
                             <Text style={style.item}
                             onPress={() => {
-                                Actions.chat({name:this.state.name,});}}>
+                                Actions.chat({name:this.state.name,contacto:item.key});}}>
                                 {item.key}
                              </Text>
                         }

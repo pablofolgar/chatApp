@@ -30,7 +30,7 @@ class Chat extends React.Component{
             <GiftedChat
                     messages={this.state.messages}
                     onSend={(message) => {
-                        Backend.sendMessage(message);
+                        Backend.sendMessage(message,this.props.contacto);
                     }}
                     user={{
                       _id: Backend.getUid(),
@@ -47,7 +47,7 @@ class Chat extends React.Component{
                     messages: GiftedChat.append(previousState.messages, message),
                 };
             });
-        });
+        },this.props.name,this.props.contacto);
     }
 
     componentWillUnMount(){
