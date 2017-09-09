@@ -323,7 +323,8 @@ class Backend{
         this.imageRef = firebase.storage().ref('images');
     }
 
-    cargarCatologo(user, url, empresa, categoria, producto, imageName, medioPago){
+    cargarCatologo(user, url, empresa, categoria, producto, imageName, medioPago, precio, telefonoProveedor, mailProveedor, 
+                      medioEntrega,horarioAtencion){
         // let userNamePath = 'usuario/'+user.key+'/details/url';
         // firebase.database().ref(userNamePath).set(url);
         this.getCatalogoRef();
@@ -334,6 +335,11 @@ class Backend{
             imageName: imageName,
             producto: producto.toUpperCase(),
             medioPago:medioPago.toUpperCase(),
+            precio: precio, 
+            telefonoProveedor: telefonoProveedor, 
+            mailProveedor:mailProveedor.toUpperCase(), 
+            medioEntrega: medioEntrega.toUpperCase(),
+            horarioAtencion: horarioAtencion,
             createdAt: firebase.database.ServerValue.TIMESTAMP,
             createdUser: user.key,
         });
@@ -353,6 +359,11 @@ class Backend{
                                 producto: cat.producto.toUpperCase(),
                                 medioPago:cat.medioPago.toUpperCase(),
                                 imageName: cat.imageName,
+                                precio: cat.precio, 
+                                telefonoProveedor: cat.telefonoProveedor, 
+                                mailProveedor:cat.mailProveedor.toUpperCase(), 
+                                medioEntrega: cat.medioEntrega.toUpperCase(),
+                                horarioAtencion: cat.horarioAtencion,
                                 createdAt: new Date(cat.createdAt),
                                 createdUser: cat.createdUser,
                                 
@@ -375,13 +386,20 @@ class Backend{
                   .done()
     }
 
-    modificarCatalogo(user, url, empresa, categoria, producto, imageName, medioPago,catalogo){
+    modificarCatalogo(user, url, empresa, categoria, producto, imageName, medioPago,catalogo, precio, telefonoProveedor, mailProveedor, 
+                      medioEntrega,horarioAtencion){
+        console.log('mailProveedor: '+mailProveedor);
         var imagenUrlAux;
         var empresaAux;
         var categoriaAux;
         var imageNameAux;
         var productoAux;
         var medioPagoAux;
+        var precioAux; 
+        var telefonoProveedorAux;
+        var mailProveedorAux; 
+        var medioEntregaAux;
+        var horarioAtencionAux;
 
         if(categoria != catalogo.categoria)
             categoriaAux= categoria.toUpperCase()
@@ -413,6 +431,31 @@ class Backend{
         else
             productoAux= catalogo.producto.toUpperCase()
 
+        if(precio != catalogo.precio)
+            precioAux= precio
+        else
+            precioAux= catalogo.precio
+
+        if(telefonoProveedor != catalogo.telefonoProveedor)
+            telefonoProveedorAux= telefonoProveedor
+        else
+            telefonoProveedorAux= catalogo.telefonoProveedor
+
+        if(mailProveedor != catalogo.mailProveedor)
+            mailProveedorAux= mailProveedor.toUpperCase()
+        else
+            mailProveedorAux= catalogo.mailProveedor.toUpperCase()
+
+        if(medioEntrega != catalogo.medioEntrega)
+            medioEntregaAux= medioEntrega.toUpperCase()
+        else
+            medioEntregaAux= catalogo.medioEntrega.toUpperCase()
+
+        if(horarioAtencion != catalogo.horarioAtencion)
+            horarioAtencionAux= horarioAtencion
+        else
+            horarioAtencionAux= catalogo.horarioAtencion
+
         var catalogoAux={
             categoria:categoriaAux,
             createdAt:firebase.database.ServerValue.TIMESTAMP,
@@ -422,6 +465,11 @@ class Backend{
             imagenUrl:imagenUrlAux,
             medioPago:medioPagoAux,
             producto:productoAux,
+            precio:precioAux,
+            telefonoProveedor:telefonoProveedorAux,
+            mailProveedor:mailProveedorAux,
+            medioEntrega:medioEntregaAux,
+            horarioAtencion:horarioAtencionAux,
         }
                     
         var updates = {};

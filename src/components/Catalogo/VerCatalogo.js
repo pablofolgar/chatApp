@@ -132,6 +132,11 @@ export default class VerCatalogo extends React.Component{
                 imageName: cat.imageName,
                 producto: cat.producto.toUpperCase(),
                 medioPago: cat.medioPago.toUpperCase(),
+                precio: cat.precio, 
+                telefonoProveedor: cat.telefonoProveedor, 
+                mailProveedor:cat.mailProveedor.toUpperCase(), 
+                medioEntrega: cat.medioEntrega.toUpperCase(),
+                horarioAtencion: cat.horarioAtencion,
             });
              this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(items)
