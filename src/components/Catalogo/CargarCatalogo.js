@@ -10,6 +10,7 @@ import {
     Image,
     Platform,
     Alert,
+    ScrollView,
 } from 'react-native';
 
 import {
@@ -72,6 +73,12 @@ export default class CargarCatalogo extends React.Component{
             empresa: this.props.catalogo ? this.props.catalogo.empresa : '',
             producto: this.props.catalogo ? this.props.catalogo.producto : '',
             imageTimeStamp:null,
+            precio: this.props.catalogo ? this.props.catalogo.precio : '',
+            telefonoProveedor: this.props.catalogo ? this.props.catalogo.telefonoProveedor : '',
+            mailProveedor: this.props.catalogo ? this.props.catalogo.mailProveedor : '',
+            selectedMedioEntrega: this.props.catalogo ? this.props.catalogo.medioEntrega : ' ',
+            medioEntrega: ['SELECCIONAR MEDIO DE ENTREGA','ENTREGA EN CAPITAL', 'ENTREGA EN TODO EL PAIS', 'RETIRO EN DOMICILIO', 'OTRO'],
+            horarioAtencion: this.props.catalogo ? this.props.catalogo.horarioAtencion : '',
             };
     }
 
@@ -83,9 +90,12 @@ export default class CargarCatalogo extends React.Component{
         let medioPagoItems = this.state.medioPago.map( (s, i) => {
                 return <Picker.Item key={i} value={s} label={s} />
             });
+        let medioEntregaItems = this.state.medioEntrega.map( (s, i) => {
+                return <Picker.Item key={i} value={s} label={s} />
+            });
 
         return(
-            <View style={style.container}>
+            <ScrollView  style={style.container}> 
 
                 <Text>EMPRESA</Text>
                 <TextInput 
@@ -118,17 +128,43 @@ export default class CargarCatalogo extends React.Component{
                   }}
                   value= {this.state.producto}
                 />   
-            {/*
+
                 <Text>PRECIO</Text>
-                <TextInput></TextInput>
+                <TextInput 
+                  style={style.singleInputText}
+                  placeholder='"PRECIO"'
+                  onChangeText={ (text) => {
+                      this.setState({
+                          precio:text,
+                      })
+                  }}
+                  value= {this.state.precio}
+                />   
 
                 <Text>TELEFONO PROVEEDOR</Text>
-                <TextInput></TextInput>
+                <TextInput 
+                  style={style.singleInputText}
+                  placeholder='"TELEFONO PROVEEDOR"'
+                  onChangeText={ (text) => {
+                      this.setState({
+                          telefonoProveedor:text,
+                      })
+                  }}
+                  value= {this.state.telefonoProveedor}
+                />   
 
                 <Text>MAIL PROVEEDOR</Text>
-                <TextInput></TextInput>
+                <TextInput 
+                  style={style.singleInputText}
+                  placeholder='"MAIL PROVEEDOR"'
+                  onChangeText={ (text) => {
+                      this.setState({
+                          mailProveedor:text,
+                      })
+                  }}
+                  value= {this.state.mailProveedor}
+                />   
 
-            */}
                 <Text>IMAGEN</Text>
                 <View style={style.container}>
 
@@ -148,13 +184,26 @@ export default class CargarCatalogo extends React.Component{
                     mode="dialog">
                     {medioPagoItems}
                 </Picker>
-{/*
+
                 <Text>MEDIO DE ENTREGA</Text>
-                <TextInput></TextInput>
+               <Picker
+                    selectedValue={this.state.selectedMedioEntrega}
+                    onValueChange={ (medioEntrega) => {this.setState({selectedMedioEntrega:medioEntrega});} }
+                    mode="dialog">
+                    {medioEntregaItems}
+                </Picker>
 
                 <Text>HORARIO ATENCION</Text>
-                <TextInput></TextInput>
- */}
+                 <TextInput 
+                  style={style.singleInputText}
+                  placeholder='"HORARIO ATENCION"'
+                  onChangeText={ (text) => {
+                      this.setState({
+                          horarioAtencion:text,
+                      })
+                  }}
+                  value= {this.state.horarioAtencion}
+                />   
 
                 {renderIf(!this.props.catalogo, 
                   <ActionButton title="CREAR"
@@ -215,7 +264,7 @@ export default class CargarCatalogo extends React.Component{
                                           }
                   />
                 )}
-            </View>
+            </ScrollView>
         );
     }
 
@@ -270,7 +319,8 @@ export default class CargarCatalogo extends React.Component{
                     Backend.cargarCatologo(this.state.user,responseData,this.state.empresa,
                       this.state.selectedCategoria, 
                       this.state.producto,this.state.empresa+'_'+this.state.producto+'_'+this.state.imageTimeStamp+'.jpg',//Nombre de la foto subida
-                      this.state.selectedMedioPago)
+                      this.state.selectedMedioPago, this.state.precio, this.state.telefonoProveedor, this.state.mailProveedor, 
+                      this.state.selectedMedioEntrega,this.state.horarioAtencion)
                 })
                 .then(()=>{
                     this.limpiarCampos();
@@ -285,6 +335,7 @@ export default class CargarCatalogo extends React.Component{
       }
 
       modificarCatalogo(){
+        console.log(this.state.mailProveedor);
         if(this.state.avatarSource){
           if(this.state.path){
             //Si tiene seteada la variable path significa que cambio la imagen, entonces tengo que subirla y modificar el catalogo
@@ -293,7 +344,8 @@ export default class CargarCatalogo extends React.Component{
                 Backend.modificarCatalogo(this.state.user,responseData,this.state.empresa,
                   this.state.selectedCategoria, 
                   this.state.producto,this.state.empresa+'_'+this.state.producto+'_'+this.state.imageTimeStamp+'.jpg',//Nombre de la foto subida
-                  this.state.selectedMedioPago,this.props.catalogo)
+                  this.state.selectedMedioPago,this.props.catalogo, this.state.precio, this.state.telefonoProveedor, this.state.mailProveedor, 
+                      this.state.selectedMedioEntrega,this.state.horarioAtencion)
             })
             .done()
           }else{
@@ -302,7 +354,8 @@ export default class CargarCatalogo extends React.Component{
             Backend.modificarCatalogo(this.state.user,null,this.state.empresa,
                     this.state.selectedCategoria, 
                     this.state.producto,null,//Nombre de la foto subida
-                    this.state.selectedMedioPago,this.props.catalogo)
+                    this.state.selectedMedioPago,this.props.catalogo, this.state.precio, this.state.telefonoProveedor, this.state.mailProveedor, 
+                      this.state.selectedMedioEntrega,this.state.horarioAtencion)
           }
         }
       }
@@ -314,7 +367,12 @@ export default class CargarCatalogo extends React.Component{
             !this.state.producto ||
             !this.state.user ||
             !this.state.selectedCategoria||
-            !this.state.selectedMedioPago){
+            !this.state.selectedMedioPago||
+            !this.state.precio||
+            !this.state.telefonoProveedor||
+            !this.state.mailProveedor||
+            !this.state.selectedMedioEntrega||
+            !this.state.horarioAtencion){
             alert("DEBE COMPLETAR TODOS LOS CAMPOS");
             result = false;
         }
@@ -323,6 +381,7 @@ export default class CargarCatalogo extends React.Component{
 
     limpiarCampos(){
         this.setState({selectedMedioPago:'SELECCIONAR MEDIO DE PAGO',selectedCategoria:'SELECCIONAR CATEGORÍA',empresa:null,producto:null,
-                      avatarSource:  null,path: null,imageTimeStamp: null,})
+                      avatarSource:  null,path: null,imageTimeStamp: null,precio:null, telefonoProveedor:null, mailProveedor:null,
+                      selectedMedioEntrega:'SELECCIONAR MEDIO DE ENTREGA', horarioAtencion:null})
     }
  }
