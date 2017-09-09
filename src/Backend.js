@@ -327,10 +327,25 @@ class Backend{
         });
     }
 
-    guardarValoracion(user, puntaje){
+    guardarValoracion(user, puntaje,opinion){
         this.getUsuarioRef();
         var updates = {};
+
+        //PUNTAJE
         updates[user.key+'/puntaje/'] = puntaje;
+
+        //OPINIONES
+        if(opinion && opinion != ''){
+            var opinion={
+                            opinion:opinion,
+                            user: user._id,
+                        };
+            // Get a key for a new Post.
+            var newPostKey = firebase.database().ref('usuario').push().key;
+            
+            updates[user.key+'/opiniones/'+newPostKey] = opinion;
+        }
+
         this.usuarioRef.update(updates);
     }
     getUsuarioRef(){
