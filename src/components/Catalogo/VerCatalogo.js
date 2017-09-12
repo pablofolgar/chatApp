@@ -24,7 +24,7 @@ export default class VerCatalogo extends React.Component{
         this.state = {
                 user:this.props.user,
                 selectedCategoria: ' ',
-                categorias: ['SELECCIONAR CATEGORÍA','SALUD Y BIENESTAR', 'COSMETICA', 'LIBROS', 'ROPA', 'SERVICIOS PERSONALIZADOS','OTROS'],
+                categorias: ['SELECCIONAR RUBRO','SALUD Y BIENESTAR', 'COSMETICA', 'LIBROS', 'ROPA', 'SERVICIOS PERSONALIZADOS','OTROS'],
                 dataSource: new ListView.DataSource({
                     rowHasChanged: (row1, row2) => row1 !== row2}),
             };
@@ -44,7 +44,7 @@ export default class VerCatalogo extends React.Component{
         //     });
 
         return(
-            <View style={style.container}>
+            <ScrollView style={style.container}>
 
                 <View style={style.viewPicker}>
                 <Picker
@@ -56,7 +56,8 @@ export default class VerCatalogo extends React.Component{
                 </View>
 
 
-                <View style={style.storyView}>
+                
+                <View>
                     {renderIf(this.props.user.perfil==='ADMIN', 
                        <ListView dataSource={this.state.dataSource} renderRow={this._renderItemAdmin.bind(this)} enableEmptySections={true}/>
                     )}
@@ -65,7 +66,10 @@ export default class VerCatalogo extends React.Component{
                     )}
                 </View>
 
-            </View>
+             
+
+
+            </ScrollView>
         );
     }
 
@@ -78,7 +82,7 @@ export default class VerCatalogo extends React.Component{
                       {text: 'EDITAR', onPress: (text) => {
                                                             console.log('Editar'); 
                                                             this.setState({
-                                                                            selectedCategoria:'SELECCIONAR CATEGORÍA',
+                                                                            selectedCategoria:'SELECCIONAR RUBRO',
                                                                             dataSource: this.state.dataSource.cloneWithRows([]),
                                                                         });
                                                             Actions.cargarCatalogo({catalogo:item, user:this.state.user}); 

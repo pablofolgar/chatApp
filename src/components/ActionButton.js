@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
-const styles = require('./styles.js')
-const constants = styles.constants;
+const style = require('./styles.js')
+const constants = style.constants;
 const { StyleSheet, Text, View, TouchableHighlight} = ReactNative;
 
 class ActionButton extends Component {
   render() {
     return (
-      <View >
+      <View style={style.ActionView}>
         <TouchableHighlight
           underlayColor={constants.actionColor}
-          style={styles.action}
+          style={style.LoginTouchable}
           onPress={this.props.onPress}>
-          <Text style={styles.actionText}>{this.props.title}</Text>
+          <Text style={style.actionText}>{this.props.title}</Text>
         </TouchableHighlight>
       </View>
     );
