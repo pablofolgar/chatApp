@@ -126,6 +126,8 @@ export default class CrearEvento extends React.Component{
                     </View>
                   </View>
 
+
+                  {/*Tiene un <View> en ActionButton.js*/}
                   <ActionButton title="CREAR"
                       onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
                                       if(camposRequeridosOk){
@@ -134,7 +136,9 @@ export default class CrearEvento extends React.Component{
                                       }
 
                               }
-                      />
+                    />
+                    
+                      
                 </KeyboardAvoidingView>
 
               </ScrollView>
