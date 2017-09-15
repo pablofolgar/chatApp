@@ -11,6 +11,7 @@ import {
     Platform,
     Alert,
     ScrollView,
+    KeyboardAvoidingView,
 } from 'react-native';
 
 import {
@@ -67,7 +68,7 @@ export default class CargarCatalogo extends React.Component{
             selectedCategoria: this.props.catalogo? this.props.catalogo.categoria : ' ',
             categorias: ['SELECCIONAR CATEGORÍA','SALUD Y BIENESTAR', 'COSMETICA', 'LIBROS', 'ROPA', 'SERVICIOS PERSONALIZADOS','OTROS'],
             selectedMedioPago: this.props.catalogo ? this.props.catalogo.medioPago : ' ',
-            medioPago: ['SELECCIONAR MEDIO DE PAGO','EFECTIVO', 'TARJETA', 'MERCADO PAGO', 'OTRO'],
+            medioPago: ['MEDIOS DE PAGO','EFECTIVO', 'TARJETA', 'MERCADO PAGO', 'OTRO', 'VARIOS'],
             avatarSource: this.props.catalogo ? { uri: this.props.catalogo.imagenUrl } : null,
             path: null,
             empresa: this.props.catalogo ? this.props.catalogo.empresa : '',
@@ -77,7 +78,7 @@ export default class CargarCatalogo extends React.Component{
             telefonoProveedor: this.props.catalogo ? this.props.catalogo.telefonoProveedor : '',
             mailProveedor: this.props.catalogo ? this.props.catalogo.mailProveedor : '',
             selectedMedioEntrega: this.props.catalogo ? this.props.catalogo.medioEntrega : ' ',
-            medioEntrega: ['SELECCIONAR MEDIO DE ENTREGA','ENTREGA EN CAPITAL', 'ENTREGA EN TODO EL PAIS', 'RETIRO EN DOMICILIO', 'OTRO'],
+            medioEntrega: ['MEDIOS DE ENTREGA','ENTREGA EN CAPITAL', 'ENTREGA EN TODO EL PAIS', 'RETIRO EN DOMICILIO', 'OTRO'],
             horarioAtencion: this.props.catalogo ? this.props.catalogo.horarioAtencion : '',
             };
     }
@@ -96,42 +97,75 @@ export default class CargarCatalogo extends React.Component{
 
         return(
             <ScrollView  style={style.container}> 
+              <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} >
+                  
+              {/*EMPRESA*/}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    EMPRESA
+                  </Text>
+                </View>
+                {/*INPUT EMPRESA*/}
+                <View style={style.singleInputView}>
+                  <TextInput style={style.singleInputText}
+                    autoCapitalize="characters"
+                    placeholder='"EMPRESA"'
+                    onChangeText={ (text) => {
+                        this.setState({
+                            empresa:text,
+                        })
+                    }}
+                    value= {this.state.empresa}
+                  />    
+                </View>
 
-                <Text>EMPRESA</Text>
-                <TextInput 
-                  style={style.singleInputText}
-                  placeholder='"EMPRESA"'
-                  onChangeText={ (text) => {
-                      this.setState({
-                          empresa:text,
-                      })
-                  }}
-                  value= {this.state.empresa}
-                />    
+              {/*CATEGORÍA*/}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    CATEGORÍA
+                  </Text>
+                </View>
+                {/*PICKER CATEGORÍA*/}
+                <View style={style.viewPicker}>
+                  <Picker
+                      selectedValue={this.state.selectedCategoria}
+                      onValueChange={ (category) => {this.setState({selectedCategoria:category});} }
+                      mode="dialog">
+                      {categoryItems}
+                  </Picker>
+                </View>
 
-                <Text>CATEGORIA</Text>
-                <Picker
-                    selectedValue={this.state.selectedCategoria}
-                    onValueChange={ (category) => {this.setState({selectedCategoria:category});} }
-                    mode="dialog">
-                    {categoryItems}
-                </Picker>
+              {/*PRODUCTO*/}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    PRODUCTO
+                  </Text>
+                </View>
+                {/*INPUT PRODUCTO*/}
+                <View style={style.singleInputView}>
+                  <TextInput style={style.singleInputText}
+                    autoCapitalize="characters"
+                    placeholder='"PRODUCTO"'
+                    onChangeText={ (text) => {
+                        this.setState({
+                            producto:text,
+                        })
+                    }}
+                    value= {this.state.producto}
+                  />   
+                </View>
 
-                <Text>PRODUCTO</Text>
-                <TextInput 
-                  style={style.singleInputText}
-                  placeholder='"PRODUCTO"'
-                  onChangeText={ (text) => {
-                      this.setState({
-                          producto:text,
-                      })
-                  }}
-                  value= {this.state.producto}
-                />   
+              {/*PRECIO*/}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    PRECIO
+                  </Text>
+                </View>
 
-                <Text>PRECIO</Text>
-                <TextInput 
-                  style={style.singleInputText}
+                {/*INPUT PRECIO*/}
+                <View style={style.singleInputView}>
+                <TextInput style={style.singleInputText}
+                  autoCapitalize="characters"
                   placeholder='"PRECIO"'
                   onChangeText={ (text) => {
                       this.setState({
@@ -140,70 +174,128 @@ export default class CargarCatalogo extends React.Component{
                   }}
                   value= {this.state.precio}
                 />   
-
-                <Text>TELEFONO PROVEEDOR</Text>
-                <TextInput 
-                  style={style.singleInputText}
-                  placeholder='"TELEFONO PROVEEDOR"'
-                  onChangeText={ (text) => {
-                      this.setState({
-                          telefonoProveedor:text,
-                      })
-                  }}
-                  value= {this.state.telefonoProveedor}
-                />   
-
-                <Text>MAIL PROVEEDOR</Text>
-                <TextInput 
-                  style={style.singleInputText}
-                  placeholder='"MAIL PROVEEDOR"'
-                  onChangeText={ (text) => {
-                      this.setState({
-                          mailProveedor:text,
-                      })
-                  }}
-                  value= {this.state.mailProveedor}
-                />   
-
-                <Text>IMAGEN</Text>
-                <View style={style.container}>
-
-                      <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
-                        <View style={[style.avatar, style.avatarContainer, {marginBottom: 20}]}>
-                        { this.state.avatarSource === null ? <Text>Seleccione una foto</Text> :
-                          <Image style={style.avatar} source={this.state.avatarSource} />
-                        }
-                        </View>
-                      </TouchableOpacity>
                 </View>
 
-                <Text>MEDIOS DE PAGO</Text>
-                 <Picker
+              {/*TELEFONO PROVEEDOR*/}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    TELEFONO PROVEEDOR
+                  </Text>
+                </View>
+
+                {/*INPUT TELEFONO PROVEEDOR*/}
+                <View style={style.singleInputView}>
+                  <TextInput style={style.singleInputText}
+                    autoCapitalize="characters"
+                    placeholder='"TELEFONO PROVEEDOR"'
+                    onChangeText={ (text) => {
+                        this.setState({
+                            telefonoProveedor:text,
+                        })
+                    }}
+                    value= {this.state.telefonoProveedor}
+                  />   
+                </View>
+
+              {/*MAIL PROVEEDOR*/}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    MAIL PROVEEDOR
+                  </Text>
+                </View>
+
+                {/*INPUT MAIL PROVEEDOR*/}
+                <View style={style.singleInputView}>
+                  <TextInput style={style.singleInputText}
+                    autoCapitalize="characters"
+                    placeholder='"MAIL PROVEEDOR"'
+                    onChangeText={ (text) => {
+                        this.setState({
+                            mailProveedor:text,
+                        })
+                    }}
+                    value= {this.state.mailProveedor}
+                  />   
+                </View>
+
+              {/* IMAGEN */}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    IMAGEN
+                  </Text>
+                </View>
+
+                {/* SELECCIÓN DE IMAGEN */}
+                <View style={style.avatarView}>
+                  <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+                    <View style={[style.avatar, style.avatarContainer, {marginBottom: 20}]}>
+                      {this.state.avatarSource === null ? 
+                        <View>
+                          <Text style={[style.TituloIndicativoText, {alignSelf:'center'}]} >CARGAR</Text>
+                          <Text style={[style.TituloIndicativoText, {alignSelf:'center'}]} >IMAGEN</Text> 
+                        </View>
+                        :
+                        <Image style={style.avatar} source={this.state.avatarSource} />
+                      }
+                    </View>
+                  </TouchableOpacity>
+                </View>
+
+              {/* MEDIOS DE PAGO */}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    MEDIOS DE PAGO
+                  </Text>
+                </View>
+
+                {/*PICKER MEDIO DE PAGO*/}
+                <View style={style.viewPicker}>
+                  <Picker
                     selectedValue={this.state.selectedMedioPago}
                     onValueChange={ (medioPago) => {this.setState({selectedMedioPago:medioPago});} }
                     mode="dialog">
                     {medioPagoItems}
-                </Picker>
+                  </Picker>
+                </View>
 
-                <Text>MEDIO DE ENTREGA</Text>
-               <Picker
+              {/* MEDIOS DE ENTREGA */}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    MEDIOS DE ENTREGA
+                  </Text>
+                </View>
+
+                {/*PICKER MEDIO DE ENTREGA*/}
+                <View style={style.viewPicker}>
+                 <Picker
                     selectedValue={this.state.selectedMedioEntrega}
                     onValueChange={ (medioEntrega) => {this.setState({selectedMedioEntrega:medioEntrega});} }
                     mode="dialog">
                     {medioEntregaItems}
-                </Picker>
+                  </Picker>
+                </View>
 
-                <Text>HORARIO ATENCION</Text>
-                 <TextInput 
-                  style={style.singleInputText}
-                  placeholder='"HORARIO ATENCION"'
-                  onChangeText={ (text) => {
-                      this.setState({
-                          horarioAtencion:text,
-                      })
-                  }}
-                  value= {this.state.horarioAtencion}
-                />   
+              {/* HORARIO ATENCION */}
+                <View style={style.TituloIndicativoView}>
+                  <Text style={style.TituloIndicativoText}> 
+                    HORARIO ATENCION
+                  </Text>
+                </View>
+
+
+                {/*INPUT MAIL PROVEEDOR*/}
+                <View style={style.singleInputView}>
+                  <TextInput style={style.singleInputText}
+                    autoCapitalize="characters"
+                    placeholder='"HORARIO ATENCION"'
+                    onChangeText={ (text) => {
+                        this.setState({
+                            horarioAtencion:text,
+                        })
+                    }}
+                    value= {this.state.horarioAtencion}
+                  />   
+                </View>
 
                 {renderIf(!this.props.catalogo, 
                   <ActionButton title="CREAR"
@@ -217,28 +309,29 @@ export default class CargarCatalogo extends React.Component{
                   )}
 
                 {renderIf(this.props.catalogo,
-                  <ActionButton title="MODIFICAR"
-                                  onPress={() => {
-                                                  Alert.alert(
-                                                  'PARA MODIFICAR DEFINITIVAMENTE SU CATALOGO APRIETE "MODIFICAR"',
-                                                  null,
-                                                  [
-                                                    {text: 'VOLVER',  onPress: (t) => console.log('Cancel')},
-                                                    {text: 'MODIFICAR', onPress: (t) => {
-                                                                                        var camposRequeridosOk=this.validarCamposRequeridos();
-                                                                                        if(camposRequeridosOk){
-                                                                                          this.modificarCatalogo();
-                                                                                          Actions.verCatalogo({
-                                                                                                user:this.state.user,
-                                                                                            });
-                                                                                        }
-                                                                                    }
-                                                    }
-                                                  ],
-                                                  'plain-text'
-                                                  );
-                                                  }
-                                            }
+                  <ActionButton 
+                    title="MODIFICAR"
+                    onPress={() => {
+                      Alert.alert(
+                      'PARA MODIFICAR DEFINITIVAMENTE SU CATALOGO APRIETE "MODIFICAR"',
+                      null,
+                      [
+                        {text: 'VOLVER',  onPress: (t) => console.log('Cancel')},
+                        {text: 'MODIFICAR', onPress: (t) => {
+                                                            var camposRequeridosOk=this.validarCamposRequeridos();
+                                                            if(camposRequeridosOk){
+                                                              this.modificarCatalogo();
+                                                              Actions.verCatalogo({
+                                                                    user:this.state.user,
+                                                                });
+                                                            }
+                                                        }
+                        }
+                      ],
+                      'plain-text'
+                      );
+                      }
+                    }
                   />
                 )}
 
@@ -264,6 +357,7 @@ export default class CargarCatalogo extends React.Component{
                                           }
                   />
                 )}
+              </KeyboardAvoidingView>
             </ScrollView>
         );
     }

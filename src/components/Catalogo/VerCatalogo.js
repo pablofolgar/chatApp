@@ -59,7 +59,7 @@ export default class VerCatalogo extends React.Component{
                 
                 <View>
                     {renderIf(this.props.user.perfil==='ADMIN', 
-                       <ListView dataSource={this.state.dataSource} renderRow={this._renderItemAdmin.bind(this)} enableEmptySections={true}/>
+                        <ListView dataSource={this.state.dataSource} renderRow={this._renderItemAdmin.bind(this)} enableEmptySections={true}/>
                     )}
                     {renderIf(this.props.user.perfil!='ADMIN', 
                         <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} enableEmptySections={true}/>

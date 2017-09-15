@@ -92,8 +92,8 @@ export default class CrearEvento extends React.Component{
 
                   <View style={style.singleInputView}>
                     <TextInput 
-                        autoCapitalize="characters"
                         style={style.singleInputText}
+                        autoCapitalize="characters"
                         placeholder='BARRIO DEL EVENTO'
                         onChangeText={ (text) => {
                             this.setState({

@@ -367,6 +367,7 @@ var styles = StyleSheet.create({
     flex:1,
   },
 
+  //NOTIFICACIONES
   CatNotifView:{
     alignSelf:'center',
     flex:1,
@@ -422,27 +423,105 @@ var styles = StyleSheet.create({
   //SELECTS.
   viewPicker:{
     elevation:10,
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    marginBottom:10,
-    height:55,
+    marginTop:alto(2),
+    marginBottom:alto(1.5),
+    marginLeft:ancho(3),
+    marginRight:ancho(3),
+    height:alto(9),
     backgroundColor:'white',
     borderRadius:5,
-    borderWidth: 1,
-    borderColor:'grey',
+    borderWidth: 2,
+    borderColor:'black',
+
 
   },
+
+//----------CATALOGO----------
+  //LISTA DE ITEMS CATALOGOS
+  catalogoView:{
+    flex:1,
+    flexDirection:'column',
+    elevation:10,
+    backgroundColor:'#FFF', 
+    borderColor: 'red',
+/*    borderWidth: 2,*/
+    borderLeftWidth:2,
+    borderRightWidth:2,
+    borderTopWidth:3,
+    borderBottomWidth:3,
+    borderRadius:0,
+    marginTop:alto(1.5),
+/*    marginRight:ancho(3),
+    marginLeft:ancho(3),*/
+    marginBottom:alto(1.5),
+    height: alto(80),
+  },
+
+  //
+  catalogoInfoView:{
+    flex:1,
+    flexDirection:'row',
+  },
+
+  //TEXTO VIEW
+  catalogoTextSubView:{
+    flex:1,
+    justifyContent:'center',
+    borderBottomWidth:1,
+    borderColor:'black',
+    marginLeft:ancho(1),
+  },
+  
+  //INFORMACIÓN VIEW
+  catalogoInfoSubView:{
+    flex:2.3,
+    justifyContent:'center',
+    borderBottomWidth:1,
+    borderColor:'black',
+  },
+
+  //TEXTO TEXT
+  catalogoTextoText:{
+    fontSize:19,
+    color:'black',
+    fontWeight:'bold',
+  },  
+
+  //HEADER PRODUCTO INFO TEXT
+  catalogoProdInfoText:{
+    alignSelf:'center',
+    textDecorationLine:'underline',
+    fontSize:30,
+    color:'#ff0000',
+  },
+
+  //INFO TEXT
+  catalogoInfoText:{
+    fontSize:19,
+    color:'blue',
+    fontWeight:'bold',
+  },
+
+  //IMAGEN CATALOGO
+  imagenCatalogo:{
+    width: alto(30),
+    height: alto(30),
+    alignSelf:'center',
+    marginTop:alto(3),
+    marginBottom:alto(3),
+  },
+
+//----------FIN CATALOGO----------
 
   //TEXTO ARRIBA DE LA HISTORIA
   textTituloHistoria:{
     alignSelf:'center',
+    textDecorationLine:'underline',
     fontSize:27,
     fontWeight:'bold',
     color:'white',
     marginTop: 40,
     marginBottom:5,
-    textDecorationLine:'underline',
 
   },
 
@@ -490,11 +569,16 @@ var styles = StyleSheet.create({
   },
 
   //Styles para los componentes de la libreira Image picker usada para el catalogo
+  avatarView:{
+    alignSelf:'center',
+  },
+
   avatarContainer: {
-    borderColor: '#9B9B9B',
-    borderWidth: 1 / PixelRatio.get(),
+    /*borderColor: '#9B9B9B',*/
+    borderColor: '#FFF',
+    borderWidth: 5 / PixelRatio.get(),
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   avatar: {
     borderRadius: 75,
