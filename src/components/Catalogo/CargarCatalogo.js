@@ -26,6 +26,7 @@ import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import Backend from '../../Backend';
 import renderIf from './../RenderIf';
+import Validaciones from './../Validaciones.js';
 
 const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;  
@@ -469,8 +470,35 @@ export default class CargarCatalogo extends React.Component{
             !this.state.horarioAtencion){
             alert("DEBE COMPLETAR TODOS LOS CAMPOS");
             result = false;
+        }else{
+            result = this.validarTiposDeDatos();
         }
         return result;
+    }
+
+    validarTiposDeDatos(){
+      var result = true;
+      if(!Validaciones.validateEmail(this.state.mailProveedor)){
+        alert("EL CAMPO MAIL PROVEEDOR ES INVALIDO");
+         return false;
+      }
+      if(!Validaciones.validarDigitos(this.state.precio)){
+        alert("EL CAMPO PRECIO ES INVALIDO");
+         return false;
+      }
+      if(!Validaciones.validarLetras(this.state.empresa)){
+        alert("EL CAMPO EMPRESA ES INVALIDO");
+         return false;
+      }
+      if(!Validaciones.validarLetras(this.state.producto)){
+        alert("EL CAMPO PRODUCTO ES INVALIDO");
+         return false;
+      }
+      if(!Validaciones.validarTelefono(this.state.telefonoProveedor)){
+        alert("EL CAMPO TELEFONO PROVEEDOR ES INVALIDO");
+         return false;
+      }
+      return result;
     }
 
     limpiarCampos(){
@@ -478,4 +506,6 @@ export default class CargarCatalogo extends React.Component{
                       avatarSource:  null,path: null,imageTimeStamp: null,precio:null, telefonoProveedor:null, mailProveedor:null,
                       selectedMedioEntrega:'SELECCIONAR MEDIO DE ENTREGA', horarioAtencion:null})
     }
+
+    
  }
