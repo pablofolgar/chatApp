@@ -26,6 +26,7 @@ import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import Backend from '../../Backend';
 import renderIf from './../RenderIf';
+import Validaciones from './../Validaciones.js';
 
 const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;  
@@ -79,7 +80,8 @@ export default class CargarCatalogo extends React.Component{
             mailProveedor: this.props.catalogo ? this.props.catalogo.mailProveedor : '',
             selectedMedioEntrega: this.props.catalogo ? this.props.catalogo.medioEntrega : ' ',
             medioEntrega: ['MEDIOS DE ENTREGA','ENTREGA EN CAPITAL', 'ENTREGA EN TODO EL PAIS', 'RETIRO EN DOMICILIO', 'OTRO'],
-            horarioAtencion: this.props.catalogo ? this.props.catalogo.horarioAtencion : '',
+            selectedHorario: this.props.catalogo ? this.props.catalogo.horarioAtencion : '',
+            horario: ['SELECCIONAR HORARIO','9 a 12', '12 a 15', '15 a 18'],
             };
     }
 
@@ -92,6 +94,9 @@ export default class CargarCatalogo extends React.Component{
                 return <Picker.Item key={i} value={s} label={s} />
             });
         let medioEntregaItems = this.state.medioEntrega.map( (s, i) => {
+                return <Picker.Item key={i} value={s} label={s} />
+            });
+        let horarioItems = this.state.horario.map( (s, i) => {
                 return <Picker.Item key={i} value={s} label={s} />
             });
 
@@ -283,18 +288,14 @@ export default class CargarCatalogo extends React.Component{
                 </View>
 
 
-                {/*INPUT MAIL PROVEEDOR*/}
-                <View style={style.singleInputView}>
-                  <TextInput style={style.singleInputText}
-                    autoCapitalize="characters"
-                    placeholder='"HORARIO ATENCION"'
-                    onChangeText={ (text) => {
-                        this.setState({
-                            horarioAtencion:text,
-                        })
-                    }}
-                    value= {this.state.horarioAtencion}
-                  />   
+                {/*PICKER HORARIO ATENCION*/}
+                <View style={style.viewPicker}>
+                  <Picker
+                      selectedValue={this.state.selectedHorario}
+                      onValueChange={ (horario) => {this.setState({selectedHorario:horario});} }
+                      mode="dialog">
+                      {horarioItems}
+                  </Picker>
                 </View>
 
                 {renderIf(!this.props.catalogo, 
@@ -414,7 +415,7 @@ export default class CargarCatalogo extends React.Component{
                       this.state.selectedCategoria, 
                       this.state.producto,this.state.empresa+'_'+this.state.producto+'_'+this.state.imageTimeStamp+'.jpg',//Nombre de la foto subida
                       this.state.selectedMedioPago, this.state.precio, this.state.telefonoProveedor, this.state.mailProveedor, 
-                      this.state.selectedMedioEntrega,this.state.horarioAtencion)
+                      this.state.selectedMedioEntrega,this.state.selectedHorario)
                 })
                 .then(()=>{
                     this.limpiarCampos();
@@ -439,7 +440,7 @@ export default class CargarCatalogo extends React.Component{
                   this.state.selectedCategoria, 
                   this.state.producto,this.state.empresa+'_'+this.state.producto+'_'+this.state.imageTimeStamp+'.jpg',//Nombre de la foto subida
                   this.state.selectedMedioPago,this.props.catalogo, this.state.precio, this.state.telefonoProveedor, this.state.mailProveedor, 
-                      this.state.selectedMedioEntrega,this.state.horarioAtencion)
+                      this.state.selectedMedioEntrega,this.state.selectedHorario)
             })
             .done()
           }else{
@@ -449,7 +450,7 @@ export default class CargarCatalogo extends React.Component{
                     this.state.selectedCategoria, 
                     this.state.producto,null,//Nombre de la foto subida
                     this.state.selectedMedioPago,this.props.catalogo, this.state.precio, this.state.telefonoProveedor, this.state.mailProveedor, 
-                      this.state.selectedMedioEntrega,this.state.horarioAtencion)
+                      this.state.selectedMedioEntrega,this.state.selectedHorario)
           }
         }
       }
@@ -466,16 +467,45 @@ export default class CargarCatalogo extends React.Component{
             !this.state.telefonoProveedor||
             !this.state.mailProveedor||
             !this.state.selectedMedioEntrega||
-            !this.state.horarioAtencion){
+            !this.state.selectedHorario){
             alert("DEBE COMPLETAR TODOS LOS CAMPOS");
             result = false;
+        }else{
+            result = this.validarTiposDeDatos();
         }
         return result;
+    }
+
+    validarTiposDeDatos(){
+      var result = true;
+      if(!Validaciones.validateEmail(this.state.mailProveedor)){
+        alert("EL CAMPO MAIL PROVEEDOR ES INVALIDO");
+         return false;
+      }
+      if(!Validaciones.validarDigitos(this.state.precio)){
+        alert("EL CAMPO PRECIO ES INVALIDO");
+         return false;
+      }
+      if(!Validaciones.validarLetras(this.state.empresa)){
+        alert("EL CAMPO EMPRESA ES INVALIDO");
+         return false;
+      }
+      if(!Validaciones.validarLetras(this.state.producto)){
+        alert("EL CAMPO PRODUCTO ES INVALIDO");
+         return false;
+      }
+      if(!Validaciones.validarTelefono(this.state.telefonoProveedor)){
+        alert("EL CAMPO TELEFONO PROVEEDOR ES INVALIDO");
+         return false;
+      }
+      return result;
     }
 
     limpiarCampos(){
         this.setState({selectedMedioPago:'SELECCIONAR MEDIO DE PAGO',selectedCategoria:'SELECCIONAR CATEGORÍA',empresa:null,producto:null,
                       avatarSource:  null,path: null,imageTimeStamp: null,precio:null, telefonoProveedor:null, mailProveedor:null,
-                      selectedMedioEntrega:'SELECCIONAR MEDIO DE ENTREGA', horarioAtencion:null})
+                      selectedMedioEntrega:'SELECCIONAR MEDIO DE ENTREGA', selectedHorario:'SELECCIONAR HORARIO'})
     }
+
+    
  }
