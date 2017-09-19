@@ -46,31 +46,33 @@ class Home extends React.Component{
 
                 <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={700} >
 
-                    <View>
+                    <View style={style.HomeContainer}>
 
-                        <View>
-
-                            <View>
-                                <Text style={style.tituloInicio}>
+                            {/*TÍTULO "HUELLAS EN RED" */}
+                            <View style={style.HomeTitleView}>
+                                <Text style={style.HomeTitleText}>
                                     HUELLAS {'\n'} EN RED
                                 </Text>
                             </View>
 
+                            {/*LOGO*/}
                             <View style={style.logoImageView}>
                                 <Image source={require('./imagenes/huellas2.jpg')} style={style.logoImage}/>
                             </View>
 
-                         </View>
-
-                         <View >
+                        {/* RUEDITA DEL LOADING
+                            <View >
                             <ActivityIndicator 
                                 animating={this.state.spinner}
                                 size={50}
                                 color='black'
                             />
-                         </View>
+                         </View>*/}
 
-                        <View>
+                        {/*BLOQUE DE INGRESO*/}
+                        <View style={style.LoginBlockView}>
+
+                            {/*INPUT INGRESE USUARIO*/}
                             <View  style={style.singleInputView}>
                                 <TextInput 
                                 style={style.singleInputText}
@@ -85,27 +87,59 @@ class Home extends React.Component{
                                 />
                             </View>
 
-                            <View>
-                                <ActionButton 
-                                    title="ENTRAR"
-                                    onPress={() => {
-                                        if(this.state.name===''){
-                                            Alert.alert(
-                                              'CAMPO OBLIGATORIO',
-                                              'DEBE INGRESAR SU USUARIO PARA COMENZAR.',
-                                              [
-                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
-                                              ],
-                                              { cancelable: false }
-                                            )
-                                        }else{
-                                            this.cargarDatosUsuarioLogueado();
-                                            this.setState({spinner:true});
-                                        }
-                                    }}/>
+                            {/*BOTÓN ENTRAR*/}
+                            {/*Tiene un <View> en ActionButton.js. Viene el componente completo.*/}
+                            <ActionButton 
+                                title="ENTRAR"
+                                onPress={() => {
+                                    if(this.state.name===''){
+                                        Alert.alert(
+                                          'CAMPO OBLIGATORIO',
+                                          'DEBE INGRESAR SU USUARIO PARA COMENZAR.',
+                                          [
+                                            {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                          ],
+                                          { cancelable: false }
+                                        )
+                                    }else{
+                                        this.cargarDatosUsuarioLogueado();
+                                        
+                                    }
+                                }}/>
                 
-                            </View>
                         </View>
+
+
+                        {/*BLOQUE FINAL DE OPCIONES: REGISTRO Y RECUPERAR CLAVE*/}
+                        <View style={style.BloqueSubIngreso}>
+
+                            {/*BOTÓN REGISTRO*/}
+                            <View style={style.ButtonRegistrese}>
+                                <TouchableOpacity>
+                                    <Text style={style.TextoRegistrese}>
+                                        REGÍSTRESE AQUÍ
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            {/*SEPARACIÓN*/}
+                            <View style={style.Separador}>
+                                <Text style={style.TextoSeparador}>
+                                    |
+                                </Text>
+                            </View>
+
+                            {/*BOTÓN RECUPERAR CONTRASEÑA*/}
+                            <View style={style.ButtonContrasena}>
+                                <TouchableOpacity>
+                                    <Text style={style.TextoContrasena}>
+                                        RECUPERAR CLAVE
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+
                     </View>
 
 

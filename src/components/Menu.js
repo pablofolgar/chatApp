@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, FlatList, StyleSheet, Text, View} from 'react-native';
 import {
     Actions,
 } from 'react-native-router-flux';
@@ -13,7 +13,7 @@ class Menu extends React.Component{
 
     render(){
         return(
-            <View style={style.container}>
+            <ScrollView style={style.container}>
                 <FlatList
 
                     data={[
@@ -60,7 +60,7 @@ class Menu extends React.Component{
                         </View>
                     }
                 />
-            </View>
+            </ScrollView>
         );
     }
 }
