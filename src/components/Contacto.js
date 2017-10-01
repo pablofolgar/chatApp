@@ -27,12 +27,13 @@ class Contacto extends React.Component{
 
                         renderItem={
                             ({item}) =>
+
                             <View style={style.ChatUserView}>
                                 <Text style={style.ChatUserText}
                                 onPress={() => {
-                                    Actions.chat({user:this.state.user,});}}>
-                                    {item.key}
-                                 </Text>
+                                Actions.chat({name:this.state.name,contacto:item.key});}}>
+                                {item.key}
+                                </Text>
                             </View>
                         }
 
