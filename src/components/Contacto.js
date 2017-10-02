@@ -31,7 +31,7 @@ class Contacto extends React.Component{
                             <View style={style.ChatUserView}>
                                 <Text style={style.ChatUserText}
                                 onPress={() => {
-                                Actions.chat({name:this.state.name,contacto:item.key});}}>
+                                Actions.chat({user:this.state.user,contacto:item.key});}}>
                                 {item.key}
                                 </Text>
                             </View>

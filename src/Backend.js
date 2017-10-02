@@ -72,9 +72,9 @@ class Backend{
         for(let i = 0; i < message.length; i++){
             this.messageRef.push({
                 text: message[i].text.toUpperCase(),
-                user: message[i].user.toUpperCase(),
+                user: message[i].user,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
-                para:para,
+                para:para.toUpperCase()
             });
         }
     }
