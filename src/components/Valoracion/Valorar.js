@@ -43,22 +43,53 @@ export default class Valorar extends React.Component {
     return (
       <ScrollView  style={style.container}> 
 
-      
-        <Text style={style.welcome}>
-          EL PARTICIPANTE {this.state.userValorar.name} 
-        </Text>
-        <Text style={style.instructions}>
-          TIENE UNA VALORACIÓN de {this.state.userValorar.puntaje} ESTRELLAS
-        </Text>
-        <Text style={style.instructions}>
-          USTED LE ESTA ASIGNANDO {this.state.generalStarCount} ESTRELLAS
-        </Text>
-        <StarRating
-          disabled={false}
-          maxStars={5}
-          rating={Number(this.state.generalStarCount)}
-          selectedStar={(rating) => this.onGeneralStarRatingPress(rating)}
-        />
+        {/*BLOQUE DE VALORACIÓN*/}
+        <View style={style.valoracionView}>
+
+          {/*NAME VIEW*/}
+          <View style={style.nameView}>
+            <Text style={style.nameText}>
+              {this.state.userValorar.name} 
+            </Text>
+          </View>
+
+          {/*STARS VIEW*/}
+          <View style={style.starsView}>
+            <StarRating
+              disabled={false}
+              maxStars={5}
+              starColor={'#ccac00'}
+              emptyStarColor={'#ccac00'}
+              starSize={40}
+              rating={Number(this.state.generalStarCount)}
+              selectedStar={(rating) => this.onGeneralStarRatingPress(rating)}
+            />
+          </View>
+        </View>
+
+        <View style={style.valoracionView2}>
+          <View style={style.puntajeView}>
+            <Text style={style.puntajeText}>
+              USTED LE DA:
+            </Text>            
+            <View style={style.espacio}>
+            </View>
+            <Text style={style.puntajeValor}>
+              {this.state.generalStarCount} ★
+            </Text>
+          </View>
+
+          <View style={style.puntajeView2}>
+            <Text style={style.puntajeText}>
+              VALORACIÓN TOTAL:
+            </Text>
+            <View style={style.espacio}>
+            </View>
+            <Text style={style.puntajeValor}>
+               {this.state.userValorar.puntaje} ★
+            </Text>
+          </View>
+        </View>
 
         <View>
             <Text style={style.textTituloHistoria}>
@@ -80,7 +111,7 @@ export default class Valorar extends React.Component {
             />
         </View>
 
-        <ActionButton title="GUARDAR VALORACIÓN"
+        <ActionButton title="VALORAR"
                                   onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
                                                    if(camposRequeridosOk){
                                                         this.guardarValoracion();
