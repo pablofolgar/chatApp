@@ -26,7 +26,8 @@ export default class Valorar extends React.Component {
     super(props);
     this.state = {
       userValorar:this.props.userValorar.user,
-      generalStarCount: this.props.userValorar.user ? this.props.userValorar.user.puntaje : 0,
+      //El usuario se carga sin el campo puntaje, por lo cual la primera vez no tiene valor, es undefine
+      generalStarCount: this.props.userValorar.user && (typeof this.props.userValorar.user.puntaje !== 'undefined')  ? this.props.userValorar.user.puntaje : 0,
       user:this.props.user,
       opinion:'',
       text:'',
@@ -75,7 +76,7 @@ export default class Valorar extends React.Component {
             <View style={style.espacio}>
             </View>
             <Text style={style.puntajeValor}>
-              {this.state.generalStarCount} ★
+              {this.state.generalStarCount != 0 ? this.state.generalStarCount.toFixed(2) : 0} ★
             </Text>
           </View>
 
@@ -86,7 +87,7 @@ export default class Valorar extends React.Component {
             <View style={style.espacio}>
             </View>
             <Text style={style.puntajeValor}>
-               {this.state.userValorar.puntaje} ★
+               {(typeof this.props.userValorar.user.puntaje !== 'undefined') ? this.state.userValorar.puntaje.toFixed(2) : 0} ★
             </Text>
           </View>
         </View>
@@ -128,9 +129,17 @@ export default class Valorar extends React.Component {
         var result = true;
         if(
             !this.state.generalStarCount ||
-            this.state.generalStarCount === 0 
+            this.state.generalStarCount === 0
             ){
             alert("DEBE COMPLETAR TODOS LOS CAMPOS");
+            result = false;
+        }
+        if (this.state.opinion.length > 0 &&
+              this.state.opinion.replace(/\n/g, '').length === 0 
+            //Si el campo opinion tiene longitud > 0 y despues de sacarle las lineas en blanco
+            //tiene longitud = 0 quiere decir que eran solo lineas en blanco
+            ){
+            alert("NO SE PUEDE COMPLETAR LA OPINIÓN CON LÍNEAS EN BLANCO");
             result = false;
         }
         return result;
@@ -145,8 +154,13 @@ export default class Valorar extends React.Component {
           {
             text: 'GUARDAR',
             onPress: (t) => {
-              var puntaje = Number(this.state.userValorar.puntaje) === 0 ?  Number(this.state.generalStarCount) : Number(((this.state.generalStarCount+this.state.userValorar.puntaje)/2))
-              Backend.guardarValoracion(this.state.userValorar,puntaje,this.state.opinion);
+              var puntaje;
+              if( (typeof this.props.userValorar.user.puntaje === 'undefined') ||  Number(this.state.userValorar.puntaje) === 0 ){
+                puntaje  = Number(this.state.generalStarCount);
+              }else{
+                puntaje  = Number((this.state.generalStarCount+this.state.userValorar.puntaje)/2);
+              }
+              Backend.guardarValoracion(this.state.userValorar,puntaje,this.state.opinion.replace(/\n/g, ''));
               Actions.verUsuarioValoracion({user:this.state.user,});
             }
           },
