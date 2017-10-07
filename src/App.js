@@ -16,6 +16,8 @@ import Perfil from './components/Perfil/CrearPerfil';
 import Catalogo from './components/Catalogo/Catalogo';
 import VerCatalogo from './components/Catalogo/VerCatalogo';
 import CargarCatalogo from './components/Catalogo/CargarCatalogo';
+import Valorar from './components/Valoracion/Valorar';
+import VerUsuarioValoracion from './components/Valoracion/VerUsuariosParaValorar';
 
 import {
     Platform
@@ -47,6 +49,8 @@ class App extends React.Component{
                     <Scene key='catalogo' component={Catalogo} title='CATALOGO'/>
                     <Scene key='verCatalogo' component={VerCatalogo} title='VER CATALOGO'/>
                     <Scene key='cargarCatalogo' component={CargarCatalogo} title='CARGAR CATALOGO'/>
+                    <Scene key='valorar' component={Valorar} title='VALORACIÓN'/>
+                    <Scene key='verUsuarioValoracion' component={VerUsuarioValoracion} title='VALORACIONES'/>
                 </Scene>
             </Router>
         );
