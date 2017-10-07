@@ -8,13 +8,27 @@ class ListItem extends Component {
   render() {
     return (
       <TouchableHighlight onPress={this.props.onPress}>
-        <View style={style.CatNotifView}>
-          <Text style={style.DataNotifText}>NOMBRE:{this.props.item.user.name}</Text>
-          <StarRating
-            disabled={true}
-            maxStars={5}
-            rating={Number(this.props.item.user.puntaje)}
-        />
+        {/*BLOQUE DE VALORACIÓN*/}
+        <View style={style.valoracionView}>
+        
+          {/*NAME VIEW*/}
+          <View style={style.nameView}>
+            <Text style={style.nameText}>
+              {this.props.item.user.name}
+            </Text>
+          </View>
+
+          {/*STARS VIEW*/}
+          <View style={style.starsView}>
+            <StarRating
+              disabled={true}
+              maxStars={5}
+              starColor={'#ccac00'}
+              emptyStarColor={'#ccac00'}
+              starSize={40}
+              rating={Number(this.props.item.user.puntaje)}
+            />
+          </View>
         </View>
       </TouchableHighlight>
     );

@@ -26,7 +26,8 @@ export default class Valorar extends React.Component {
     super(props);
     this.state = {
       userValorar:this.props.userValorar.user,
-      generalStarCount: this.props.userValorar.user ? this.props.userValorar.user.puntaje : 0,
+      //El usuario se carga sin el campo puntaje, por lo cual la primera vez no tiene valor, es undefine
+      generalStarCount: this.props.userValorar.user && (typeof this.props.userValorar.user.puntaje !== 'undefined')  ? this.props.userValorar.user.puntaje : 0,
       user:this.props.user,
       opinion:'',
       text:'',
@@ -43,22 +44,53 @@ export default class Valorar extends React.Component {
     return (
       <ScrollView  style={style.container}> 
 
-      
-        <Text style={style.welcome}>
-          EL PARTICIPANTE {this.state.userValorar.name} 
-        </Text>
-        <Text style={style.instructions}>
-          TIENE UNA VALORACIÓN de {this.state.userValorar.puntaje} ESTRELLAS
-        </Text>
-        <Text style={style.instructions}>
-          USTED LE ESTA ASIGNANDO {this.state.generalStarCount} ESTRELLAS
-        </Text>
-        <StarRating
-          disabled={false}
-          maxStars={5}
-          rating={Number(this.state.generalStarCount)}
-          selectedStar={(rating) => this.onGeneralStarRatingPress(rating)}
-        />
+        {/*BLOQUE DE VALORACIÓN*/}
+        <View style={style.valoracionView}>
+
+          {/*NAME VIEW*/}
+          <View style={style.nameView}>
+            <Text style={style.nameText}>
+              {this.state.userValorar.name} 
+            </Text>
+          </View>
+
+          {/*STARS VIEW*/}
+          <View style={style.starsView}>
+            <StarRating
+              disabled={false}
+              maxStars={5}
+              starColor={'#ccac00'}
+              emptyStarColor={'#ccac00'}
+              starSize={40}
+              rating={Number(this.state.generalStarCount)}
+              selectedStar={(rating) => this.onGeneralStarRatingPress(rating)}
+            />
+          </View>
+        </View>
+
+        <View style={style.valoracionView2}>
+          <View style={style.puntajeView}>
+            <Text style={style.puntajeText}>
+              USTED LE DA:
+            </Text>            
+            <View style={style.espacio}>
+            </View>
+            <Text style={style.puntajeValor}>
+              {this.state.generalStarCount != 0 ? this.state.generalStarCount.toFixed(2) : 0} ★
+            </Text>
+          </View>
+
+          <View style={style.puntajeView2}>
+            <Text style={style.puntajeText}>
+              VALORACIÓN TOTAL:
+            </Text>
+            <View style={style.espacio}>
+            </View>
+            <Text style={style.puntajeValor}>
+               {(typeof this.props.userValorar.user.puntaje !== 'undefined') ? this.state.userValorar.puntaje.toFixed(2) : 0} ★
+            </Text>
+          </View>
+        </View>
 
         <View>
             <Text style={style.textTituloHistoria}>
@@ -80,7 +112,7 @@ export default class Valorar extends React.Component {
             />
         </View>
 
-        <ActionButton title="GUARDAR VALORACIÓN"
+        <ActionButton title="VALORAR"
                                   onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
                                                    if(camposRequeridosOk){
                                                         this.guardarValoracion();
@@ -97,9 +129,17 @@ export default class Valorar extends React.Component {
         var result = true;
         if(
             !this.state.generalStarCount ||
-            this.state.generalStarCount === 0 
+            this.state.generalStarCount === 0
             ){
             alert("DEBE COMPLETAR TODOS LOS CAMPOS");
+            result = false;
+        }
+        if (this.state.opinion.length > 0 &&
+              this.state.opinion.replace(/\n/g, '').length === 0 
+            //Si el campo opinion tiene longitud > 0 y despues de sacarle las lineas en blanco
+            //tiene longitud = 0 quiere decir que eran solo lineas en blanco
+            ){
+            alert("NO SE PUEDE COMPLETAR LA OPINIÓN CON LÍNEAS EN BLANCO");
             result = false;
         }
         return result;
@@ -114,8 +154,13 @@ export default class Valorar extends React.Component {
           {
             text: 'GUARDAR',
             onPress: (t) => {
-              var puntaje = Number(this.state.userValorar.puntaje) === 0 ?  Number(this.state.generalStarCount) : Number(((this.state.generalStarCount+this.state.userValorar.puntaje)/2))
-              Backend.guardarValoracion(this.state.userValorar,puntaje,this.state.opinion);
+              var puntaje;
+              if( (typeof this.props.userValorar.user.puntaje === 'undefined') ||  Number(this.state.userValorar.puntaje) === 0 ){
+                puntaje  = Number(this.state.generalStarCount);
+              }else{
+                puntaje  = Number((this.state.generalStarCount+this.state.userValorar.puntaje)/2);
+              }
+              Backend.guardarValoracion(this.state.userValorar,puntaje,this.state.opinion.replace(/\n/g, ''));
               Actions.verUsuarioValoracion({user:this.state.user,});
             }
           },

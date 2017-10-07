@@ -98,6 +98,8 @@ var styles = StyleSheet.create({
     marginTop:tool.ratio_Y * alto(4.6),    
   },
 
+  //-------------PAG INICIO-------------
+
   //TÍTULO "HUELLAS EN RED" TEXTO
   HomeTitleText:{
     fontSize:alto(7),
@@ -134,6 +136,8 @@ var styles = StyleSheet.create({
   //LOGIN BLOCK
   LoginBlockView:{
   }, 
+
+//------------- FIN PAG INICIO-------------
 
   //SINGLE INPUT VIEW
   singleInputView:{
@@ -512,6 +516,95 @@ var styles = StyleSheet.create({
   },
 
 //----------FIN CATALOGO----------
+
+//----------VALORACIÓN----------
+
+  valoracionView:{
+    flex:1,
+    flexDirection:'column',
+    elevation:10,
+    backgroundColor:'#FFF', 
+    borderColor: 'black',
+    borderWidth: 2,
+    borderRadius:15,
+    marginTop:alto(1.5),
+    marginRight:ancho(6),
+    marginLeft:ancho(6),
+    marginBottom:alto(1.5),
+    height: 120,
+  },
+
+  nameView:{
+    flex: 1,
+  },
+
+  nameText:{
+    alignSelf:'center',
+    textDecorationLine:'underline',
+    fontSize:24,
+    fontWeight:'bold',
+    color:'#886800',
+  },
+
+  starsView:{
+    flex: 1.3,
+    /*alignItems:'center',*/
+    marginRight: Math.pow(tool.ratio_X,2) * 62,
+    marginLeft: Math.pow(tool.ratio_X,2) *62,
+  },
+
+  valoracionView2:{
+    flex:1,
+    flexDirection:'column',
+    elevation:10,
+    backgroundColor:'#FFF', 
+    borderColor: 'black',
+    borderWidth: 2,
+    borderRadius:15,
+    marginTop:alto(0.5),
+    marginRight:ancho(6),
+    marginLeft:ancho(6),
+    marginBottom:-30,
+    height: 95,
+  },
+
+  puntajeView:{
+    flex:1,
+    flexDirection:'row',
+    marginLeft:ancho(3),
+    marginRight:ancho(3),
+  },  
+
+  puntajeView2:{
+    flex:1.2,
+    flexDirection:'row',
+    marginLeft:ancho(3),
+    marginRight:ancho(3),
+  },
+
+  puntajeText:{
+    fontSize: 18,
+    color: 'black',
+    textAlignVertical:'center',
+    textAlign:'center',
+    fontWeight:'bold',
+  },    
+
+  puntajeValor:{
+    fontSize: 18,
+    color: '#886800',
+    textAlignVertical:'center',
+    textAlign:'center',
+
+  },
+
+  espacio:{
+    marginLeft: ancho(2),
+  },
+
+//----------FIN VALORACIÓN----------
+
+
 
   //TEXTO ARRIBA DE LA HISTORIA
   textTituloHistoria:{

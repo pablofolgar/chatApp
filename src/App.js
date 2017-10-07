@@ -50,7 +50,7 @@ class App extends React.Component{
                     <Scene key='verCatalogo' component={VerCatalogo} title='VER CATALOGO'/>
                     <Scene key='cargarCatalogo' component={CargarCatalogo} title='CARGAR CATALOGO'/>
                     <Scene key='valorar' component={Valorar} title='VALORACIÓN'/>
-                    <Scene key='verUsuarioValoracion' component={VerUsuarioValoracion} title='USUARIOS A VALORAR'/>
+                    <Scene key='verUsuarioValoracion' component={VerUsuarioValoracion} title='VALORACIONES'/>
                 </Scene>
             </Router>
         );
