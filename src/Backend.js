@@ -103,7 +103,7 @@ class Backend{
         for(let i = 0; i < message.length; i++){
             this.messageRef.push({
                 text: message[i].text.toUpperCase(),
-                user: message[i].user.toUpperCase(),
+                user: message[i].user,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 para:para.toUpperCase()
             });
@@ -249,12 +249,16 @@ class Backend{
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
         });
-        Actions.menu();
+        this.buscarUsuarioLogueado((usuario)=>{
+                       Actions.menu({
+                            user:usuario,
+                        });
+                } );
     }
 
     buscarUsuarioLogueado(callback){//,name){
         this.getUsuarioRef();
-        this.usuarioRef.orderByChild("_id").equalTo(this.uid).limitToLast(20).once('value',function(snapshot){
+        this.usuarioRef.orderByChild("_id").equalTo(this.uid).once('value',function(snapshot){
             if(snapshot.hasChildren()){
                 snapshot.forEach(function(childSnapshot) {
                 const user = childSnapshot.val();
@@ -401,37 +405,6 @@ class Backend{
     closePerfil(){
         this.close(this.usuarioRef);
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Desde aca se escribe lo referido a los centros
-    //Guardar Centros
-    agregarCentro(){
-        this.getUsuarioRef();
-        this.usuarioRef.push({
-                _id: this.getUid(),
-                name: 'CENTRO1',
-                voluntarios: ['JUAN','PABLO'],
-                actividades: [''],
-                perfil: 'CENTRO',
-                barrio: 'WILDE',
-                createdAt: firebase.database.ServerValue.TIMESTAMP,
-        });
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Desde aca se escribe lo referido a los ADMIN
-    //Guardar Usuario perfil admin
-    agregarAdmin(){
-        this.getUsuarioRef();
-        this.usuarioRef.push({
-                _id: this.getUid(),
-                name: 'ADMIN1',
-                //voluntarios: ['JUAN','PABLO'],
-                //actividades: [''],
-                perfil: 'ADMIN',
-                barrio: 'WILDE',
-                createdAt: firebase.database.ServerValue.TIMESTAMP,
-        });
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido al guardado de imagenes en el storage
     getImageRef(){
         this.imageRef = firebase.storage().ref('images');
