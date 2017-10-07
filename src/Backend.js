@@ -272,6 +272,7 @@ class Backend{
                             createdAt:  user.createdAt,
                             notificaciones:user.notificaciones,
                             usuarios:user.usuarios,
+                            centro:user.centro,
                         });
                     });
             }else{

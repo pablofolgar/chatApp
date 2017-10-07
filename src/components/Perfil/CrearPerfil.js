@@ -31,12 +31,11 @@ export default class CrearPerfil extends React.Component{
             'Setting a timer'
         ]
         this.state = {userId:this.props.userId,
-                        name:'',
-                        barrio:'',
-                        centro:'',
-                        // interes: ['MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
-                        selectedInteres: [],
-                        selectedPerfil: ' ',
+                        name: this.props.user.name,
+                        barrio:this.props.user.barrio,
+                        centro:this.props.user.centro,
+                        selectedInteres: this.props.user.intereses,
+                        selectedPerfil: this.props.user.perfil,
                         perfiles: ['SELECCIONAR PERFIL','USUARIO', 'VOLUNTARIO', 'CENTRO',],
                     }
     }
