@@ -256,6 +256,49 @@ class Backend{
                 } );
     }
 
+    modificarUsuario(user, name, barrio, centro, interes, selectedPerfil){
+        this.getUsuarioRef();
+        var nameAux;
+        var barrioAux;
+        var centroAux;
+        var perfilAux;
+
+        if(user.name != name)
+            nameAux = name.toUpperCase();
+        else
+            nameAux = user.name;
+
+        if(user.barrio != barrio)
+            barrioAux = barrio.toUpperCase();
+        else
+            barrioAux = user.barrio;
+
+        if(user.centro != centro)
+            centroAux = centro.toUpperCase();
+        else
+            centroAux = user.centro;
+
+        if(user.perfil != selectedPerfil)
+            perfilAux = selectedPerfil.toUpperCase();
+        else
+            perfilAux = user.perfil;
+
+
+        var usuarioModificado={
+            _id: user._id,
+            name: nameAux,
+            intereses:user.intereses,
+            perfil: perfilAux,
+            barrio: barrioAux,
+            centro: centroAux,
+            createdAt: user.createdAt,
+            fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
+        }
+        var updates = {};
+        updates[user.key+'/'] = usuarioModificado;
+        this.usuarioRef.update(updates);
+    }
+
     buscarUsuarioLogueado(callback){//,name){
         this.getUsuarioRef();
         this.usuarioRef.orderByChild("_id").equalTo(this.uid).once('value',function(snapshot){
@@ -476,7 +519,6 @@ class Backend{
 
     modificarCatalogo(user, url, empresa, categoria, producto, imageName, medioPago,catalogo, precio, telefonoProveedor, mailProveedor, 
                       medioEntrega,horarioAtencion){
-        console.log('mailProveedor: '+mailProveedor);
         var imagenUrlAux;
         var empresaAux;
         var categoriaAux;

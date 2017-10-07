@@ -19,10 +19,10 @@ import {
 import ActionButton from  '../ActionButton';
 import Backend from '../../Backend';
 import SelectMultiple from './SelectMultiple'
+import renderIf from './RenderIf';
 
 const style = require('../styles.js');
 const interes = ['MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'];
-
 
 export default class CrearPerfil extends React.Component{
     constructor(props) {
@@ -31,11 +31,11 @@ export default class CrearPerfil extends React.Component{
             'Setting a timer'
         ]
         this.state = {userId:this.props.userId,
-                        name: this.props.user.name,
-                        barrio:this.props.user.barrio,
-                        centro:this.props.user.centro,
-                        selectedInteres: this.props.user.intereses,
-                        selectedPerfil: this.props.user.perfil,
+                        name: this.props.user ? this.props.user.name : '',
+                        barrio: this.props.user ? this.props.user.barrio : '',
+                        centro: this.props.user ? this.props.user.centro : '',
+                        selectedInteres: this.props.user ? this.props.user.intereses : [],
+                        selectedPerfil: this.props.user ? this.props.user.perfil : '',
                         perfiles: ['SELECCIONAR PERFIL','USUARIO', 'VOLUNTARIO', 'CENTRO',],
                     }
     }
@@ -116,14 +116,27 @@ export default class CrearPerfil extends React.Component{
                             </View>
 
                             <View>
-                                <ActionButton 
-                                    title="AGREGAR"
-                                    onPress={()=>{
-                                                    Backend.agregarUsuario(this.state.userId, this.state.name, this.state.barrio,
-                                                        this.state.centro, this.state.selectedInteres, this.state.selectedPerfil);
+                                {renderIf(!this.props.user,
+                                    <ActionButton 
+                                        title="AGREGAR"
+                                        onPress={()=>{
+                                                        Backend.agregarUsuario(this.state.userId, this.state.name, this.state.barrio,
+                                                            this.state.centro, this.state.selectedInteres, this.state.selectedPerfil);
+                                                    }
                                                 }
-                                            }
-                                />
+                                    />
+                                )}
+
+                                 {renderIf(this.props.user,
+                                    <ActionButton 
+                                        title="MODIFICAR"
+                                        onPress={()=>{
+                                                        Backend.modificarUsuario(this.props.user,this.state.name, this.state.barrio,
+                                                            this.state.centro, this.state.selectedInteres, this.state.selectedPerfil);
+                                                    }
+                                                }
+                                    />
+                                )}
                 
                             </View>
                     </View>
