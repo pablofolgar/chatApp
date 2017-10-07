@@ -1,5 +1,9 @@
 import firebase from 'firebase';
 
+import {
+    Actions,
+} from 'react-native-router-flux';
+
 class Backend{
     uid='';
     messageRef=null;
@@ -18,13 +22,16 @@ class Backend{
         });
             firebase.auth().onAuthStateChanged((user) => {
             if(user){
+                console.log('Usuario Logueado: '+ user.uid);
                 this.setUid(user.uid);
-            }else{
-                firebase.auth().signInAnonymously().catch((error) => {
-                    alert(error.message);
-                });
+                this.buscarUsuarioLogueado((usuario)=>{
+                    console.log('entro por buscarUsuarioLogueado con : ' + usuario._id)
+                    this.actualizarFechaUltimoAcceso(usuario);
+                       Actions.menu({
+                            user:usuario,
+                        });
+                }   ,user);
             }
-
         });
     }
 
@@ -36,6 +43,30 @@ class Backend{
         return this.uid;
     }
 
+    signUp(name, pass){
+        console.log('signUp name: ' + name)
+        firebase.auth().createUserWithEmailAndPassword(name,pass)
+        .catch(function(error){
+            alert(error.message);
+        })
+    }
+
+    login(name, pass){
+        firebase.auth().signInWithEmailAndPassword(name,pass)
+        .catch(function(error) {   
+            console.log(error.message);
+            alert(error.message);
+        })
+    }
+
+    logOut(){
+        console.log('Logout usuario: '+this.getUid());
+        firebase.auth().signOut().then(function() {
+            console.log('Logout satisfactorio');
+        }).catch(function(error) {
+          alert(error.message);
+        });
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los chat
@@ -54,11 +85,11 @@ class Backend{
                 ){
                     callback({
                         _id: data.key,
-                        text: message.text,
+                        text: message.text.toUpperCase(),
                         createdAt: new Date(message.createdAt),
                         user:{
                             _id: message.user._id,
-                            name: message.user.name,
+                            name: message.user.name.toUpperCase(),
                         },
                     });
             }
@@ -72,7 +103,7 @@ class Backend{
         for(let i = 0; i < message.length; i++){
             this.messageRef.push({
                 text: message[i].text.toUpperCase(),
-                user: message[i].user,
+                user: message[i].user.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 para:para.toUpperCase()
             });
@@ -204,24 +235,27 @@ class Backend{
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los usuarios
     //Guardar usuarios
-    agregarUsuario(user){
+    agregarUsuario(userId, name, barrio, centro, interes, selectedPerfil){
         this.getUsuarioRef();
+        console.log('userId '+userId)
+        console.log('getUid '+this.getUid())
         this.usuarioRef.push({
                 _id: this.getUid(),
-                name: 'PABLO',
-                intereses:['CINE','TEATRO','HISTORIA'],
-                perfil: 'USUARIO',
-                barrio: 'WILDE',
-                centro: ['CENTRO1'],
+                name: name.toUpperCase(),
+                intereses:interes,
+                perfil: selectedPerfil,
+                barrio: barrio.toUpperCase(),
+                centro: centro.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
-                puntaje:0,
         });
+        Actions.menu();
     }
 
-    buscarUsuarioLogueado(callback,name){
+    buscarUsuarioLogueado(callback){//,name){
         this.getUsuarioRef();
-        this.usuarioRef.orderByChild("name").equalTo(name.toUpperCase()).limitToLast(20).once('value',function(snapshot){
+        this.usuarioRef.orderByChild("_id").equalTo(this.uid).limitToLast(20).once('value',function(snapshot){
+            if(snapshot.hasChildren()){
                 snapshot.forEach(function(childSnapshot) {
                 const user = childSnapshot.val();
                 callback({
@@ -234,10 +268,13 @@ class Backend{
                             createdAt:  user.createdAt,
                             notificaciones:user.notificaciones,
                             usuarios:user.usuarios,
-                            centro:user.centro,
-                            puntaje:user.puntaje
-                });
-            });
+                        });
+                    });
+            }else{
+                Actions.perfil({
+                            userId:this.uid,
+                        });
+            }
         });
     }
 
@@ -361,7 +398,7 @@ class Backend{
         this.usuarioRef = firebase.database().ref('usuario');
     }
 
-    closeUsuarioRef(){
+    closePerfil(){
         this.close(this.usuarioRef);
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////

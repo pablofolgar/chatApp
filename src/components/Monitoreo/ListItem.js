@@ -5,7 +5,7 @@ const {
     TouchableHighlight, 
     Text 
   } = ReactNative;
-import renderIf from './../RenderIf';
+import renderIf from './RenderIf';
 const style = require('./../styles.js');
 
 class ListItem extends Component {

@@ -9,7 +9,6 @@ import {
     Image,
     KeyboardAvoidingView,
     ScrollView,
-    ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -18,6 +17,8 @@ import {
 
 import ActionButton from  './ActionButton';
 import Backend from '../Backend';
+import * as firebase from 'firebase';
+
 
 
 const style = require('./styles.js');
@@ -35,7 +36,8 @@ class Home extends React.Component{
     state={
         name:'',
         user:'',
-        spinner:false,
+        pass:'',
+        response:'',
     };
 
     render(){
@@ -46,38 +48,40 @@ class Home extends React.Component{
 
                 <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={700} >
 
-                    <View style={style.HomeContainer}>
+                    <View>
 
-                            {/*TÍTULO "HUELLAS EN RED" */}
-                            <View style={style.HomeTitleView}>
-                                <Text style={style.HomeTitleText}>
+                        <View>
+
+                            <View>
+                                <Text style={style.tituloInicio}>
                                     HUELLAS {'\n'} EN RED
                                 </Text>
                             </View>
 
-                            {/*LOGO*/}
                             <View style={style.logoImageView}>
                                 <Image source={require('./imagenes/huellas2.jpg')} style={style.logoImage}/>
                             </View>
 
-                        {/* RUEDITA DEL LOADING
-                            <View >
-                            <ActivityIndicator 
-                                animating={this.state.spinner}
-                                size={50}
-                                color='black'
-                            />
-                         </View>*/}
+                         </View>
 
-                        {/*BLOQUE DE INGRESO*/}
-                        <View style={style.LoginBlockView}>
+                     {/*     BORRAR             */}
 
-                            {/*INPUT INGRESE USUARIO*/}
+							<View>
+                                <ActionButton 
+                                    title="LOGOUT"
+                                    onPress={() => {
+                                        
+                                            Backend.logOut();
+                                        }
+                                    }/>
+                
+                            </View>
+                        {/*     BORRAR             */}
+
+                        <View>
                             <View  style={style.singleInputView}>
-                                <TextInput 
-                                style={style.singleInputText}
-                                autoCapitalize="characters"
-                                placeholder='INGRESE SU USUARIO'
+                                <TextInput style={style.singleInputText}
+                                placeholder='INGRESE SU MAIL'
                                 onChangeText={ (text) => {
                                     this.setState({
                                         name:text,
@@ -86,60 +90,58 @@ class Home extends React.Component{
                                 value= {this.state.name}
                                 />
                             </View>
+                            <View  style={style.singleInputView}>
+                                <TextInput style={style.singleInputText}
+                                placeholder='INGRESE SU PASSWORD'
+                                onChangeText={ (text) => {
+                                    this.setState({
+                                        pass:text,
+                                    })
+                                }}
+                                value= {this.state.pass}
+                                />
+                            </View>
 
-                            {/*BOTÓN ENTRAR*/}
-                            {/*Tiene un <View> en ActionButton.js. Viene el componente completo.*/}
-                            <ActionButton 
-                                title="ENTRAR"
-                                onPress={() => {
-                                    if(this.state.name===''){
-                                        Alert.alert(
-                                          'CAMPO OBLIGATORIO',
-                                          'DEBE INGRESAR SU USUARIO PARA COMENZAR.',
-                                          [
-                                            {text: 'OK', onPress: () => console.log('OK Pressed')},
-                                          ],
-                                          { cancelable: false }
-                                        )
-                                    }else{
-                                        this.cargarDatosUsuarioLogueado();
-                                        
-                                    }
-                                }}/>
+                            <View>
+                                <ActionButton 
+                                    title="REGISTRARSE"
+                                    onPress={() => {
+                                        if(this.state.name==='' || this.state.pass ===''){
+                                            Alert.alert(
+                                              'CAMPO OBLIGATORIO',
+                                              'DEBE INGRESAR EL MAIL Y EL PASSWORD PARA COMENZAR.',
+                                              [
+                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                              ],
+                                              { cancelable: false }
+                                            )
+                                        }else{
+                                            Backend.signUp(this.state.name,this.state.pass);
+                                        }
+                                    }}/>
                 
+                            </View>
+
+                            <View>
+                                <ActionButton 
+                                    title="INGRESAR"
+                                    onPress={() => {
+                                        if(this.state.name==='' || this.state.pass ===''){
+                                            Alert.alert(
+                                              'CAMPO OBLIGATORIO',
+                                              'DEBE INGRESAR EL MAIL Y EL PASSWORD PARA COMENZAR.',
+                                              [
+                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                              ],
+                                              { cancelable: false }
+                                            )
+                                        }else{
+                                            Backend.login(this.state.name,this.state.pass);
+                                        }
+                                    }}/>
+                
+                            </View>
                         </View>
-
-
-                        {/*BLOQUE FINAL DE OPCIONES: REGISTRO Y RECUPERAR CLAVE*/}
-                        <View style={style.BloqueSubIngreso}>
-
-                            {/*BOTÓN REGISTRO*/}
-                            <View style={style.ButtonRegistrese}>
-                                <TouchableOpacity>
-                                    <Text style={style.TextoRegistrese}>
-                                        REGÍSTRESE AQUÍ
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-
-                            {/*SEPARACIÓN*/}
-                            <View style={style.Separador}>
-                                <Text style={style.TextoSeparador}>
-                                    |
-                                </Text>
-                            </View>
-
-                            {/*BOTÓN RECUPERAR CONTRASEÑA*/}
-                            <View style={style.ButtonContrasena}>
-                                <TouchableOpacity>
-                                    <Text style={style.TextoContrasena}>
-                                        RECUPERAR CLAVE
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-
-                        </View>
-
                     </View>
 
 
@@ -150,30 +152,6 @@ class Home extends React.Component{
            
         );
     }
-
-    cargarDatosUsuarioLogueado(){
-        console.log('********************** Logueando usuario: '+this.state.name+' ***************************************')
-        Backend.buscarUsuarioLogueado((usuario)=>{
-            Backend.actualizarFechaUltimoAcceso(usuario);
-            // if(usuario._id){
-                Actions.menu({
-                                user:usuario,
-                                // name:usuario.name
-                            });
-            // }else{
-            //     return Alert.alert(
-            //       'USUARIO INEXISTENTE',
-            //       'EL USUARIO NO EXISTE EN EL SISTEMA',
-            //       [
-            //         {text: 'OK', onPress: () => console.log('OK Pressed')},
-            //       ],
-            //       { cancelable: false }
-            //     )
-            // }
-        },this.state.name);
-    }
-
-    
 }
 
 export default Home;
