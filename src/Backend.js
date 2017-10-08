@@ -237,67 +237,63 @@ class Backend{
     //Guardar usuarios
     agregarUsuario(userId, name, barrio, centro, interes, selectedPerfil){
         this.getUsuarioRef();
-        console.log('userId '+userId)
-        console.log('getUid '+this.getUid())
+        var intereses = [];
+        for(var keyPre in interes){
+            intereses.push(interes[keyPre].value);
+        }
         this.usuarioRef.push({
                 _id: this.getUid(),
                 name: name.toUpperCase(),
-                intereses:interes,
+                intereses:intereses,
                 perfil: selectedPerfil,
                 barrio: barrio.toUpperCase(),
                 centro: centro.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
-        });
-        this.buscarUsuarioLogueado((usuario)=>{
-                       Actions.menu({
-                            user:usuario,
-                        });
-                } );
+        })
+        .then(result => {
+            this.buscarUsuarioLogueado((usuario)=>{
+                           Actions.menu({
+                                user:usuario,
+                            });
+                    } );
+        })
+        .catch(error => {
+            console.log(error);  
+        })
     }
 
     modificarUsuario(user, name, barrio, centro, interes, selectedPerfil){
         this.getUsuarioRef();
-        var nameAux;
-        var barrioAux;
-        var centroAux;
-        var perfilAux;
-
-        if(user.name != name)
-            nameAux = name.toUpperCase();
-        else
-            nameAux = user.name;
-
-        if(user.barrio != barrio)
-            barrioAux = barrio.toUpperCase();
-        else
-            barrioAux = user.barrio;
-
-        if(user.centro != centro)
-            centroAux = centro.toUpperCase();
-        else
-            centroAux = user.centro;
-
-        if(user.perfil != selectedPerfil)
-            perfilAux = selectedPerfil.toUpperCase();
-        else
-            perfilAux = user.perfil;
-
-
+        var intereses = [];
+        for(var keyPre in interes){
+            intereses.push(interes[keyPre].value);
+        }
         var usuarioModificado={
             _id: user._id,
-            name: nameAux,
-            intereses:user.intereses,
-            perfil: perfilAux,
-            barrio: barrioAux,
-            centro: centroAux,
+            name: name.toUpperCase(),
+            intereses:intereses,
+            perfil: selectedPerfil,
+            barrio: barrio.toUpperCase(),
+            centro: centro.toUpperCase(),
             createdAt: user.createdAt,
-            fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
+            fechaUltimoAcceso:user.fechaUltimoAcceso,
         }
         var updates = {};
         updates[user.key+'/'] = usuarioModificado;
-        this.usuarioRef.update(updates);
+        this.usuarioRef.update(updates)
+        .then(result => {
+            this.buscarUsuarioLogueado((usuario)=>{
+                           Actions.menu({
+                                user:usuario,
+                            });
+                    } );
+        })
+        .catch(error => {
+            console.log(error);  
+        })
     }
+
 
     buscarUsuarioLogueado(callback){//,name){
         this.getUsuarioRef();
@@ -316,6 +312,7 @@ class Backend{
                             notificaciones:user.notificaciones,
                             usuarios:user.usuarios,
                             centro:user.centro,
+                            fechaUltimoAcceso:user.fechaUltimoAcceso,
                         });
                     });
             }else{

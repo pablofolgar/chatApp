@@ -41,11 +41,17 @@ export default class CrearPerfil extends React.Component{
     }
 
     onSelectionsChange = (selectedInt) => {
-        for(var keyPre in selectedInt){
-            this.setState({ selectedInteres:this.state.selectedInteres.concat([selectedInt[keyPre].label]) })
-        }
+        this.setState({ selectedInteres:selectedInt});
     }
-        
+
+    componentDidMount(){
+        var aux = [];
+       for (var i = this.state.selectedInteres.length - 1; i >= 0; i--) {
+            aux.push({label:this.state.selectedInteres[i] , value:this.state.selectedInteres[i]});
+        }
+        this.setState({selectedInteres:aux});
+    }
+    
     render(){
         let perfilItems = this.state.perfiles.map( (s, i) => {
                 return <Picker.Item key={i} value={s} label={s} />
@@ -120,8 +126,10 @@ export default class CrearPerfil extends React.Component{
                                     <ActionButton 
                                         title="AGREGAR"
                                         onPress={()=>{
-                                                        Backend.agregarUsuario(this.state.userId, this.state.name, this.state.barrio,
-                                                            this.state.centro, this.state.selectedInteres, this.state.selectedPerfil);
+                                                        var camposRequeridosOk=this.validarCamposRequeridos();
+                                                        if(camposRequeridosOk){
+                                                            this.agregarUsuario();
+                                                        }
                                                     }
                                                 }
                                     />
@@ -131,8 +139,10 @@ export default class CrearPerfil extends React.Component{
                                     <ActionButton 
                                         title="MODIFICAR"
                                         onPress={()=>{
-                                                        Backend.modificarUsuario(this.props.user,this.state.name, this.state.barrio,
-                                                            this.state.centro, this.state.selectedInteres, this.state.selectedPerfil);
+                                                        var camposRequeridosOk=this.validarCamposRequeridos();
+                                                        if(camposRequeridosOk){
+                                                            this.editarUsuario();
+                                                        }
                                                     }
                                                 }
                                     />
@@ -148,6 +158,56 @@ export default class CrearPerfil extends React.Component{
         //</Image>
            
         );
+    }//FIN de render()
+
+    validarCamposRequeridos(){
+        var result = true;
+        if(!this.state.name ||
+            !this.state.barrio ||
+            !this.state.centro ||
+            !this.state.selectedInteres || this.state.selectedInteres.length === 0 ||
+            !this.state.selectedPerfil){
+            alert("DEBE COMPLETAR TODOS LOS CAMPOS");
+            result = false;
+        }
+        return result;
     }
+
+    agregarUsuario() {
+      Alert.alert(
+        'PARA CREAR DEFINITIVAMENTE SU USUARIO APRIETE "AGREGAR"',
+        null,
+        [
+          {text: 'VOLVER', onPress: (t) => console.log('Cancel')},
+          {
+            text: 'AGREGAR',
+            onPress: (t) => {
+              Backend.agregarUsuario(this.state.userId, this.state.name, this.state.barrio,
+                this.state.centro, this.state.selectedInteres, this.state.selectedPerfil);
+            }
+          },
+        ],
+        'plain-text'
+      );
+    }
+
+    editarUsuario() {
+      Alert.alert(
+        'PARA EDITAR DEFINITIVAMENTE SU USUARIO APRIETE "MODIFICAR"',
+        null,
+        [
+          {text: 'VOLVER', onPress: (t) => console.log('Cancel')},
+          {
+            text: 'MODIFICAR',
+            onPress: (t) => {
+              Backend.modificarUsuario(this.props.user,this.state.name, this.state.barrio,
+                    this.state.centro, this.state.selectedInteres, this.state.selectedPerfil);
+            }
+          },
+        ],
+        'plain-text'
+      );
+    }
+
 }
 

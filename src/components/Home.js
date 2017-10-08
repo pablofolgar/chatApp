@@ -92,6 +92,7 @@ class Home extends React.Component{
                             </View>
                             <View  style={style.singleInputView}>
                                 <TextInput style={style.singleInputText}
+                                secureTextEntry={true}
                                 placeholder='INGRESE SU PASSWORD'
                                 onChangeText={ (text) => {
                                     this.setState({
