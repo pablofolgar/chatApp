@@ -56,7 +56,7 @@ export default class Notificacion extends React.Component{
                 this.setState({
                             dataSource: this.state.dataSource.cloneWithRows(items)
                           });
-            },this.state.user.name);
+            });
             //Busco las actuales notificaciones asociadas al usuario para ver si hay alguna nueva
             //Con la busqueda se agrega un listener para que notifique las que se agregan nuevas
             Backend.buscarNotificacionesPorUsuarioLogueado((usuario)=>{

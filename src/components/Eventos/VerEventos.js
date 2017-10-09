@@ -5,22 +5,25 @@ import {
     Picker,
     TextInput,
     ScrollView,
+    ListView,
+     Alert,
 } from 'react-native';
 import Backend from '../../Backend';
 import ActionButton from  '../ActionButton';
 const style = require('./../styles.js');
+import ListItem from './ListItem';
+import {
+    Actions,
+} from 'react-native-router-flux';
 
 export default class VerEventos extends React.Component{
 
     constructor(props){
         super(props);
         this.state = {
-                text: ' ',
-                categorias: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
-                selectedCategoria: ' ',
-                titulos:['SELECCIONE TÍTULO'],
-                selectedTitulo: ' ',
-                historias:[]
+                user: this.props.user,
+                dataSource: new ListView.DataSource({
+                    rowHasChanged: (row1, row2) => row1 !== row2}),
             };
         console.ignoredYellowBox = [
             'Setting a timer'
@@ -33,88 +36,62 @@ export default class VerEventos extends React.Component{
 
 
     render(){
-      
-        let categoryItems = this.state.categorias.map( (s, i) => {
-            return <Picker.Item key={i} value={s} label={s} />
-        });
-        let tituloItems = this.state.titulos.map( (s, i) => {
-            return <Picker.Item key={i} value={s} label={s} />
-        });
 
         return(
-            <View style={style.container}>
-
-                <View style={style.viewPicker}>
-                    <Picker
-                      selectedValue={this.state.selectedCategoria}
-                      onValueChange={ (category) => {this.setState({selectedCategoria:category});this.limpiarSeleccionCategoria();this.getHistoriasPorCategoria(category)} }
-                      mode="dialog">
-                      {categoryItems}
-                    </Picker>
-                </View>
-
-                <View style={style.viewPicker}>
-                    <Picker
-                      selectedValue={this.state.selectedTitulo}
-                      onValueChange={ (titulo) => {this.setState({selectedTitulo:titulo});this.limpiarSeleccionTitulo();this.getHistoriasPorTitulo(titulo)} }
-                      mode="dialog"
-                      style={{height:50,}}>
-                      {tituloItems}
-                    </Picker>
-                </View>
-                    
-                <View>
-                    <Text style={style.textTituloHistoria}>
-                        Historia
-                    </Text>
-                </View>
-
-
-                <View style={style.storyView}>
-                    <ScrollView>
-                        <Text style={style.storyText}>
-                            {this.state.text==" "?"NO HAY HISTORIAS":this.state.text}
-                        </Text>
-                    </ScrollView>
-                </View>
-
-            </View>
+            <ScrollView  style={style.container}> 
+                    <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} enableEmptySections={true}/>
+            </ScrollView>
         );
     }
 
 
     componentDidMount(){
-    }
-
-    getHistoriasPorCategoria(category) {
-            Backend.loadHistories((historia) => {
+        var items = [];
+        Backend.getEventosCreadosPorUsuario((evento)=>{
+                console.log('didmount evento.createdAt '+evento.createdAt)
+                items.push({
+                            eventoId: evento.eventoId,
+                            categoria: evento.categoria.toUpperCase(),
+                            barrio: evento.barrio.toUpperCase(),
+                            fecha: evento.fecha,
+                            mensajeAlertaId: evento.mensajeAlertaId,
+                            descripcion: evento.descripcion.toUpperCase(),
+                            centro: evento.centro.toUpperCase(),
+                            hora: evento.hora,
+                            user: evento.user,
+                            createdAt:evento.createdAt,
+                        });
                 this.setState({
-                    titulos: this.state.titulos.concat([historia.titulo]),
-                    historias: this.state.historias.concat([{categoria: historia.category,titulo:historia.titulo,historia:historia.text}]),
-                });
-            }, category);
-    }
-
-    getHistoriasPorTitulo(titulo){
-        for (var i = this.state.historias.length - 1; i >= 0; i--) {
-            if(this.state.historias[i].titulo==titulo){
-                this.setState({text:this.state.historias[i].historia});
-                break;
-            }
-            
-        }
+                    dataSource: this.state.dataSource.cloneWithRows(items),
+                  });
+        },this.state.user);
     }
 
     componentWillUnMount(){
-        Backend.closeHist();
+        Backend.closeEventos();
     }
 
-    limpiarSeleccionCategoria(){
-        this.setState({titulos:['SELECCIONE TÍTULO'],text:" "});
+    _renderItem(item) {
+        const onPress = () => {
+                  Alert.alert(
+                    'PARA EDITAR  SU EVENTO APRIETE "EDITAR"',
+                    null,
+                    [
+                      {text: 'EDITAR', onPress: (text) => {
+                                                            console.log('Editar'); 
+                                                            this.setState({
+                                                                            dataSource: this.state.dataSource.cloneWithRows([]),
+                                                                        });
+                                                            Actions.crearEvento({evento:item, user:this.state.user}); 
+                                                        }
+                        },
+                      {text: 'CANCELAR', onPress: (text) => console.log('Cancel')}
+                    ],
+                    'default'
+                  );
+                };
+        return (
+              <ListItem item={item} onPress={onPress}/>
+            );
     }
-
-    limpiarSeleccionTitulo(){
-        this.setState({text:" "});
-    }
-
 }

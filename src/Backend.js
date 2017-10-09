@@ -176,10 +176,7 @@ class Backend{
                 descripcion:descripcion.toUpperCase(),
                 centro:centro.toUpperCase(),
                 hora:hora,
-                user:{
-                  _id: this.getUid(),
-                  name: user.name.toUpperCase(),
-                }
+                userId:this.getUid(),
             }).key;
             var evento = {
                 eventoId: eventoId.toUpperCase(),
@@ -190,14 +187,64 @@ class Backend{
                 descripcion:descripcion.toUpperCase(),
                 centro:centro.toUpperCase(),
                 hora:hora,
-                user:{
-                      _id: this.getUid(),
-                      name: user.name.toUpperCase(),
-                    }
-
+                userId:this.getUid(),
             };
             //Agrego el evento como notificacipn para cada usuario
            this.agregarNotificacionParaUsuario(user,evento);
+    }
+
+    modificarEvento(evento,categoria,barrio,fecha,descripcion,centro,hora){
+        this.getEventoRef();
+        //Agrego el evento en la tabla
+        var mensajeAlertaId = this.getRandomInt(0,10000);
+        console.log('evento.createdAt: ' + evento.createdAt);
+        var eventoModificado = {
+            categoria: categoria.toUpperCase(),
+            barrio: barrio.toUpperCase(),
+            fecha: fecha.toUpperCase(),
+            createdAt: evento.createdAt,
+            mensajeAlertaId:mensajeAlertaId,
+            descripcion:descripcion.toUpperCase(),
+            centro:centro.toUpperCase(),
+            hora:hora,
+            userId:this.getUid(),
+        };
+
+        var updates = {};
+        updates[evento.eventoId+'/'] = eventoModificado;
+        this.eventosRef.update(updates)
+        .then(result => {
+                            var evento = {
+                                eventoId: evento.eventoId.toUpperCase(),
+                                categoria: categoria.toUpperCase(),
+                                barrio: barrio.toUpperCase(),
+                                fecha: fecha.toUpperCase(),
+                                mensajeAlertaId:mensajeAlertaId,
+                                descripcion:descripcion.toUpperCase(),
+                                centro:centro.toUpperCase(),
+                                hora:hora,
+                                userId:this.getUid(),
+                            };
+                            //Agrego el evento como notificacipn para cada usuario
+                           this.agregarNotificacionParaUsuario(user,evento);
+                           Actions.verEventos({
+                                user:usuario,
+                            });
+        })
+        .catch(error => {
+            console.log(error);  
+        })
+    }
+
+    borrarEvento(evento){
+        this.getEventoRef();
+        this.eventosRef.child(evento.eventoId).remove()
+                      .then(()=>{
+                        console.log('Evento '+evento.eventoId+' borrado correctamente')
+                      })
+                      .catch(function(error) {
+                              console.log('Error: '+error);
+                          })
     }
 
     agregarNotificacionParaUsuario(userCreador,evento){
@@ -216,7 +263,7 @@ class Backend{
                         categoria: evento.categoria,
                         barrio: evento.barrio,
                         fecha: evento.fecha,
-                        user: evento.user,
+                        userId: evento.userId,
                         mensajeAlertaId:evento.mensajeAlertaId,
                         descripcion:evento.descripcion,
                         centro:evento.centro,
@@ -235,6 +282,27 @@ class Backend{
 
     getEventoRef(){
         this.eventosRef = firebase.database().ref('eventos');
+    } 
+
+    getEventosCreadosPorUsuario(callback, usuario){
+        this.getEventoRef();
+        this.eventosRef.orderByChild("userId").equalTo(usuario._id).limitToLast(20).once('value',function(snapshot){
+            snapshot.forEach(function(childSnapshot) {
+                const evento = childSnapshot.val();
+                    callback({
+                                eventoId: childSnapshot.key,
+                                categoria: evento.categoria.toUpperCase(),
+                                barrio: evento.barrio.toUpperCase(),
+                                fecha: evento.fecha,
+                                mensajeAlertaId: evento.mensajeAlertaId,
+                                descripcion: evento.descripcion.toUpperCase(),
+                                centro: evento.centro.toUpperCase(),
+                                hora: evento.hora,
+                                user: evento.user,
+                                createdAt:evento.createdAt,
+                     });
+                });
+        });
     }
 
     closeEventos(){

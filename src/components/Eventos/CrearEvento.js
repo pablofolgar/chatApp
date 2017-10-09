@@ -18,11 +18,26 @@ import {
 import ActionButton from  '../ActionButton';
 import Backend from '../../Backend';
 const style = require('./../styles.js');
+import renderIf from './../RenderIf';
 
 export default class CrearEvento extends React.Component{
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
+        this.state={
+            user:this.props.user,
+            selectedTipoEvento: this.props.evento ? this.props.evento.categoria :' ',
+            eventos: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
+            barrio:this.props.evento ? this.props.evento.barrio : '',
+            fecha:this.props.evento ? this.props.evento.fecha :'',
+            simpleDate: new Date(Date.now()),
+            simpleText: this.props.evento ? this.props.evento.fecha :'FECHA DEL EVENTO',
+            descripcion:this.props.evento ? this.props.evento.descripcion :'',
+            centro:this.props.evento ? this.props.evento.centro :'',
+            hora:this.props.evento ? this.props.evento.hora :'',
+            isoFormatText:this.props.evento ? this.props.evento.hora :'HORA DEL EVENTO',
+            
+        };
 
         console.ignoredYellowBox = [
             'Setting a timer'
@@ -30,19 +45,6 @@ export default class CrearEvento extends React.Component{
     }
 
 
-    state={
-        selectedTipoEvento: ' ',
-        eventos: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
-        barrio:'',
-        fecha:'',
-        simpleDate: new Date(Date.now()),
-        simpleText: 'FECHA DEL EVENTO',
-        descripcion:'',
-        centro:'',
-        hora:'',
-        isoFormatText:'HORA DEL EVENTO',
-        
-    };
 
 
     showPicker = async (stateKey, options) => {
@@ -216,7 +218,7 @@ export default class CrearEvento extends React.Component{
                       />
                 </View>   
 
-                  {/*Tiene un <View> en ActionButton.js*/}
+                {renderIf(!this.props.evento,
                   <ActionButton title="CREAR"
                       onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
                                       if(camposRequeridosOk){
@@ -226,7 +228,28 @@ export default class CrearEvento extends React.Component{
 
                               }
                     />
-                    
+                  )}
+
+                  {renderIf(this.props.evento,
+                    <ActionButton title="MODIFICAR"
+                        onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                        if(camposRequeridosOk){
+                                            this.modificarEvento();
+                                            }
+                                        }
+
+                                }
+                      />
+                  )}
+                
+                {renderIf(this.props.evento,
+                  <ActionButton title="BORRAR"
+                      onPress={() => {
+                                          this.borrarEvento();
+                                          }
+                              }
+                    />
+                  )}
                       
                 </KeyboardAvoidingView>
 
@@ -256,12 +279,50 @@ export default class CrearEvento extends React.Component{
       );
     }
 
+    modificarEvento() {
+      Alert.alert(
+        'ESTÁ POR MODIFICAR SU EVENTO.',
+        null,
+        [
+          {text: 'CANCELAR', onPress: (t) => console.log('Cancel')},
+          {
+            text: 'MODIFICAR',
+            onPress: (t) => {
+              Backend.modificarEvento(this.props.evento,this.state.selectedTipoEvento,
+                                      this.state.barrio,this.state.fecha,
+                                      this.state.descripcion,this.state.centro,this.state.hora);
+              this.limpiarCampos();
+              this.notificar
+            }
+          },
+          //TODO: hacer que cancele.
+        ],
+        'plain-text'
+      );
+    }
+
+  borrarEvento() {
+        Alert.alert(
+          'ESTÁ POR BORRAR SU EVENTO.',
+          null,
+          [
+            {text: 'CANCELAR', onPress: (t) => console.log('Cancel')},
+            {
+              text: 'BORRAR',
+              onPress: (t) => {
+                Backend.borrarEvento(this.props.evento);
+              }
+            },
+            //TODO: hacer que cancele.
+          ],
+          'plain-text'
+        );
+      }
     limpiarCampos(){
         this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA',descripcion:'',centro:'',fecha:'',hora:''})
     }
 
     validarCamposRequeridos(){
-      alert(this.state.hora)
         var result = true;
         if(!this.props.name ||
             !this.state.selectedTipoEvento ||

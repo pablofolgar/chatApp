@@ -18,7 +18,7 @@ import CargarCatalogo from './components/Catalogo/CargarCatalogo';
 import Valorar from './components/Valoracion/Valorar';
 import VerUsuarioValoracion from './components/Valoracion/VerUsuariosParaValorar';
 import Evento from './components/Eventos/Evento';
-// import VerEventos from './components/Eventos/VerEventos';
+import VerEventos from './components/Eventos/VerEventos';
 import CrearEvento from './components/Eventos/CrearEvento';
 
 import {
@@ -53,7 +53,7 @@ class App extends React.Component{
                     <Scene key='cargarCatalogo' component={CargarCatalogo} title='CARGAR CATALOGO'/>
                     <Scene key='valorar' component={Valorar} title='VALORACIÓN'/>
                     <Scene key='verUsuarioValoracion' component={VerUsuarioValoracion} title='VALORACIONES'/>
-                    {/*<Scene key='verEventos' component={VerEventos} title='VER EVENTOS'/>*/}
+                    {<Scene key='verEventos' component={VerEventos} title='VER EVENTOS'/>}
                     <Scene key='crearEvento' component={CrearEvento} title='CREAR EVENTO'/>
                 </Scene>
             </Router>
