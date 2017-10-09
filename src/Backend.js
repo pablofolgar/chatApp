@@ -163,7 +163,7 @@ class Backend{
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los eventos
     //Send eventos to the backend
-    sendEvento(user,categoria,barrio,fecha){
+    sendEvento(user,categoria,barrio,fecha,descripcion,centro,hora){
             this.getEventoRef();
             //Agrego el evento en la tabla
             var mensajeAlertaId = this.getRandomInt(0,10000);
@@ -173,6 +173,9 @@ class Backend{
                 fecha: fecha.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 mensajeAlertaId:mensajeAlertaId,
+                descripcion:descripcion.toUpperCase(),
+                centro:centro.toUpperCase(),
+                hora:hora,
                 user:{
                   _id: this.getUid(),
                   name: user.name.toUpperCase(),
@@ -184,6 +187,9 @@ class Backend{
                 barrio: barrio.toUpperCase(),
                 fecha: fecha.toUpperCase(),
                 mensajeAlertaId:mensajeAlertaId,
+                descripcion:descripcion.toUpperCase(),
+                centro:centro.toUpperCase(),
+                hora:hora,
                 user:{
                       _id: this.getUid(),
                       name: user.name.toUpperCase(),
@@ -212,6 +218,9 @@ class Backend{
                         fecha: evento.fecha,
                         user: evento.user,
                         mensajeAlertaId:evento.mensajeAlertaId,
+                        descripcion:evento.descripcion,
+                        centro:evento.centro,
+                        hora:evento.hora,
                     };
                     // Get a key for a new Post.
                     var newPostKey = firebase.database().ref('usuario').push().key;

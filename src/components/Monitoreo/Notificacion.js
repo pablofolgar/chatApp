@@ -47,6 +47,9 @@ export default class Notificacion extends React.Component{
                             _key: usuario.notificaciones[keyPre].eventoId,
                             fecha: usuario.notificaciones[keyPre].fecha,
                             barrio: usuario.notificaciones[keyPre].barrio,
+                            hora:usuario.notificaciones[keyPre].hora,
+                            centro:usuario.notificaciones[keyPre].centro,
+                            descripcion:usuario.notificaciones[keyPre].descripcion,
                             perfilCentro:false,
                         });
                 }
@@ -67,6 +70,9 @@ export default class Notificacion extends React.Component{
                             _key: notificacionesActuales[keyAct].eventoId,
                             fecha: notificacionesActuales[keyAct].fecha,
                             barrio: notificacionesActuales[keyAct].barrio,
+                            hora:usuario.notificaciones[keyPre].hora,
+                            centro:usuario.notificaciones[keyPre].centro,
+                            descripcion:usuario.notificaciones[keyPre].descripcion,
                             perfilCentro:false,
                         });
                         //Si no esta hago la notificacion

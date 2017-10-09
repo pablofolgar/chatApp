@@ -13,6 +13,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Image,
+  TimePickerAndroid,
 } from 'react-native';
 import ActionButton from  '../ActionButton';
 import Backend from '../../Backend';
@@ -36,6 +37,11 @@ export default class CrearEvento extends React.Component{
         fecha:'',
         simpleDate: new Date(Date.now()),
         simpleText: 'FECHA DEL EVENTO',
+        descripcion:'',
+        centro:'',
+        hora:'',
+        isoFormatText:'HORA DEL EVENTO',
+        
     };
 
 
@@ -55,6 +61,24 @@ export default class CrearEvento extends React.Component{
         } catch ({code, message}) {
           console.warn(`Error in example '${stateKey}': `, message);
         }
+    };
+
+    showTimePicker = async (stateKey, options) => {
+      try {
+        const {action, minute, hour} = await TimePickerAndroid.open(options);
+        var newState = {};
+        if (action === TimePickerAndroid.timeSetAction) {
+          newState[stateKey + 'Text'] = hour + ':' + (minute < 10 ? '0' + minute : minute);
+          newState[stateKey + 'Hour'] = hour;
+          newState[stateKey + 'Minute'] = minute;
+        } else if (action === TimePickerAndroid.dismissedAction) {
+          newState[stateKey + 'Text'] = 'dismissed';
+        }
+        this.setState(newState);
+        this.setState({hora:hour+':'+minute});
+      } catch ({code, message}) {
+        console.warn(`Error in example '${stateKey}': `, message);
+      }
     };
 
     render(){
@@ -103,7 +127,28 @@ export default class CrearEvento extends React.Component{
                         value= {this.state.barrio}
                     />
                   </View>
-         
+
+                  <View style={style.TituloIndicativoView}>
+                    <Text style={style.TituloIndicativoText}> 
+                      CENTRO:
+                    </Text>
+                  </View>
+
+
+                  <View style={style.singleInputView}>
+                    <TextInput 
+                        style={style.singleInputText}
+                        autoCapitalize="characters"
+                        placeholder='CENTRO'
+                        onChangeText={ (text) => {
+                            this.setState({
+                                centro:text,
+                            })
+                        }}
+                        value= {this.state.centro}
+                    />
+                  </View>
+
                   <View style={style.TituloIndicativoView}>
                     <Text style={style.TituloIndicativoText}> 
                       FECHA:
@@ -126,6 +171,50 @@ export default class CrearEvento extends React.Component{
                     </View>
                   </View>
 
+
+                  <View style={style.TituloIndicativoView}>
+                    <Text style={style.TituloIndicativoText}> 
+                      HORA:
+                    </Text>
+                  </View>
+
+                  <View style={style.DatePickerView}>
+
+                    <View style={style.DatePickerButton}>
+                      <TouchableOpacity
+                        onPress={
+                                  this.showTimePicker.bind(this, 'isoFormat', {
+                                  hour: this.state.isoFormatHour,
+                                  minute: this.state.isoFormatMinute,
+                                  is24Hour: true,
+                                })
+                        }>
+                        <Text style={style.DatePickerText}>
+                          {this.state.isoFormatText}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  <View>
+                      <Text style={style.textTituloHistoria}>
+                         DESCRIPCION DEL EVENTO
+                       </Text>
+                  </View>
+
+                  <View style={style.MultiLineInputView}> 
+                      <TextInput
+                              style={style.multilineInputText}
+                              autoCapitalize="characters"
+                              onChangeText={(descripcion) => this.setState({descripcion:descripcion})}
+                              multiline={true}
+                              blurOnSubmit={false}
+                              onSelectionChange={(event) => this.setState({ cursorPosition: event.nativeEvent.selection.start })}
+                              onSubmitEditing = {(event) => {this._updateText(event)} }
+                              defaultValue={this.state.text}
+                              
+                      />
+                </View>   
 
                   {/*Tiene un <View> en ActionButton.js*/}
                   <ActionButton title="CREAR"
@@ -155,7 +244,8 @@ export default class CrearEvento extends React.Component{
             text: 'CREAR',
             onPress: (t) => {
               Backend.sendEvento(this.props.user,this.state.selectedTipoEvento,
-                                      this.state.barrio,this.state.fecha);
+                                      this.state.barrio,this.state.fecha,
+                                      this.state.descripcion,this.state.centro,this.state.hora);
               this.limpiarCampos();
               this.notificar
             }
@@ -167,22 +257,24 @@ export default class CrearEvento extends React.Component{
     }
 
     limpiarCampos(){
-        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA'})
+        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA',descripcion:'',centro:'',fecha:'',hora:''})
     }
 
     validarCamposRequeridos(){
-        console.log('Nombre: '+this.props.name + ' ---- Evento: '+this.state.selectedTipoEvento+' ---- Barrio: '+this.state.barrio+' ----- Fecha: '+this.state.fecha);
+      alert(this.state.hora)
         var result = true;
         if(!this.props.name ||
             !this.state.selectedTipoEvento ||
             !this.state.barrio ||
-            !this.state.fecha){
+            !this.state.fecha ||
+            !this.state.descripcion||
+            !this.state.centro||
+            !this.state.hora){
             alert("DEBE COMPLETAR TODOS LOS CAMPOS");
             result = false;
         }
         return result;
     }
-
  }
 
 
