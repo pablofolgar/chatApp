@@ -9,9 +9,6 @@ const style = require('./../styles.js');
 
 class ListItem extends Component {
 
-  componentDidMount(){
-    console.log('this.props.item.createdAt: ' + this.props.item.createdAt)
-  }
   render() {
     return (
        <TouchableHighlight onPress={this.props.onPress}>

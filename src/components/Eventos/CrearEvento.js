@@ -270,7 +270,6 @@ export default class CrearEvento extends React.Component{
                                       this.state.barrio,this.state.fecha,
                                       this.state.descripcion,this.state.centro,this.state.hora);
               this.limpiarCampos();
-              this.notificar
             }
           },
           //TODO: hacer que cancele.
@@ -290,9 +289,8 @@ export default class CrearEvento extends React.Component{
             onPress: (t) => {
               Backend.modificarEvento(this.props.evento,this.state.selectedTipoEvento,
                                       this.state.barrio,this.state.fecha,
-                                      this.state.descripcion,this.state.centro,this.state.hora);
+                                      this.state.descripcion,this.state.centro,this.state.hora,this.state.user);
               this.limpiarCampos();
-              this.notificar
             }
           },
           //TODO: hacer que cancele.
@@ -310,7 +308,7 @@ export default class CrearEvento extends React.Component{
             {
               text: 'BORRAR',
               onPress: (t) => {
-                Backend.borrarEvento(this.props.evento);
+                Backend.borrarEvento(this.props.evento,this.state.user);
               }
             },
             //TODO: hacer que cancele.

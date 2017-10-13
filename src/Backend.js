@@ -193,17 +193,14 @@ class Backend{
            this.agregarNotificacionParaUsuario(user,evento);
     }
 
-    modificarEvento(evento,categoria,barrio,fecha,descripcion,centro,hora){
+    modificarEvento(evento,categoria,barrio,fecha,descripcion,centro,hora,user){
         this.getEventoRef();
-        //Agrego el evento en la tabla
-        var mensajeAlertaId = this.getRandomInt(0,10000);
-        console.log('evento.createdAt: ' + evento.createdAt);
         var eventoModificado = {
             categoria: categoria.toUpperCase(),
             barrio: barrio.toUpperCase(),
             fecha: fecha.toUpperCase(),
             createdAt: evento.createdAt,
-            mensajeAlertaId:mensajeAlertaId,
+            mensajeAlertaId:evento.mensajeAlertaId,
             descripcion:descripcion.toUpperCase(),
             centro:centro.toUpperCase(),
             hora:hora,
@@ -213,40 +210,26 @@ class Backend{
         var updates = {};
         updates[evento.eventoId+'/'] = eventoModificado;
         this.eventosRef.update(updates)
-        .then(result => {
-                            var evento = {
-                                eventoId: evento.eventoId.toUpperCase(),
-                                categoria: categoria.toUpperCase(),
-                                barrio: barrio.toUpperCase(),
-                                fecha: fecha.toUpperCase(),
-                                mensajeAlertaId:mensajeAlertaId,
-                                descripcion:descripcion.toUpperCase(),
-                                centro:centro.toUpperCase(),
-                                hora:hora,
-                                userId:this.getUid(),
-                            };
-                            //Agrego el evento como notificacipn para cada usuario
-                           this.agregarNotificacionParaUsuario(user,evento);
-                           Actions.verEventos({
-                                user:usuario,
-                            });
-        })
-        .catch(error => {
-            console.log(error);  
-        })
+                           .then(()=>{
+                               Actions.evento({user:user,});
+                           })
+                           .catch(error => {
+                                console.log(error);  
+                            })
     }
 
-    borrarEvento(evento){
+    borrarEvento(evento, user){
         this.getEventoRef();
         this.eventosRef.child(evento.eventoId).remove()
-                      .then(()=>{
-                        console.log('Evento '+evento.eventoId+' borrado correctamente')
-                      })
-                      .catch(function(error) {
-                              console.log('Error: '+error);
-                          })
+                                              .then(()=>{
+                                                    Actions.evento({user:user,});
+                                              })
+                                              .catch(function(error) {
+                                                      console.log('Error: '+error);
+                                              })
     }
 
+    
     agregarNotificacionParaUsuario(userCreador,evento){
         //Buscar los usuarios que esten interesados en participar del evento
         this.getUsuarioRef();

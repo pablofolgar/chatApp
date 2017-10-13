@@ -48,7 +48,6 @@ export default class VerEventos extends React.Component{
     componentDidMount(){
         var items = [];
         Backend.getEventosCreadosPorUsuario((evento)=>{
-                console.log('didmount evento.createdAt '+evento.createdAt)
                 items.push({
                             eventoId: evento.eventoId,
                             categoria: evento.categoria.toUpperCase(),
