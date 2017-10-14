@@ -4,6 +4,8 @@ import {
     Actions,
 } from 'react-native-router-flux';
 
+import prompt from 'react-native-prompt-android';
+
 class Backend{
     uid='';
     messageRef=null;
@@ -382,16 +384,42 @@ class Backend{
         this.getUsuarioRef();
         this.usuarioRef.child(user.key).remove()
             .then(()=>{
-                console.log('name ' + this.getName() + ' : pass ' + this.getPass())
-                    firebase.auth().signInWithEmailAndPassword(this.getName(),this.getPass())
-                    .then(()=>{
-                            firebase.auth().currentUser.delete()
+                    prompt(
+                        'INGRESE SU  CONTRASEÑA',
+                        'Para borrar su cuenta debemos validar su identidad',
+                        [
+                         {text: 'CANCELAR', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                         {text: 'OK', onPress: password => {
+                            const currentUser = firebase.auth().currentUser;
+                            const credential = firebase.auth.EmailAuthProvider.credential(
+                                currentUser.email, 
+                                password
+                            );
+                            currentUser.reauthenticateWithCredential(credential)
+                            .then(()=>{
+                                currentUser.delete()
+                                .then(()=>{
+                                    Actions.home({
+                                    });
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                    alert('Se produjo un error borrando el usuario');
+                                })
+                            })
                             .catch(error => {
                                 console.log(error);
                                 alert('Se produjo un error borrando el usuario');
                             })
-                        
-                    })
+                         }},
+                        ],
+                        {
+                            type: 'secure-text',
+                            cancelable: false,
+                            defaultValue: 'test',
+                            placeholder: 'placeholder'
+                        }
+                    );
             })
             .catch(error => {
                 console.log(error);
