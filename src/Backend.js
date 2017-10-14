@@ -30,7 +30,7 @@ class Backend{
                        Actions.menu({
                             user:usuario,
                         });
-                }   ,user);
+                });
             }
         });
     }
@@ -179,7 +179,7 @@ class Backend{
                 userId:this.getUid(),
             }).key;
             var evento = {
-                eventoId: eventoId.toUpperCase(),
+                eventoId: eventoId,
                 categoria: categoria.toUpperCase(),
                 barrio: barrio.toUpperCase(),
                 fecha: fecha.toUpperCase(),
@@ -191,6 +191,8 @@ class Backend{
             };
             //Agrego el evento como notificacipn para cada usuario
            this.agregarNotificacionParaUsuario(user,evento);
+           //Navego a la pantalla anterior
+            Actions.evento({user:user,});
     }
 
     modificarEvento(evento,categoria,barrio,fecha,descripcion,centro,hora,user){
@@ -270,6 +272,27 @@ class Backend{
     getEventosCreadosPorUsuario(callback, usuario){
         this.getEventoRef();
         this.eventosRef.orderByChild("userId").equalTo(usuario._id).limitToLast(20).once('value',function(snapshot){
+            snapshot.forEach(function(childSnapshot) {
+                const evento = childSnapshot.val();
+                    callback({
+                                eventoId: childSnapshot.key,
+                                categoria: evento.categoria.toUpperCase(),
+                                barrio: evento.barrio.toUpperCase(),
+                                fecha: evento.fecha,
+                                mensajeAlertaId: evento.mensajeAlertaId,
+                                descripcion: evento.descripcion.toUpperCase(),
+                                centro: evento.centro.toUpperCase(),
+                                hora: evento.hora,
+                                user: evento.user,
+                                createdAt:evento.createdAt,
+                     });
+                });
+        });
+    }
+
+    getEventoPorId(callback,eventoId){
+        this.getEventoRef();
+        this.eventosRef.orderByKey().equalTo(eventoId).limitToLast(20).once('value',function(snapshot){
             snapshot.forEach(function(childSnapshot) {
                 const evento = childSnapshot.val();
                     callback({

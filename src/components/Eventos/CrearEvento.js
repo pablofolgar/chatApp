@@ -213,7 +213,7 @@ export default class CrearEvento extends React.Component{
                               blurOnSubmit={false}
                               onSelectionChange={(event) => this.setState({ cursorPosition: event.nativeEvent.selection.start })}
                               onSubmitEditing = {(event) => {this._updateText(event)} }
-                              defaultValue={this.state.text}
+                              defaultValue={this.state.descripcion}
                               
                       />
                 </View>   
@@ -317,7 +317,7 @@ export default class CrearEvento extends React.Component{
         );
       }
     limpiarCampos(){
-        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA',descripcion:'',centro:'',fecha:'',hora:''})
+        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA',descripcion:'',centro:'',simpleText:'FECHA DEL EVENTO',isoFormatText:'HORA DEL EVENTO'})
     }
 
     validarCamposRequeridos(){
