@@ -147,6 +147,16 @@ export default class CrearPerfil extends React.Component{
                                                 }
                                     />
                                 )}
+
+                                 {renderIf(this.props.user,
+                                    <ActionButton 
+                                        title="BORRAR"
+                                        onPress={()=>{
+                                                        this.borrarUsuario();
+                                                    }
+                                                }
+                                    />
+                                )}
                 
                             </View>
                     </View>
@@ -175,7 +185,7 @@ export default class CrearPerfil extends React.Component{
 
     agregarUsuario() {
       Alert.alert(
-        'PARA CREAR DEFINITIVAMENTE SU USUARIO APRIETE "AGREGAR"',
+        'PARA CREAR DEFINITIVAMENTE SU USUARIO PRESIONE "AGREGAR"',
         null,
         [
           {text: 'VOLVER', onPress: (t) => console.log('Cancel')},
@@ -193,7 +203,7 @@ export default class CrearPerfil extends React.Component{
 
     editarUsuario() {
       Alert.alert(
-        'PARA EDITAR DEFINITIVAMENTE SU USUARIO APRIETE "MODIFICAR"',
+        'PARA EDITAR DEFINITIVAMENTE SU USUARIO PRESIONE "MODIFICAR"',
         null,
         [
           {text: 'VOLVER', onPress: (t) => console.log('Cancel')},
@@ -202,6 +212,23 @@ export default class CrearPerfil extends React.Component{
             onPress: (t) => {
               Backend.modificarUsuario(this.props.user,this.state.name, this.state.barrio,
                     this.state.centro, this.state.selectedInteres, this.state.selectedPerfil);
+            }
+          },
+        ],
+        'plain-text'
+      );
+    }
+
+    borrarUsuario() {
+      Alert.alert(
+        'PARA BORRAR DEFINITIVAMENTE SU USUARIO PRESIONE "BORRAR"',
+        null,
+        [
+          {text: 'VOLVER', onPress: (t) => console.log('Cancel')},
+          {
+            text: 'BORRAR',
+            onPress: (t) => {
+              Backend.borrarUsuario(this.props.user);
             }
           },
         ],

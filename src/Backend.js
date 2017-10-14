@@ -44,10 +44,11 @@ class Backend{
     }
 
     signUp(name, pass){
-        console.log('signUp name: ' + name)
         firebase.auth().createUserWithEmailAndPassword(name,pass)
         .catch(function(error){
+            console.log(error.message);
             alert(error.message);
+
         })
     }
 
@@ -377,6 +378,26 @@ class Backend{
         })
     }
 
+    borrarUsuario(user){
+        this.getUsuarioRef();
+        this.usuarioRef.child(user.key).remove()
+            .then(()=>{
+                console.log('name ' + this.getName() + ' : pass ' + this.getPass())
+                    firebase.auth().signInWithEmailAndPassword(this.getName(),this.getPass())
+                    .then(()=>{
+                            firebase.auth().currentUser.delete()
+                            .catch(error => {
+                                console.log(error);
+                                alert('Se produjo un error borrando el usuario');
+                            })
+                        
+                    })
+            })
+            .catch(error => {
+                console.log(error);
+                alert('Se produjo un error borrando el usuario');
+            })
+    }
 
     buscarUsuarioLogueado(callback){//,name){
         this.getUsuarioRef();
