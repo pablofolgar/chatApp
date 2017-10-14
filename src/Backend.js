@@ -49,7 +49,7 @@ class Backend{
         firebase.auth().createUserWithEmailAndPassword(name,pass)
         .catch(function(error){
             console.log(error.message);
-            alert(error.message);
+            alert('La dirección de mail ya esta siendo utilizada por otra cuenta');
 
         })
     }
@@ -58,7 +58,7 @@ class Backend{
         firebase.auth().signInWithEmailAndPassword(name,pass)
         .catch(function(error) {   
             console.log(error.message);
-            alert(error.message);
+            alert('La cuenta no existe o la contraseña es inválida');
         })
     }
 
