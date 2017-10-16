@@ -18,27 +18,83 @@ import {
 import ActionButton from  './ActionButton';
 import Backend from '../Backend';
 import * as firebase from 'firebase';
-
-
+import Validaciones from './Validaciones.js';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const style = require('./styles.js');
 
+const autenticacion = () => {
+    return new Promise((resolve,reject) => {
+        firebase.auth().onAuthStateChanged((user) => {
+             if(user){
+                resolve(user);
+             }else{
+                reject(null);
+             }
+
+        })
+    })
+}
+
+const login = (name, pass) => {
+    return new Promise((resolve,reject) => {
+        firebase.auth().signInWithEmailAndPassword(name,pass)
+        .then((user)=>{
+            resolve(user);
+        })
+        .catch(error => {   
+            console.log(error.message);
+            reject(error);
+        })
+    })
+}
+
+const signUp = (name, pass) => {
+    return new Promise((resolve,reject) => {
+        firebase.auth().createUserWithEmailAndPassword(name,pass)
+        .then((user)=>{
+            resolve(user);
+        })
+        .catch(error => {   
+            console.log(error.message);
+            reject(error);
+        })
+    })
+}
 
 class Home extends React.Component{
-    constructor(){
+    constructor(props){
         super();
 
+        this.state={
+            name:'',
+            user:'',
+            pass:'',
+            response:'',
+            visible:true,
+        };
+        autenticacion()
+        .then((user)=>{
+            console.log('Usuario autenticado por firebase: '+ user.uid);
+                Backend.setUid(user.uid);
+                Backend.buscarUsuarioLogueado((usuario)=>{
+                    console.log('entro por buscarUsuarioLogueado con : ' + usuario._id)
+                    Backend.actualizarFechaUltimoAcceso(usuario);
+                    this.setState({visible:!this.state.visible});
+                    Actions.menu({
+                        user:usuario,
+                    });
+                });
+        })
+        .catch(error => {
+            this.setState({visible:!this.state.visible});
+            console.log('usuario no autenticado en la base')
+        })
+        
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
     }
-
-    state={
-        name:'',
-        user:'',
-        pass:'',
-        response:'',
-    };
 
     render(){
         return(
@@ -49,6 +105,9 @@ class Home extends React.Component{
                 <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={700} >
 
                     <View>
+                        <View style={{ flex: 1 }}>
+                            <Spinner visible={this.state.visible} textContent={"Estamos cargando sus datos..."} textStyle={{color: '#FFF'}} />
+                        </View>
 
                         <View>
 
@@ -116,8 +175,30 @@ class Home extends React.Component{
                                               ],
                                               { cancelable: false }
                                             )
+                                        }else if(!Validaciones.validateEmail(this.state.name)){
+                                            Alert.alert(
+                                              'CAMPO INVÁLIDO',
+                                              'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
+                                              [
+                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                              ],
+                                              { cancelable: false }
+                                            )
                                         }else{
-                                            Backend.signUp(this.state.name,this.state.pass);
+                                            this.setState({visible:!this.state.visible,});
+                                            signUp(this.state.name,this.state.pass)
+                                            .then((user)=>{
+                                                console.log('Login de usuario creado: ' + user.uid)
+                                                Backend.setUid(user.uid);
+                                                this.setState({visible:!this.state.visible});
+                                                Actions.perfil({
+                                                    userId:this.uid,
+                                                });
+                                            })
+                                            .catch(error => {
+                                                this.setState({visible:!this.state.visible,});
+                                                alert('La cuenta no existe o la contraseña es inválida');
+                                            })
                                         }
                                     }}/>
                 
@@ -136,8 +217,34 @@ class Home extends React.Component{
                                               ],
                                               { cancelable: false }
                                             )
+                                        }else if(!Validaciones.validateEmail(this.state.name)){
+                                            Alert.alert(
+                                              'CAMPO INVÁLIDO',
+                                              'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
+                                              [
+                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                              ],
+                                              { cancelable: false }
+                                            )
                                         }else{
-                                            Backend.login(this.state.name,this.state.pass);
+                                            this.setState({visible:!this.state.visible,});
+                                            login(this.state.name,this.state.pass)
+                                            .then((user)=>{
+                                                console.log('Login de usuario: ' + user.uid)
+                                                 Backend.setUid(user.uid);
+                                                    Backend.buscarUsuarioLogueado((usuario)=>{
+                                                        console.log('entro por buscarUsuarioLogueado con : ' + usuario._id)
+                                                        Backend.actualizarFechaUltimoAcceso(usuario);
+                                                        this.setState({visible:!this.state.visible});
+                                                        Actions.menu({
+                                                            user:usuario,
+                                                        });
+                                                    });
+                                            })
+                                            .catch(error => {
+                                                this.setState({visible:!this.state.visible,});
+                                                alert('La cuenta no existe o la contraseña es inválida');
+                                            })
                                         }
                                     }}/>
                 

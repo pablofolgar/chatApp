@@ -22,19 +22,6 @@ class Backend{
             databaseURL: "https://redterceraedad-531be.firebaseio.com",
             storageBucket: "redterceraedad-531be.appspot.com",
         });
-            firebase.auth().onAuthStateChanged((user) => {
-            if(user){
-                console.log('Usuario Logueado: '+ user.uid);
-                this.setUid(user.uid);
-                this.buscarUsuarioLogueado((usuario)=>{
-                    console.log('entro por buscarUsuarioLogueado con : ' + usuario._id)
-                    this.actualizarFechaUltimoAcceso(usuario);
-                       Actions.menu({
-                            user:usuario,
-                        });
-                });
-            }
-        });
     }
 
     setUid(value){
@@ -43,23 +30,6 @@ class Backend{
 
     getUid(){
         return this.uid;
-    }
-
-    signUp(name, pass){
-        firebase.auth().createUserWithEmailAndPassword(name,pass)
-        .catch(function(error){
-            console.log(error.message);
-            alert('La dirección de mail ya esta siendo utilizada por otra cuenta');
-
-        })
-    }
-
-    login(name, pass){
-        firebase.auth().signInWithEmailAndPassword(name,pass)
-        .catch(function(error) {   
-            console.log(error.message);
-            alert('La cuenta no existe o la contraseña es inválida');
-        })
     }
 
     logOut(){
@@ -427,10 +397,9 @@ class Backend{
             })
     }
 
-    buscarUsuarioLogueado(callback){//,name){
+    buscarUsuarioLogueado(callback){
         this.getUsuarioRef();
         this.usuarioRef.orderByChild("_id").equalTo(this.uid).once('value',function(snapshot){
-            if(snapshot.hasChildren()){
                 snapshot.forEach(function(childSnapshot) {
                 const user = childSnapshot.val();
                 callback({
@@ -447,11 +416,6 @@ class Backend{
                             fechaUltimoAcceso:user.fechaUltimoAcceso,
                         });
                     });
-            }else{
-                Actions.perfil({
-                            userId:this.uid,
-                        });
-            }
         });
     }
 
