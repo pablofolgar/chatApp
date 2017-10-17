@@ -291,7 +291,8 @@ class Backend{
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los usuarios
     //Guardar usuarios
-    agregarUsuario(userId, name, barrio, centro, interes, selectedPerfil){
+    agregarUsuario(userId, name, barrio, centro, interes, selectedPerfil, telefono, centroPrestaInstalaciones, descripcion, brindarCharlas, asistirCharlas,
+        recibirVisitasCentro, contactoEmergencia, telefonoContactoSeguridad, mailContactoSeguridad, tipoOrganizacion){
         this.getUsuarioRef();
         var intereses = [];
         for(var keyPre in interes){
@@ -306,6 +307,16 @@ class Backend{
                 centro: centro.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
+                telefono: telefono,
+                centroPrestaInstalaciones: centroPrestaInstalaciones,
+                descripcion: descripcion,
+                brindarCharlas: brindarCharlas,
+                asistirCharlas: asistirCharlas,
+                recibirVisitasCentro:recibirVisitasCentro,
+                contactoEmergencia: contactoEmergencia,
+                telefonoContactoSeguridad:telefonoContactoSeguridad,
+                mailContactoSeguridad:mailContactoSeguridad,
+                tipoOrganizacion:tipoOrganizacion,
         })
         .then(result => {
             this.buscarUsuarioLogueado((usuario)=>{
@@ -319,7 +330,8 @@ class Backend{
         })
     }
 
-    modificarUsuario(user, name, barrio, centro, interes, selectedPerfil){
+    modificarUsuario(user, name, barrio, centro, interes, selectedPerfil, telefono, centroPrestaInstalaciones, descripcion, brindarCharlas, asistirCharlas,
+        recibirVisitasCentro, contactoEmergencia, telefonoContactoSeguridad, mailContactoSeguridad, tipoOrganizacion){
         this.getUsuarioRef();
         var intereses = [];
         for(var keyPre in interes){
@@ -334,6 +346,16 @@ class Backend{
             centro: centro.toUpperCase(),
             createdAt: user.createdAt,
             fechaUltimoAcceso:user.fechaUltimoAcceso,
+            telefono:telefono,
+            centroPrestaInstalaciones: centroPrestaInstalaciones,
+            descripcion: descripcion,
+            brindarCharlas: brindarCharlas,
+            asistirCharlas: asistirCharlas,
+            recibirVisitasCentro:recibirVisitasCentro,
+            contactoEmergencia: contactoEmergencia,
+            telefonoContactoSeguridad:telefonoContactoSeguridad,
+            mailContactoSeguridad:mailContactoSeguridad,
+            tipoOrganizacion:tipoOrganizacion,
         }
         var updates = {};
         updates[user.key+'/'] = usuarioModificado;
@@ -358,7 +380,6 @@ class Backend{
                         'INGRESE SU  CONTRASEÑA',
                         'Para borrar su cuenta debemos validar su identidad',
                         [
-                         {text: 'CANCELAR', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                          {text: 'OK', onPress: password => {
                             const currentUser = firebase.auth().currentUser;
                             const credential = firebase.auth.EmailAuthProvider.credential(
@@ -414,6 +435,16 @@ class Backend{
                             usuarios:user.usuarios,
                             centro:user.centro,
                             fechaUltimoAcceso:user.fechaUltimoAcceso,
+                            telefono: user.telefono,
+                            centroPrestaInstalaciones: user.centroPrestaInstalaciones,
+                            descripcion: user.descripcion,
+                            brindarCharlas:user.brindarCharlas,
+                            asistirCharlas:user.asistirCharlas,
+                            recibirVisitasCentro:user.recibirVisitasCentro,
+                            contactoEmergencia:user.contactoEmergencia,
+                            telefonoContactoSeguridad:user.telefonoContactoSeguridad,
+                            mailContactoSeguridad:user.mailContactoSeguridad,
+                            tipoOrganizacion:user.tipoOrganizacion,
                         });
                     });
         });
