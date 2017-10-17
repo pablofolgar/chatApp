@@ -294,40 +294,94 @@ class Backend{
     agregarUsuario(userId, name, barrio, centro, interes, selectedPerfil, telefono, centroPrestaInstalaciones, descripcion, brindarCharlas, asistirCharlas,
         recibirVisitasCentro, contactoEmergencia, telefonoContactoSeguridad, mailContactoSeguridad, tipoOrganizacion){
         this.getUsuarioRef();
-        var intereses = [];
-        for(var keyPre in interes){
-            intereses.push(interes[keyPre].value);
-        }
-        this.usuarioRef.push({
+
+
+        if(selectedPerfil.toUpperCase() === 'CENTRO'){//9 CAMPOS
+            this.usuarioRef.push({
                 _id: this.getUid(),
                 name: name.toUpperCase(),
-                intereses:intereses,
                 perfil: selectedPerfil,
                 barrio: barrio.toUpperCase(),
-                centro: centro.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
                 telefono: telefono,
                 centroPrestaInstalaciones: centroPrestaInstalaciones,
-                descripcion: descripcion,
-                brindarCharlas: brindarCharlas,
-                asistirCharlas: asistirCharlas,
-                recibirVisitasCentro:recibirVisitasCentro,
-                contactoEmergencia: contactoEmergencia,
-                telefonoContactoSeguridad:telefonoContactoSeguridad,
-                mailContactoSeguridad:mailContactoSeguridad,
                 tipoOrganizacion:tipoOrganizacion,
-        })
-        .then(result => {
-            this.buscarUsuarioLogueado((usuario)=>{
-                           Actions.menu({
-                                user:usuario,
-                            });
-                    } );
-        })
-        .catch(error => {
-            console.log(error);  
-        })
+            })
+            .then(result => {
+                this.buscarUsuarioLogueado((usuario)=>{
+                               Actions.menu({
+                                    user:usuario,
+                                });
+                        } );
+            })
+            .catch(error => {
+                console.log(error);  
+            })
+        }else if(selectedPerfil.toUpperCase() === 'VOLUNTARIO'){//12 CAMPOS
+            var intereses = [];
+            for(var keyPre in interes){
+                intereses.push(interes[keyPre].value);
+            }
+            this.usuarioRef.push({
+                    perfil: selectedPerfil,
+                    name: name.toUpperCase(),
+                    descripcion: descripcion,
+                    telefono: telefono,
+                    barrio: barrio.toUpperCase(),
+                    centro: centro.toUpperCase(),
+                    intereses:intereses,
+                    brindarCharlas: brindarCharlas,
+                    asistirCharlas: asistirCharlas,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
+                    _id: this.getUid(),
+            })
+            .then(result => {
+                this.buscarUsuarioLogueado((usuario)=>{
+                               Actions.menu({
+                                    user:usuario,
+                                });
+                        } );
+            })
+            .catch(error => {
+                console.log(error);  
+            })
+        }else if(selectedPerfil.toUpperCase() === 'USUARIO'){//16 CAMPOS
+            var intereses = [];
+            for(var keyPre in interes){
+                intereses.push(interes[keyPre].value);
+            }
+            this.usuarioRef.push({
+                    perfil: selectedPerfil,
+                    name: name.toUpperCase(),
+                    descripcion: descripcion,
+                    telefono: telefono,
+                    barrio: barrio.toUpperCase(),
+                    centro: centro.toUpperCase(),
+                    intereses:intereses,
+                    brindarCharlas: brindarCharlas,
+                    asistirCharlas: asistirCharlas,
+                    recibirVisitasCentro:recibirVisitasCentro,
+                    contactoSeguridad: contactoEmergencia,
+                    telefonoContactoSeguridad:telefonoContactoSeguridad,
+                    mailContactoSeguridad:mailContactoSeguridad,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
+                    _id: this.getUid(),
+            })
+            .then(result => {
+                this.buscarUsuarioLogueado((usuario)=>{
+                               Actions.menu({
+                                    user:usuario,
+                                });
+                        } );
+            })
+            .catch(error => {
+                console.log(error);  
+            })
+        }
+
     }
 
     modificarUsuario(user, name, barrio, centro, interes, selectedPerfil, telefono, centroPrestaInstalaciones, descripcion, brindarCharlas, asistirCharlas,
@@ -408,7 +462,7 @@ class Backend{
                             type: 'secure-text',
                             cancelable: false,
                             defaultValue: 'test',
-                            placeholder: 'placeholder'
+                            placeholder: 'CONTRASEÑA'
                         }
                     );
             })
