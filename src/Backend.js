@@ -421,32 +421,36 @@ class Backend{
     buscarUsuarioLogueado(callback){
         this.getUsuarioRef();
         this.usuarioRef.orderByChild("_id").equalTo(this.uid).once('value',function(snapshot){
-                snapshot.forEach(function(childSnapshot) {
-                const user = childSnapshot.val();
-                callback({
-                            key:childSnapshot.key,
-                            _id: user._id,
-                            name:  user.name.toUpperCase(),
-                            intereses:  user.intereses,
-                            perfil:  user.perfil,
-                            barrio:  user.barrio.toUpperCase(),
-                            createdAt:  user.createdAt,
-                            notificaciones:user.notificaciones,
-                            usuarios:user.usuarios,
-                            centro:user.centro,
-                            fechaUltimoAcceso:user.fechaUltimoAcceso,
-                            telefono: user.telefono,
-                            centroPrestaInstalaciones: user.centroPrestaInstalaciones,
-                            descripcion: user.descripcion,
-                            brindarCharlas:user.brindarCharlas,
-                            asistirCharlas:user.asistirCharlas,
-                            recibirVisitasCentro:user.recibirVisitasCentro,
-                            contactoEmergencia:user.contactoEmergencia,
-                            telefonoContactoSeguridad:user.telefonoContactoSeguridad,
-                            mailContactoSeguridad:user.mailContactoSeguridad,
-                            tipoOrganizacion:user.tipoOrganizacion,
+                if(snapshot.hasChildren()){
+                    snapshot.forEach(function(childSnapshot) {
+                    const user = childSnapshot.val();
+                    callback({
+                                key:childSnapshot.key,
+                                _id: user._id,
+                                name:  user.name.toUpperCase(),
+                                intereses:  user.intereses,
+                                perfil:  user.perfil,
+                                barrio:  user.barrio.toUpperCase(),
+                                createdAt:  user.createdAt,
+                                notificaciones:user.notificaciones,
+                                usuarios:user.usuarios,
+                                centro:user.centro,
+                                fechaUltimoAcceso:user.fechaUltimoAcceso,
+                                telefono: user.telefono,
+                                centroPrestaInstalaciones: user.centroPrestaInstalaciones,
+                                descripcion: user.descripcion,
+                                brindarCharlas:user.brindarCharlas,
+                                asistirCharlas:user.asistirCharlas,
+                                recibirVisitasCentro:user.recibirVisitasCentro,
+                                contactoEmergencia:user.contactoEmergencia,
+                                telefonoContactoSeguridad:user.telefonoContactoSeguridad,
+                                mailContactoSeguridad:user.mailContactoSeguridad,
+                                tipoOrganizacion:user.tipoOrganizacion,
+                            });
                         });
-                    });
+                }else{
+                    callback(null);
+                }
         });
     }
 

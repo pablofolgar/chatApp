@@ -78,12 +78,20 @@ class Home extends React.Component{
             console.log('Usuario autenticado por firebase: '+ user.uid);
                 Backend.setUid(user.uid);
                 Backend.buscarUsuarioLogueado((usuario)=>{
-                    console.log('entro por buscarUsuarioLogueado con : ' + usuario._id)
-                    Backend.actualizarFechaUltimoAcceso(usuario);
-                    this.setState({visible:!this.state.visible});
-                    Actions.menu({
-                        user:usuario,
-                    });
+                    if(usuario){
+                        console.log('entro por buscarUsuarioLogueado con : ' + usuario._id);
+                        Backend.actualizarFechaUltimoAcceso(usuario);
+                        this.setState({visible:!this.state.visible});
+                        Actions.menu({
+                            user:usuario,
+                        });
+                    }else{
+                        console.log('El usuario autenticado no esta creado en la tabla USERS');
+                        this.setState({visible:!this.state.visible});
+                        Actions.perfil({
+                            userId:this.uid,
+                        });
+                    }
                 });
         })
         .catch(error => {
@@ -197,7 +205,7 @@ class Home extends React.Component{
                                             })
                                             .catch(error => {
                                                 this.setState({visible:!this.state.visible,});
-                                                alert('La cuenta no existe o la contraseña es inválida');
+                                                alert('La dirección de mail esta siendo usada por otra cuenta');
                                             })
                                         }
                                     }}/>
