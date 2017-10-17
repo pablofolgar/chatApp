@@ -45,7 +45,7 @@ export default class CrearPerfil extends React.Component{
                         brindarCharlas: (this.props.user && this.props.user.perfil != 'CENTRO') ? this.props.user.brindarCharlas : false,
                         asistirCharlas: (this.props.user && this.props.user.perfil != 'CENTRO') ? this.props.user.asistirCharlas : false,
                         recibirVisitasCentro: (this.props.user && this.props.user.perfil === 'USUARIO') ? this.props.user.recibirVisitasCentro : false,
-                        contactoEmergencia: (this.props.user && this.props.user.perfil === 'USUARIO') ? this.props.user.contactoEmergencia : '',
+                        contactoSeguridad: (this.props.user && this.props.user.perfil === 'USUARIO') ? this.props.user.contactoSeguridad : '',
                         telefonoContactoSeguridad: (this.props.user && this.props.user.perfil === 'USUARIO') ? this.props.user.telefonoContactoSeguridad : '',
                         mailContactoSeguridad: (this.props.user && this.props.user.perfil === 'USUARIO') ? this.props.user.mailContactoSeguridad : '',
                         tipoOrganizacion: (this.props.user && this.props.user.perfil === 'CENTRO') ? this.props.user.tipoOrganizacion : '',
@@ -241,10 +241,10 @@ export default class CrearPerfil extends React.Component{
                                     placeholder='"NOMBRE Y APELLIDO DEL CONTACTO DE EMERGENCIA"'
                                     onChangeText={ (text) => {
                                         this.setState({
-                                            contactoEmergencia:text,
+                                            contactoSeguridad:text,
                                         })
                                     }}
-                                    value= {this.state.contactoEmergencia}
+                                    value= {this.state.contactoSeguridad}
                                 />
                             </View>
                         )}
@@ -358,7 +358,7 @@ export default class CrearPerfil extends React.Component{
               Backend.agregarUsuario(this.state.userId, this.state.name, this.state.barrio,
                 this.state.centro, this.state.selectedInteres, this.state.selectedPerfil, this.state.telefono,
                 this.state.centroPrestaInstalaciones, this.state.descripcion, this.state.brindarCharlas, this.state.asistirCharlas,
-                this.state.recibirVisitasCentro, this.state.contactoEmergencia, this.state.telefonoContactoSeguridad, 
+                this.state.recibirVisitasCentro, this.state.contactoSeguridad, this.state.telefonoContactoSeguridad, 
                 this.state.mailContactoSeguridad, this.state.tipoOrganizacion);
             }
           },
@@ -379,7 +379,7 @@ export default class CrearPerfil extends React.Component{
               Backend.modificarUsuario(this.props.user,this.state.name, this.state.barrio,
                     this.state.centro, this.state.selectedInteres, this.state.selectedPerfil, this.state.telefono,
                     this.state.centroPrestaInstalaciones, this.state.descripcion, this.state.brindarCharlas, this.state.asistirCharlas,
-                    this.state.recibirVisitasCentro, this.state.contactoEmergencia, this.state.telefonoContactoSeguridad, 
+                    this.state.recibirVisitasCentro, this.state.contactoSeguridad, this.state.telefonoContactoSeguridad, 
                     this.state.mailContactoSeguridad, this.state.tipoOrganizacion);
             }
           },
