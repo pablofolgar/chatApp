@@ -36,6 +36,7 @@ class Backend{
         console.log('Logout usuario: '+this.getUid());
         firebase.auth().signOut().then(function() {
             console.log('Logout satisfactorio');
+            Actions.home({});
         }).catch(function(error) {
           alert(error.message);
         });
@@ -489,6 +490,7 @@ class Backend{
                             .catch(error => {
                                 console.log(error);
                                 alert('Se produjo un error borrando el usuario');
+                                this.logOut();
                             })
                          }},
                         ],
