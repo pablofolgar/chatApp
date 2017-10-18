@@ -146,10 +146,11 @@ class Home extends React.Component{
 
                             <View>
                                 <ActionButton 
-                                    title="Recupear contrasenia"
+                                    title="Recuperar contrasenia"
                                     onPress={() => {
                                         
                                             Backend.recuperarContrasenia();
+
                                         }
                                     }/>
                 
@@ -210,8 +211,10 @@ class Home extends React.Component{
                                                 console.log('Login de usuario creado: ' + user.uid)
                                                 Backend.setUid(user.uid);
                                                 this.setState({visible:!this.state.visible});
-                                                Actions.perfil({
-                                                    userId:this.uid,
+                                                user.sendEmailVerification().then(function() {
+                                                  alert('Se envio un email a '+ user.email +' .Verifique su identidad y vuelva a ingresar ')
+                                                }).catch(function(error) {
+                                                  console.log('Error enciando mail de confirmacion')
                                                 });
                                             })
                                             .catch(error => {
@@ -252,12 +255,20 @@ class Home extends React.Component{
                                                 console.log('Login de usuario: ' + user.uid)
                                                  Backend.setUid(user.uid);
                                                     Backend.buscarUsuarioLogueado((usuario)=>{
-                                                        console.log('entro por buscarUsuarioLogueado con : ' + usuario._id)
-                                                        Backend.actualizarFechaUltimoAcceso(usuario);
-                                                        this.setState({visible:!this.state.visible});
-                                                        Actions.menu({
-                                                            user:usuario,
-                                                        });
+                                                        if(usuario){
+                                                            console.log('entro por buscarUsuarioLogueado con : ' + usuario._id);
+                                                            Backend.actualizarFechaUltimoAcceso(usuario);
+                                                            this.setState({visible:!this.state.visible});
+                                                            Actions.menu({
+                                                                user:usuario,
+                                                            });
+                                                        }else{
+                                                            console.log('El usuario autenticado no esta creado en la tabla USERS');
+                                                            this.setState({visible:!this.state.visible});
+                                                            Actions.perfil({
+                                                                userId:this.uid,
+                                                            });
+                                                        }
                                                     });
                                             })
                                             .catch(error => {

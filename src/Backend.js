@@ -47,7 +47,8 @@ class Backend{
         this.logOut();
         firebase.auth().sendPasswordResetEmail(user.email)
         .then(function() {
-            console.log('se envio mail')
+            console.log('Se envio un email a '+ user.email +' para recuperar la contraseña')
+            alert('Se envio un email a '+ user.email +' para recuperar la contraseña')
         }).catch(function(error) {
             console.log('error al tratar de reestablecer la contrasenia')
         });
