@@ -143,6 +143,17 @@ class Home extends React.Component{
                                     }/>
                 
                             </View>
+
+                            <View>
+                                <ActionButton 
+                                    title="Recupear contrasenia"
+                                    onPress={() => {
+                                        
+                                            Backend.recuperarContrasenia();
+                                        }
+                                    }/>
+                
+                            </View>
                         {/*     BORRAR             */}
 
                         <View>

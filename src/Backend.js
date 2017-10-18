@@ -42,6 +42,15 @@ class Backend{
         });
     }
 
+    recuperarContrasenia(){
+        var user = firebase.auth().currentUser;
+        firebase.auth().sendPasswordResetEmail(user.email).then(function() {
+            console.log('se envio mail')
+        }).catch(function(error) {
+            console.log('error al tratar de reestablecer la contrasenia')
+        });
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los chat
     //Retrieve the message from the backend
