@@ -131,31 +131,47 @@ class Home extends React.Component{
 
                          </View>
 
-                     {/*     BORRAR             */}
 
-							<View>
-                                <ActionButton 
-                                    title="LOGOUT"
-                                    onPress={() => {
-                                        
-                                            Backend.logOut();
+						<View>
+                            <ActionButton 
+                                title="LOGOUT"
+                                onPress={() => {
+                                        Backend.logOut();
+                                    }
+                                }/>
+            
+                        </View>
+
+                        <View>
+                            <ActionButton 
+                                title="RECUPERAR CONTRASEÑA"
+                                onPress={() => {
+
+                                        if(this.state.name===''){
+                                            Alert.alert(
+                                              'CAMPO OBLIGATORIO',
+                                              'DEBE INGRESAR EL MAIL PARA RECUPERAR LA CONTRASEÑA.',
+                                              [
+                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                              ],
+                                              { cancelable: false }
+                                            )
+                                        }else if(!Validaciones.validateEmail(this.state.name)){
+                                            Alert.alert(
+                                              'CAMPO INVÁLIDO',
+                                              'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
+                                              [
+                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                              ],
+                                              { cancelable: false }
+                                            )
+                                        }else{
+                                            Backend.recuperarContrasenia(this.state.name);
                                         }
-                                    }/>
-                
-                            </View>
-
-                            <View>
-                                <ActionButton 
-                                    title="Recuperar contrasenia"
-                                    onPress={() => {
-                                        
-                                            Backend.recuperarContrasenia();
-
-                                        }
-                                    }/>
-                
-                            </View>
-                        {/*     BORRAR             */}
+                                    }
+                                }/>
+            
+                        </View>
 
                         <View>
                             <View  style={style.singleInputView}>

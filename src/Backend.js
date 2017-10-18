@@ -42,13 +42,15 @@ class Backend{
         });
     }
 
-    recuperarContrasenia(){
+    recuperarContrasenia(email){
         var user = firebase.auth().currentUser;
-        this.logOut();
-        firebase.auth().sendPasswordResetEmail(user.email)
+        if(user){
+            this.logOut();
+        }
+        firebase.auth().sendPasswordResetEmail(email)
         .then(function() {
-            console.log('Se envio un email a '+ user.email +' para recuperar la contraseña')
-            alert('Se envio un email a '+ user.email +' para recuperar la contraseña')
+            console.log('Se envio un email a '+ email +' para recuperar la contraseña')
+            alert('Se envio un email a '+ email +' para recuperar la contraseña')
         }).catch(function(error) {
             console.log('error al tratar de reestablecer la contrasenia')
         });
