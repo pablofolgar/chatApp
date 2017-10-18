@@ -44,7 +44,9 @@ class Backend{
 
     recuperarContrasenia(){
         var user = firebase.auth().currentUser;
-        firebase.auth().sendPasswordResetEmail(user.email).then(function() {
+        this.logOut();
+        firebase.auth().sendPasswordResetEmail(user.email)
+        .then(function() {
             console.log('se envio mail')
         }).catch(function(error) {
             console.log('error al tratar de reestablecer la contrasenia')
