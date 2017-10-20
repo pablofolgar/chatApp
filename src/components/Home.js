@@ -120,7 +120,7 @@ class Home extends React.Component{
                         <View>
 
                             <View>
-                                <Text style={style.tituloInicio}>
+                                <Text style={style.HomeTitleText}>
                                     HUELLAS {'\n'} EN RED
                                 </Text>
                             </View>
