@@ -40,7 +40,11 @@ const login = (name, pass) => {
     return new Promise((resolve,reject) => {
         firebase.auth().signInWithEmailAndPassword(name,pass)
         .then((user)=>{
-            resolve(user);
+            if(user &&  user.emailVerified){
+                resolve(user);
+            }else {
+                reject();
+            }
         })
         .catch(error => {   
             console.log(error.message);
@@ -75,7 +79,8 @@ class Home extends React.Component{
         };
         autenticacion()
         .then((user)=>{
-            console.log('Usuario autenticado por firebase: '+ user.uid);
+            if(user &&  user.emailVerified){
+                console.log('Usuario autenticado por firebase: '+ user.uid);
                 Backend.setUid(user.uid);
                 Backend.buscarUsuarioLogueado((usuario)=>{
                     if(usuario){
@@ -93,10 +98,14 @@ class Home extends React.Component{
                         });
                     }
                 });
+            }else {
+                console.log('usuario autenticado por firebase pero sin verificacion de email')
+                this.setState({visible:!this.state.visible});
+            }
         })
         .catch(error => {
             this.setState({visible:!this.state.visible});
-            console.log('usuario no autenticado en la base')
+            console.log('usuario no autenticado por firebase')
         })
         
         console.ignoredYellowBox = [
@@ -230,7 +239,7 @@ class Home extends React.Component{
                                                 user.sendEmailVerification().then(function() {
                                                   alert('Se envio un email a '+ user.email +' .Verifique su identidad y vuelva a ingresar ')
                                                 }).catch(function(error) {
-                                                  console.log('Error enciando mail de confirmacion')
+                                                  console.log('Error enviando mail de confirmación')
                                                 });
                                             })
                                             .catch(error => {
