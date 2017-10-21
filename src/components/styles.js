@@ -93,16 +93,21 @@ var styles = StyleSheet.create({
   },
 
 
+  //-------------PAG INICIO-------------
+
+  //BLOQUE TITULO E IMAGEN
+/*  BloqueTituloImagen:{
+    flex:1,
+    flexDirection: 'row',
+  },*/
   //TÍTULO "HUELLAS EN RED" VISTA
   HomeTitleView:{
-    marginTop:tool.ratio_Y * alto(4.6),    
+    marginTop:tool.ratio_Y * alto(3.6),    
   },
-
-  //-------------PAG INICIO-------------
 
   //TÍTULO "HUELLAS EN RED" TEXTO
   HomeTitleText:{
-    fontSize:alto(7),
+    fontSize:alto(6),
     fontWeight: 'bold',
     color:'white',
     textAlign:'center',
@@ -112,12 +117,12 @@ var styles = StyleSheet.create({
   logoImageView:{
     flex:1,
     elevation:10,
-    height:alto(26),
-    width: alto(26),
+    height:alto(25),
+    width: alto(25),
     borderRadius:100,
     borderWidth:0,
-    marginTop:tool.ratio_Y * alto(5),
-    marginBottom:tool.ratio_Y * alto(5),
+    marginTop:tool.ratio_Y * alto(3),
+    marginBottom:tool.ratio_Y * alto(3.2),
     alignSelf:'center',
   },
 
@@ -127,8 +132,8 @@ var styles = StyleSheet.create({
     borderRadius:100,
     // marginTop:30,
     // marginBottom:95,
-    height: alto(25),
-    width:alto(25),
+    height: alto(24),
+    width:alto(24),
     borderColor: 'black',
     borderWidth:1,
   },
@@ -148,7 +153,7 @@ var styles = StyleSheet.create({
     borderColor: 'black',
     backgroundColor: '#ffffff',
     borderRadius:5,
-    marginTop: alto(1),
+    marginTop: alto(0.2),
     marginLeft:ancho(3),
     marginRight:ancho(3),
     marginBottom:alto(2),
@@ -190,9 +195,9 @@ var styles = StyleSheet.create({
     flex:1,
     flexDirection:'row',
     alignSelf:'center',
-    marginTop:  alto(2.7),
-    marginLeft: ancho(3),
-    marginRight:ancho(3),
+    marginTop:  alto(1),
+    marginLeft: ancho(1),
+    marginRight:ancho(1),
   },
 
   //Vista BOTON REGISTRESE
@@ -223,7 +228,7 @@ var styles = StyleSheet.create({
   },
     //VISTA BOTON CONTRASEÑA 
   ButtonContrasena:{
-    flex:tool.ratio_X * 10,
+    flex:tool.ratio_X * 14,
   },
 
   //TEXTO CONTRASEÑA

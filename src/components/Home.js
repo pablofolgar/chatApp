@@ -5,6 +5,7 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
+    TouchableHighlight,
     Alert,
     Image,
     KeyboardAvoidingView,
@@ -112,14 +113,18 @@ class Home extends React.Component{
 
                 <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={700} >
 
+                    {/* TODO */}
                     <View>
+
+                        {/* --------SPINNER--------- */}
                         <View style={{ flex: 1 }}>
                             <Spinner visible={this.state.visible} textContent={"Estamos cargando sus datos..."} textStyle={{color: '#FFF'}} />
                         </View>
 
-                        <View>
+                        {/*-----BLOQUE TITULO E IMAGEN ----*/}
+                        <View style={style.BloqueTituloImagen}>
 
-                            <View>
+                            <View style={style.HomeTitleView} >
                                 <Text style={style.HomeTitleText}>
                                     HUELLAS {'\n'} EN RED
                                 </Text>
@@ -131,52 +136,14 @@ class Home extends React.Component{
 
                          </View>
 
+                        {/*-----BLOQUE INGRESO Y BOTONES-------*/}
+                        <View >
 
-						<View>
-                            <ActionButton 
-                                title="LOGOUT"
-                                onPress={() => {
-                                        Backend.logOut();
-                                    }
-                                }/>
-            
-                        </View>
-
-                        <View>
-                            <ActionButton 
-                                title="RECUPERAR CONTRASEÑA"
-                                onPress={() => {
-
-                                        if(this.state.name===''){
-                                            Alert.alert(
-                                              'CAMPO OBLIGATORIO',
-                                              'DEBE INGRESAR EL MAIL PARA RECUPERAR LA CONTRASEÑA.',
-                                              [
-                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
-                                              ],
-                                              { cancelable: false }
-                                            )
-                                        }else if(!Validaciones.validateEmail(this.state.name)){
-                                            Alert.alert(
-                                              'CAMPO INVÁLIDO',
-                                              'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
-                                              [
-                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
-                                              ],
-                                              { cancelable: false }
-                                            )
-                                        }else{
-                                            Backend.recuperarContrasenia(this.state.name);
-                                        }
-                                    }
-                                }/>
-            
-                        </View>
-
-                        <View>
+                            {/*  -MAIL- */}
                             <View  style={style.singleInputView}>
                                 <TextInput style={style.singleInputText}
-                                placeholder='INGRESE SU MAIL'
+                               
+                                placeholder='INGRESE MAIL'
                                 onChangeText={ (text) => {
                                     this.setState({
                                         name:text,
@@ -185,10 +152,13 @@ class Home extends React.Component{
                                 value= {this.state.name}
                                 />
                             </View>
+
+                            {/*  -PASSWORD-  */}
                             <View  style={style.singleInputView}>
                                 <TextInput style={style.singleInputText}
+                                autoCapitalize="characters"
                                 secureTextEntry={true}
-                                placeholder='INGRESE SU PASSWORD'
+                                placeholder='INGRESE CLAVE'
                                 onChangeText={ (text) => {
                                     this.setState({
                                         pass:text,
@@ -198,58 +168,17 @@ class Home extends React.Component{
                                 />
                             </View>
 
-                            <View>
-                                <ActionButton 
-                                    title="REGISTRARSE"
-                                    onPress={() => {
-                                        if(this.state.name==='' || this.state.pass ===''){
-                                            Alert.alert(
-                                              'CAMPO OBLIGATORIO',
-                                              'DEBE INGRESAR EL MAIL Y EL PASSWORD PARA COMENZAR.',
-                                              [
-                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
-                                              ],
-                                              { cancelable: false }
-                                            )
-                                        }else if(!Validaciones.validateEmail(this.state.name)){
-                                            Alert.alert(
-                                              'CAMPO INVÁLIDO',
-                                              'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
-                                              [
-                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
-                                              ],
-                                              { cancelable: false }
-                                            )
-                                        }else{
-                                            this.setState({visible:!this.state.visible,});
-                                            signUp(this.state.name,this.state.pass)
-                                            .then((user)=>{
-                                                console.log('Login de usuario creado: ' + user.uid)
-                                                Backend.setUid(user.uid);
-                                                this.setState({visible:!this.state.visible});
-                                                user.sendEmailVerification().then(function() {
-                                                  alert('Se envio un email a '+ user.email +' .Verifique su identidad y vuelva a ingresar ')
-                                                }).catch(function(error) {
-                                                  console.log('Error enciando mail de confirmacion')
-                                                });
-                                            })
-                                            .catch(error => {
-                                                this.setState({visible:!this.state.visible,});
-                                                alert('La dirección de mail esta siendo usada por otra cuenta');
-                                            })
-                                        }
-                                    }}/>
-                
-                            </View>
+                            {/*  -BOTON INGRESAR-  */}
+                            <View style={style.ActionView}>
 
-                            <View>
                                 <ActionButton 
                                     title="INGRESAR"
+                                    style={style.actionText}
                                     onPress={() => {
                                         if(this.state.name==='' || this.state.pass ===''){
                                             Alert.alert(
                                               'CAMPO OBLIGATORIO',
-                                              'DEBE INGRESAR EL MAIL Y EL PASSWORD PARA COMENZAR.',
+                                              'DEBE INGRESAR EL MAIL Y LA CONTRASEÑA PARA COMENZAR.',
                                               [
                                                 {text: 'OK', onPress: () => console.log('OK Pressed')},
                                               ],
@@ -295,9 +224,115 @@ class Home extends React.Component{
                                     }}/>
                 
                             </View>
-                        </View>
-                    </View>
 
+                            {/*BLOQUE FINAL DE OPCIONES: REGISTRO Y RECUPERAR CLAVE*/}
+                            <View style={style.BloqueSubIngreso}>
+
+                                {/*  -BOTON REGISTRARSE-  */}
+                                <View style={style.ButtonRegistrese}>
+                                    
+                                    <ActionButton 
+                                        title="REGISTRARSE"
+                                        style={style.TextoRegistrese}
+                                        onPress={() => {
+                                            if(this.state.name==='' || this.state.pass ===''){
+                                                Alert.alert(
+                                                  'CAMPO OBLIGATORIO',
+                                                  'DEBE INGRESAR EL MAIL Y LA CONTRASEÑA PARA COMENZAR.',
+                                                  [
+                                                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                  ],
+                                                  { cancelable: false }
+                                                )
+                                            }else if(!Validaciones.validateEmail(this.state.name)){
+                                                Alert.alert(
+                                                  'CAMPO INVÁLIDO',
+                                                  'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
+                                                  [
+                                                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                  ],
+                                                  { cancelable: false }
+                                                )
+                                            }else{
+                                                this.setState({visible:!this.state.visible,});
+                                                signUp(this.state.name,this.state.pass)
+                                                .then((user)=>{
+                                                    console.log('Login de usuario creado: ' + user.uid)
+                                                    Backend.setUid(user.uid);
+                                                    this.setState({visible:!this.state.visible});
+                                                    user.sendEmailVerification().then(function() {
+                                                      alert('Se envio un email a '+ user.email +' .Verifique su identidad y vuelva a ingresar ')
+                                                    }).catch(function(error) {
+                                                      console.log('Error enciando mail de confirmacion')
+                                                    });
+                                                })
+                                                .catch(error => {
+                                                    this.setState({visible:!this.state.visible,});
+                                                    alert('La dirección de mail esta siendo usada por otra cuenta');
+                                                })
+                                            }
+                                        }}/>
+                    
+                                </View>
+
+                                {/*SEPARACIÓN*/}
+                                <View style={style.Separador}>
+                                    <Text style={style.TextoSeparador}>
+                                        |
+                                    </Text>
+                                </View>
+                               
+
+                                {/*  -BOTON LOGOUT-  ¿NO DEBERÏA ESTAR EN MENÚ?*/}
+                                {/*  <View>
+                                    <ActionButton
+                                        title="CERRAR SESIÓN"
+                                        onPress={() => {
+                                                Backend.logOut();
+                                            }
+                                        }/>
+                    
+                                </View>*/}
+
+                                {/*  -BOTON RECUPERAR CONTRASEÑA-  */}
+                                <View style={style.ButtonContrasena}>
+                                    <ActionButton 
+                                        title="RECUPERAR CLAVE"
+                                        style={style.TextoContrasena}
+                                        onPress={() => {
+
+                                                if(this.state.name===''){
+                                                    Alert.alert(
+                                                      'CAMPO OBLIGATORIO',
+                                                      'DEBE INGRESAR EL MAIL PARA RECUPERAR LA CONTRASEÑA.',
+                                                      [
+                                                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                      ],
+                                                      { cancelable: false }
+                                                    )
+                                                }else if(!Validaciones.validateEmail(this.state.name)){
+                                                    Alert.alert(
+                                                      'CAMPO INVÁLIDO',
+                                                      'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
+                                                      [
+                                                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                      ],
+                                                      { cancelable: false }
+                                                    )
+                                                }else{
+                                                    Backend.recuperarContrasenia(this.state.name);
+                                                }
+                                            }
+                                        }/>
+                    
+                                </View>
+
+                            </View>                        
+                        </View> 
+                        {/*FIN BLOQUE INGRESO Y BOTONES*/}
+
+                    </View> 
+                    {/*FIN TODO*/}
 
                 </KeyboardAvoidingView>
             
