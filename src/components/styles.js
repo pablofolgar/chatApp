@@ -146,7 +146,7 @@ var styles = StyleSheet.create({
 
   //SINGLE INPUT VIEW
   singleInputView:{
-    height: alto(11),
+    height: alto(9.8),
     elevation:10,
     padding:4,
     borderWidth:2,
@@ -156,12 +156,13 @@ var styles = StyleSheet.create({
     marginTop: alto(0.2),
     marginLeft:ancho(3),
     marginRight:ancho(3),
-    marginBottom:alto(2),
+    marginBottom:alto(1.5),
   },
 
   //SINGLE INPUT TEXT
   singleInputText:{
-    fontSize: Math.pow(tool.ratio_Y,2) * 27,
+    fontSize: Math.pow(tool.ratio_Y,2) * 23.5,
+   /* textAlign: 'center',*/
   },
 
   //ACTION-BUTTON VIEW
@@ -176,6 +177,22 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft:ancho(3),
     marginRight:ancho(3),
+    marginBottom: tool.ratio_Y * alto(2),
+  },  
+
+  //ACTION-BUTTON VIEW PERFIL
+  ActionViewPerfil:{
+    elevation:10,
+    backgroundColor: constants.actionColor,
+    borderColor: 'transparent',
+    borderWidth: 1,
+    borderRadius:10,
+    height: alto(11),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft:ancho(3),
+    marginRight:ancho(3),
+    marginTop: alto(1.5),
     marginBottom: tool.ratio_Y * alto(2),
   },
 
@@ -228,7 +245,7 @@ var styles = StyleSheet.create({
   },
     //VISTA BOTON CONTRASEÑA 
   ButtonContrasena:{
-    flex:tool.ratio_X * 14,
+    flex:tool.ratio_X * 12,
   },
 
   //TEXTO CONTRASEÑA
@@ -242,8 +259,8 @@ var styles = StyleSheet.create({
   MultiLineInputView:{
     elevation:10,
     backgroundColor:'white', 
-    borderColor: 'grey',
-    borderWidth: 1,
+    borderColor: 'black',
+    borderWidth: 2,
     borderRadius:10,
     marginTop:alto(2),
     marginRight:ancho(3),
@@ -257,7 +274,9 @@ var styles = StyleSheet.create({
     textAlignVertical: 'top',
     height: 250,
     flexWrap: 'wrap', 
-  },
+    marginLeft:ancho(1),
+    marginRight:ancho(1),
+  },  
 
   //DATE-PICKER VIEW
   DatePickerView:{
@@ -277,12 +296,32 @@ var styles = StyleSheet.create({
     //alignItems:'center',
   },
 
+  //SELECT MULTIPLE VISTA
+  selectMultipleVista:{
+    marginLeft:ancho(3),
+    marginRight:ancho(3),
+  },
+
+  //CHECK VISTA
+  checkVista:{
+    marginLeft:ancho(3),
+    marginRight:ancho(3),
+
+    backgroundColor: '#ffffff',
+  },
+
+  //CHECK TEXTO
+  checkTexto:{
+    padding:10,
+    marginLeft:ancho(2),
+  },
+
   //TÍTULOS INDICATIVOS DE LA APP VIEW
   TituloIndicativoView:{
     marginTop: alto(1.5),
     marginLeft:ancho(3.7),
     marginRight:ancho(3.7),
-    marginBottom:0,
+    marginBottom:alto(1.5),
   },
 
   //TÍTULOS INDICATIVOS DE LA APP TEXT
@@ -307,7 +346,7 @@ var styles = StyleSheet.create({
 
   //BOTON FECHA
   DatePickerButton:{
-    flex:10,
+    flex:4,
     justifyContent:'center',
   },
 
@@ -342,6 +381,38 @@ var styles = StyleSheet.create({
     fontFamily: 'monospace',
   },
 
+  //DESCRIPCIÖN EVENTO VIEW
+  descEventoView:{
+/*    backgroundColor:'#e6ffe6', 
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius:0,
+    marginTop:alto(0.5),
+    marginRight:ancho(2.2),
+    marginLeft:ancho(0),
+    marginBottom:alto(2),*/
+    backgroundColor: '#ffebe6',
+    elevation:10,
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius:10,
+    marginTop:10,
+    marginRight:15,
+    marginRight:ancho(2.2),
+    marginLeft:ancho(0),
+  },
+
+  //DESCRIPCIÖN EVENTO  TEXT
+  descEventoText:{
+    fontSize:25,
+    textAlignVertical: 'top',
+    height: alto(26),
+    flexWrap: 'wrap', 
+    marginLeft:ancho(1),
+    marginRight:ancho(1),
+    color:'black'
+  },
+
   //NOTIFICACIONES VIEW
   GralNotifView:{
     flex:1,
@@ -353,7 +424,7 @@ var styles = StyleSheet.create({
     marginRight:5,
     marginBottom:0,
     backgroundColor: '#ffe6ff',
-    height: 120,
+    height: alto(60),
   },
 
   //TÍTULO-NOTIFICACIONES VIEW
@@ -376,6 +447,16 @@ var styles = StyleSheet.create({
     flex:1,
   },
 
+  SubBlockDataView:{
+    flex:1,
+    flexDirection: 'row',
+  },  
+
+  SubBlockDescView:{
+    flex:6,
+    flexDirection: 'column',
+  },
+
   //NOTIFICACIONES
   CatNotifView:{
     alignSelf:'center',
@@ -383,9 +464,27 @@ var styles = StyleSheet.create({
   },
 
   //DATOS-NOTIFICACIONES VIEW EVENTOS
-  DataNotifView:{
-    marginLeft:8,
+  TitleNotifView:{
     flex:1,
+    marginLeft:8,
+  },     
+
+  //DATOS-NOTIFICACIONES VIEW EVENTOS
+  DataDescView:{
+    flex:7,
+    marginLeft:8,
+  },    
+
+  //DATOS-NOTIFICACIONES VIEW EVENTOS
+  DataNotifView:{
+    flex:2.5,
+    marginLeft:8,
+  },  
+
+  //DESCRIPCIÓN
+  DescNotifView:{
+    marginLeft:8,
+    flex:6,
   },
 
     //DATOS-NOTIFICACIONES VIEW USUARIO AUSENTE
@@ -395,10 +494,22 @@ var styles = StyleSheet.create({
   },
   
   //DATOS-NOTIFICACIONES TEXT
-  DataNotifText:{
-    fontSize:19,
+  CatNotifText:{
+    fontSize:alto(3.3),
+    color:'#cc2900',
+    fontWeight:'bold',
+    textDecorationLine:'underline',
+  },  
+  //DATOS-NOTIFICACIONES TEXT
+  TitleNotifText:{
+    fontSize:alto(3.3),
     color:'black',
     fontWeight:'bold',
+  },  
+  //DATOS-NOTIFICACIONES TEXT
+  DataNotifText:{
+    fontSize:alto(3.3),
+    color:'black',
   },
   
   //BOTON-USUARIOS-CHAT VIEW
@@ -432,7 +543,7 @@ var styles = StyleSheet.create({
   //SELECTS.
   viewPicker:{
     elevation:10,
-    marginTop:alto(2),
+    marginTop:alto(1),
     marginBottom:alto(1.5),
     marginLeft:ancho(3),
     marginRight:ancho(3),
@@ -620,7 +731,22 @@ var styles = StyleSheet.create({
     color:'white',
     marginTop: 40,
     marginBottom:5,
+  },  
 
+  //TITULO CENTRAL VISTO
+  tituloCentralVista:{
+    marginTop: alto(3),
+    marginBottom: alto (1),
+  },
+
+  //TITULO CENTRAL TEXTO
+  tituloCentral:{
+    alignSelf:'center',
+    textDecorationLine:'underline',
+    fontSize:27,
+    fontWeight:'bold',
+    color:'white',
+    marginBottom:5,
   },
 
   //VISTA VER HISTORIA

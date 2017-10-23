@@ -13,7 +13,8 @@ export default StyleSheet.create({
   checkbox: {
     width: 24,
     height: 24,
-    marginRight: 5
+    marginRight: 5,
+    color:'black',
   },
   label: {}
 })

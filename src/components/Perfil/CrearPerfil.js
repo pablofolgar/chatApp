@@ -37,7 +37,7 @@ export default class CrearPerfil extends React.Component{
                         barrio: this.props.user ? this.props.user.barrio : '',
                         centro: this.props.user ? this.props.user.centro : '',
                         selectedInteres: this.props.user ? this.props.user.intereses : [],
-                        selectedPerfil: this.props.user ? this.props.user.perfil : 'USUARIO',
+                        selectedPerfil: this.props.user ? this.props.user.perfil : 'SELECCIONAR PERFIL',
                         perfiles: ['SELECCIONAR PERFIL','USUARIO', 'VOLUNTARIO', 'CENTRO',],
                         telefono: this.props.user ? this.props.user.telefono : '',
                         centroPrestaInstalaciones: (this.props.user && this.props.user.perfil === 'CENTRO') ? this.props.user.centroPrestaInstalaciones :false,
@@ -49,6 +49,7 @@ export default class CrearPerfil extends React.Component{
                         telefonoContactoSeguridad: (this.props.user && this.props.user.perfil === 'USUARIO') ? this.props.user.telefonoContactoSeguridad : '',
                         mailContactoSeguridad: (this.props.user && this.props.user.perfil === 'USUARIO') ? this.props.user.mailContactoSeguridad : '',
                         tipoOrganizacion: (this.props.user && this.props.user.perfil === 'CENTRO') ? this.props.user.tipoOrganizacion : '',
+                        text: '',
                     }
     }
 
@@ -78,30 +79,86 @@ export default class CrearPerfil extends React.Component{
                 <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={700} >
 
                     <View>
-                            
-                            {/*          PERFIL           */}
-                            <View style={style.viewPicker}>
-                                <Picker
-                                    selectedValue={this.state.selectedPerfil}
-                                    onValueChange={ (perfil) => {this.setState({selectedPerfil:perfil});} }
-                                    mode="dialog">
-                                    {perfilItems}
-                                </Picker>
-                            </View>
+                        {/*   Título Principal    */}
+                        <View style={style.tituloCentralVista}>
+                            <Text style={style.tituloCentral}> 
+                              CREACIÓN DE PERFIL
+                            </Text>
+                        </View>
 
-                        {/*          NOMBRE USUARIO           */}
-                            <View>
+                        
+                        {/*        -PERFIL-        */}
+                        <View style={style.viewPicker}>
+                            <Picker
+                                selectedValue={this.state.selectedPerfil}
+                                onValueChange={ (perfil) => {this.setState({selectedPerfil:perfil});} }
+                                mode="dialog">
+                                {perfilItems}
+                            </Picker>
+                        </View>
+                        
+                        {/*       -NOMBRE USUARIO-        */}
+                        <View style={style.singleInputView}>
+                            <TextInput 
+                                autoCapitalize="characters"
+                                style={style.singleInputText}
+                                placeholder='"NOMBRE DE USUARIO"'
+                                onChangeText={ (text) => {
+                                    this.setState({
+                                        name:text,
+                                    })
+                                }}
+                                value= {this.state.name}
+                            />
+                        </View>
+
+                        {/*          TELEFONO           */}
+                        <View style={style.singleInputView}>
+                            <TextInput 
+                                autoCapitalize="characters"
+                                style={style.singleInputText}
+                                placeholder='"TELEFONO"'
+                                onChangeText={ (text) => {
+                                    this.setState({
+                                        telefono:text,
+                                    })
+                                }}
+                                value= {this.state.telefono}
+                            />
+                        </View>
+
+
+                        {/*          BARRIO           */}
+                        <View style={style.singleInputView}>
+                            <TextInput 
+                                autoCapitalize="characters"
+                                style={style.singleInputText}
+                                placeholder='"BARRIO"'
+                                onChangeText={ (text) => {
+                                    this.setState({
+                                        barrio:text,
+                                    })
+                                }}
+                                value= {this.state.barrio}
+                            />
+                        </View>
+
+                        {/*          CENTRO DE JUBILADOS           */}
+                        {renderIf(this.state.selectedPerfil != 'CENTRO',
+                            <View style={style.singleInputView}>
                                 <TextInput 
+                                    autoCapitalize="characters"
                                     style={style.singleInputText}
-                                    placeholder='"NOMBRE USUARIO"'
+                                    placeholder='"CENTRO DE JUBILADOS"'
                                     onChangeText={ (text) => {
                                         this.setState({
-                                            name:text,
+                                            centro:text,
                                         })
                                     }}
-                                    value= {this.state.name}
+                                    value= {this.state.centro}
                                 />
                             </View>
+                        )}
 
                         {/* DESCRIPCION */}
                         {renderIf(this.state.selectedPerfil != 'CENTRO',
@@ -111,85 +168,21 @@ export default class CrearPerfil extends React.Component{
                                         autoCapitalize="characters"
                                         onChangeText={(desc) => this.setState({descripcion:desc})}
                                         multiline={true}
-                                        placeholder='"INGRESE UNA BREVE DESCRIPCIÓN"'
+                                        placeholder='"INGRESE UNA BREVE DESCRIPCIÓN ACERCA DE USTED"'
                                         blurOnSubmit={false}
                                         onSelectionChange={(event) => this.setState({ cursorPosition: event.nativeEvent.selection.start })}
                                         onSubmitEditing = {(event) => {this._updateText(event)} }
-                                        defaultValue={this.state.descripcion}
+                                        defaultValue={this.state.text}
                                         
                                 />
                             </View>
                         )}
 
-                        {/*          TELEFONO           */}
-                            <View>
+                        {/*    CENTRO: TIPO ORGANIZACION */}
+                        {renderIf(this.state.selectedPerfil === 'CENTRO',
+                            <View style={style.singleInputView}>
                                 <TextInput 
-                                    style={style.singleInputText}
-                                    placeholder='"TELEFONO"'
-                                    onChangeText={ (text) => {
-                                        this.setState({
-                                            telefono:text,
-                                        })
-                                    }}
-                                    value= {this.state.telefono}
-                                />
-                            </View>
-
-
-                        {/*          BARRIO           */}
-                            <View>
-                                <TextInput 
-                                    style={style.singleInputText}
-                                    placeholder='"BARRIO"'
-                                    onChangeText={ (text) => {
-                                        this.setState({
-                                            barrio:text,
-                                        })
-                                    }}
-                                    value= {this.state.barrio}
-                                />
-                            </View>
-
-                        {/*          CENTRO DE JUBILADOS           */}
-                            {renderIf(this.state.selectedPerfil != 'CENTRO',
-                                <View>
-                                    <TextInput 
-                                        style={style.singleInputText}
-                                        placeholder='"CENTRO DE JUBILADOS"'
-                                        onChangeText={ (text) => {
-                                            this.setState({
-                                                centro:text,
-                                            })
-                                        }}
-                                        value= {this.state.centro}
-                                    />
-                                </View>
-                            )}
-
-                        {/*          INTERESES           */}
-                            {renderIf(this.state.selectedPerfil != 'CENTRO',
-                            <View>
-                                <SelectMultiple
-                                  items={interes}
-                                  selectedItems={this.state.selectedInteres}
-                                  onSelectionsChange={this.onSelectionsChange} />
-                            </View>
-                            )}
-                            
-                            {/*  CENTRO: Presta Instalaciones   */}
-                            {renderIf(this.state.selectedPerfil === 'CENTRO',
-                                <CheckBox
-                                    style={{flex: 1, padding: 10}}
-                                    onClick={()=> this.setState({centroPrestaInstalaciones:!this.state.centroPrestaInstalaciones})}
-                                    isChecked={this.state.centroPrestaInstalaciones}
-                                    leftText={'Accede a brindar sus instalaciones para eventos'}
-                                />
-                           
-                            )}
-
-                            {/*    CENTRO: TIPO ORGANIZACION */}
-                            {renderIf(this.state.selectedPerfil === 'CENTRO',
-                                <TextInput 
+                                        autoCapitalize="characters"
                                         style={style.singleInputText}
                                         placeholder='"TIPO ORGANIZACIÓN"'
                                         onChangeText={ (text) => {
@@ -199,61 +192,112 @@ export default class CrearPerfil extends React.Component{
                                         }}
                                         value= {this.state.tipoOrganizacion}
                                     />
-                           
-                            )}
+                            </View>
+
+                        )}
+                        {/*          INTERESES           */}
+                        {renderIf(this.state.selectedPerfil != 'CENTRO',
+                            <View>
+                                <View style={style.TituloIndicativoView}>
+                                    <Text style={style.TituloIndicativoText}> 
+                                      INTERESES:
+                                    </Text>
+                                </View>
+                                <View style={style.selectMultipleVista}>
+                                    <SelectMultiple
+                                      items={interes}
+                                      selectedItems={this.state.selectedInteres}
+                                      onSelectionsChange={this.onSelectionsChange} />
+                                </View>
+                            </View>
+                        )}
+                            
+                        {/*  CENTRO: Presta Instalaciones   */}
+                        {renderIf(this.state.selectedPerfil === 'CENTRO',
+                        <View style={style.checkVista}>
+                            <CheckBox
+                                style={style.checkTexto}
+                                onClick={()=> this.setState({centroPrestaInstalaciones:!this.state.centroPrestaInstalaciones})}
+                                isChecked={this.state.centroPrestaInstalaciones}
+                                rightText={'¿BRINDA SUS INSTALACIONES PARA EVENTOS?'}
+                            />
+                        </View>
+                       
+                        )}
+
 
                         {/*  VOLUNTARIOS o USUARIOS: Brindar o Asistir Charlas   */}
-                            {renderIf(this.state.selectedPerfil != 'CENTRO',
-                                <CheckBox
-                                    style={{flex: 1, padding: 10}}
-                                    onClick={()=> this.setState({brindarCharlas:!this.state.brindarCharlas})}
-                                    isChecked={this.state.brindarCharlas}
-                                    leftText={'Desea brindar charlas?'}
-                                />
-                           
-                            )}
+                        
+                        {renderIf(this.state.selectedPerfil != 'CENTRO',
+                            <View>
+                                <View style={style.TituloIndicativoView}>
+                                    <Text style={style.TituloIndicativoText}> 
+                                      ACTIVIDAD:
+                                    </Text>
+                                </View>
+                                <View style={style.checkVista}>
+                                    <CheckBox
+                                        style={style.checkTexto}
+                                        onClick={()=> this.setState({brindarCharlas:!this.state.brindarCharlas})}
+                                        isChecked={this.state.brindarCharlas}
+                                        rightText={'¿DESEA BRINDAR CHARLAS?'}
+                                    />
+                                </View>
+                            </View>
+                        )}
 
-                            {renderIf(this.state.selectedPerfil != 'CENTRO',
+                        {renderIf(this.state.selectedPerfil != 'CENTRO',
+                            <View style={style.checkVista}>
                                 <CheckBox
-                                    style={{flex: 1, padding: 10}}
+                                    style={style.checkTexto}
                                     onClick={()=> this.setState({asistirCharlas:!this.state.asistirCharlas})}
                                     isChecked={this.state.asistirCharlas}
-                                    leftText={'Desea asistir a charlas?'}
-                                />
-                           
-                            )}
-
-                        {/*      CAMPOS PROOPIOS DEL ABUELO (VOLUNTARIO) : */}
-                        {renderIf(this.state.selectedPerfil === 'USUARIO',
-                                <CheckBox
-                                    style={{flex: 1, padding: 10}}
-                                    onClick={()=> this.setState({recibirVisitasCentro:!this.state.recibirVisitasCentro})}
-                                    isChecked={this.state.recibirVisitasCentro}
-                                    leftText={'Quiere recibir visitas en su centro?'}
-                                />
-                           
-                            )}
-
-                        {renderIf(this.state.selectedPerfil === 'USUARIO',
-                            <View>
-                                <TextInput 
-                                    style={style.singleInputText}
-                                    placeholder='"NOMBRE Y APELLIDO DEL CONTACTO DE EMERGENCIA"'
-                                    onChangeText={ (text) => {
-                                        this.setState({
-                                            contactoSeguridad:text,
-                                        })
-                                    }}
-                                    value= {this.state.contactoSeguridad}
+                                    rightText={'¿DESEA ASISTIR A CHARLAS?'}
                                 />
                             </View>
                         )}
 
+                        {/*      CAMPOS PROOPIOS DEL ABUELO (VOLUNTARIO) : */}
+                        {renderIf(this.state.selectedPerfil === 'USUARIO',
+                            <View style={style.checkVista}>
+                                <CheckBox
+                                    style={style.checkTexto}
+                                    onClick={()=> this.setState({recibirVisitasCentro:!this.state.recibirVisitasCentro})}
+                                    isChecked={this.state.recibirVisitasCentro}
+                                    rightText={'¿DESEA RECIBIR VISITAS AL CENTRO?'}
+                                />
+                            </View>
+                            )}
+
                         {renderIf(this.state.selectedPerfil === 'USUARIO',
                             <View>
+                                <View style={style.TituloIndicativoView}>
+                                    <Text style={style.TituloIndicativoText}> 
+                                      CONTACTO DE EMERGENCIA:
+                                    </Text>
+                                </View>
+                                <View style={style.singleInputView}>
+                                    <TextInput 
+                                        autoCapitalize="characters"
+                                        style={style.singleInputText}
+                                        placeholder='"NOMBRE Y APELLIDO"'
+                                        onChangeText={ (text) => {
+                                            this.setState({
+                                                contactoSeguridad:text,
+                                            })
+                                        }}
+                                        value= {this.state.contactoSeguridad}
+                                    />
+                                </View>
+                            </View>
+                        )}
+
+                        {renderIf(this.state.selectedPerfil === 'USUARIO',
+                            <View style={style.singleInputView}>
                                 <TextInput 
+                                    autoCapitalize="characters"
                                     style={style.singleInputText}
-                                    placeholder='"TELEFONO CONTACTO SEGURIDAD"'
+                                    placeholder='"TELEFONO"'
                                     onChangeText={ (text) => {
                                         this.setState({
                                             telefonoContactoSeguridad:text,
@@ -266,13 +310,15 @@ export default class CrearPerfil extends React.Component{
 
                         {renderIf(this.state.selectedPerfil === 'USUARIO',
                             <View  style={style.singleInputView}>
-                                <TextInput style={style.singleInputText}
-                                placeholder='INGRESE EL MAIL DEL CONTACTO DE SEGURIDAD'
-                                onChangeText={ (text) => {
-                                    this.setState({
-                                        mailContactoSeguridad:text,
-                                    })
-                                }}
+                                <TextInput 
+                                    autoCapitalize="characters"
+                                    style={style.singleInputText}
+                                    placeholder='MAIL'
+                                    onChangeText={ (text) => {
+                                        this.setState({
+                                            mailContactoSeguridad:text,
+                                        })
+                                    }}
                                 value= {this.state.mailContactoSeguridad}
                                 />
                             </View>
@@ -280,9 +326,11 @@ export default class CrearPerfil extends React.Component{
 
                         {/******************************************************************************************/}
                         {/*    BOTONES    */}
-                            <View>
-                                {renderIf(!this.props.user,
+                        <View>
+                            {renderIf(!this.props.user,
+                                <View style={style.ActionViewPerfil}>
                                     <ActionButton 
+                                        style={style.actionText}
                                         title="AGREGAR"
                                         onPress={()=>{
                                                         var camposRequeridosOk=this.validarCamposRequeridos();
@@ -293,31 +341,38 @@ export default class CrearPerfil extends React.Component{
                                                     }
                                                 }
                                     />
-                                )}
+                                </View>
+                            )}
 
-                                 {renderIf(this.props.user,
-                                    <ActionButton 
-                                        title="MODIFICAR"
-                                        onPress={()=>{
-                                                        var camposRequeridosOk=this.validarCamposRequeridos();
-                                                        var formatoCamposValidos=this.validarTiposDeDatos();
-                                                        if(camposRequeridosOk && formatoCamposValidos){
-                                                            this.editarUsuario();
-                                                        }
-                                                    }
+                        {renderIf(this.props.user,
+                            <View style={style.ActionViewPerfil}>
+                                <ActionButton 
+                                    style={style.actionText} 
+                                    title="MODIFICAR"
+                                    onPress={()=>{
+                                                var camposRequeridosOk=this.validarCamposRequeridos();
+                                                var formatoCamposValidos=this.validarTiposDeDatos();
+                                                if(camposRequeridosOk && formatoCamposValidos){
+                                                    this.editarUsuario();
                                                 }
-                                    />
-                                )}
+                                            }
+                                        }
+                                />
+                            </View>
+                        )}
 
-                                 {renderIf(this.props.user,
-                                    <ActionButton 
-                                        title="BORRAR"
-                                        onPress={()=>{
-                                                        this.borrarUsuario();
-                                                    }
+                        {renderIf(this.props.user,
+                            <View style={style.ActionViewPerfil}>
+                                <ActionButton 
+                                    style={style.actionText}
+                                    title="BORRAR"
+                                    onPress={()=>{
+                                                    this.borrarUsuario();
                                                 }
-                                    />
-                                )}
+                                            }
+                                />
+                            </View>
+                        )}
                 
                             </View>
                     </View>

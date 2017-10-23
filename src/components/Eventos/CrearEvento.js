@@ -36,6 +36,7 @@ export default class CrearEvento extends React.Component{
             centro:this.props.evento ? this.props.evento.centro :'',
             hora:this.props.evento ? this.props.evento.hora :'',
             isoFormatText:this.props.evento ? this.props.evento.hora :'HORA DEL EVENTO',
+            text: '',
             
         };
 
@@ -83,6 +84,17 @@ export default class CrearEvento extends React.Component{
       }
     };
 
+    _updateText(event) { 
+    /*this.setState({word:text+'\n'}); */
+
+        const { cursorPosition } = this.state;
+        let newText = event.nativeEvent.text;
+        const ar = newText.split('');
+        ar.splice(cursorPosition, 0, '\n');
+        newText = ar.join('');
+        this.setState({ text: newText });
+    }
+
     render(){
             let eventostems = this.state.eventos.map( (s, i) => {
                 return <Picker.Item key={i} value={s} label={s} />
@@ -99,6 +111,7 @@ export default class CrearEvento extends React.Component{
                     </Text>
                   </View>*/}
 
+                {/*   PICKER CATEGORÍA   */}
                   <View style={style.viewPicker}>
                     <Picker
                       selectedValue={this.state.selectedTipoEvento}
@@ -108,13 +121,12 @@ export default class CrearEvento extends React.Component{
                     </Picker>
                   </View>
 
-              
+                  {/*   BARRIO    */}
                   <View style={style.TituloIndicativoView}>
                     <Text style={style.TituloIndicativoText}> 
                       BARRIO:
                     </Text>
                   </View>
-
 
                   <View style={style.singleInputView}>
                     <TextInput 
@@ -130,12 +142,12 @@ export default class CrearEvento extends React.Component{
                     />
                   </View>
 
+                  {/*   CENTRO    */}
                   <View style={style.TituloIndicativoView}>
                     <Text style={style.TituloIndicativoText}> 
                       CENTRO:
                     </Text>
                   </View>
-
 
                   <View style={style.singleInputView}>
                     <TextInput 
@@ -151,6 +163,7 @@ export default class CrearEvento extends React.Component{
                     />
                   </View>
 
+                  {/*   FECHA     */}
                   <View style={style.TituloIndicativoView}>
                     <Text style={style.TituloIndicativoText}> 
                       FECHA:
@@ -173,7 +186,7 @@ export default class CrearEvento extends React.Component{
                     </View>
                   </View>
 
-
+                  {/*   HORA    */}
                   <View style={style.TituloIndicativoView}>
                     <Text style={style.TituloIndicativoText}> 
                       HORA:
@@ -213,42 +226,54 @@ export default class CrearEvento extends React.Component{
                               blurOnSubmit={false}
                               onSelectionChange={(event) => this.setState({ cursorPosition: event.nativeEvent.selection.start })}
                               onSubmitEditing = {(event) => {this._updateText(event)} }
-                              defaultValue={this.state.descripcion}
+                              defaultValue={this.state.text}
+                              maxLength = {140}
                               
                       />
                 </View>   
 
                 {renderIf(!this.props.evento,
-                  <ActionButton title="CREAR"
-                      onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
-                                      if(camposRequeridosOk){
-                                          this.agregarEvento();
-                                          }
-                                      }
-
-                              }
-                    />
-                  )}
-
-                  {renderIf(this.props.evento,
-                    <ActionButton title="MODIFICAR"
+                  <View style={style.ActionView}>
+                    <ActionButton title="CREAR"
+                        style={style.actionText}
                         onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
                                         if(camposRequeridosOk){
-                                            this.modificarEvento();
+                                            this.agregarEvento();
                                             }
                                         }
 
                                 }
                       />
+                  </View>   
+                  )}
+
+                  {renderIf(this.props.evento,
+                    <View style={style.ActionView}>
+                      <ActionButton 
+                          style={style.actionText}
+                          title="MODIFICAR"
+                          onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                          if(camposRequeridosOk){
+                                              this.modificarEvento();
+                                              }
+                                          }
+
+                                  }
+                        />
+                    </View> 
                   )}
                 
                 {renderIf(this.props.evento,
-                  <ActionButton title="BORRAR"
-                      onPress={() => {
-                                          this.borrarEvento();
-                                          }
-                              }
-                    />
+                  <View style={style.ActionView}>
+                    <ActionButton 
+                        style={style.actionText}
+                        title="BORRAR"
+                        onPress={() => {
+                                            this.borrarEvento();
+                                            }
+                                }
+                      />
+                  </View> 
                   )}
                       
                 </KeyboardAvoidingView>

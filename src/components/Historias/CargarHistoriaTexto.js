@@ -110,16 +110,19 @@ class CargarHistoriaTexto extends React.Component{
                                         
                                 />
                             </View>
-
-                            <ActionButton title="CREAR"
-                                onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
-                                                if(camposRequeridosOk){
-                                                    this.agregarHistoria();
+                            <View style={style.ActionView}>
+                                <ActionButton 
+                                    style={style.actionText}
+                                    title="CREAR"
+                                    onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                                    if(camposRequeridosOk){
+                                                        this.agregarHistoria();
+                                                        }
                                                     }
-                                                }
 
-                                        }
-                            />
+                                            }
+                                />
+                            </View>
 
                         </KeyboardAvoidingView>
 
