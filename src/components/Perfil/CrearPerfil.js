@@ -49,7 +49,7 @@ export default class CrearPerfil extends React.Component{
                         telefonoContactoSeguridad: (this.props.user && this.props.user.perfil === 'USUARIO') ? this.props.user.telefonoContactoSeguridad : '',
                         mailContactoSeguridad: (this.props.user && this.props.user.perfil === 'USUARIO') ? this.props.user.mailContactoSeguridad : '',
                         tipoOrganizacion: (this.props.user && this.props.user.perfil === 'CENTRO') ? this.props.user.tipoOrganizacion : '',
-                        text: '',
+                        text: this.props.user.descripcion,
                     }
     }
 

@@ -178,6 +178,22 @@ var styles = StyleSheet.create({
     marginLeft:ancho(3),
     marginRight:ancho(3),
     marginBottom: tool.ratio_Y * alto(2),
+  },   
+
+  //ACTION-BUTTON VIEW LOGOUT
+  ActionViewLogout:{
+    elevation:10,
+    borderWidth:0,
+    borderRadius:15,
+    borderColor: 'grey',
+    marginTop:alto(3),
+    marginBottom:alto(3),
+    marginLeft:ancho(2),
+    marginRight:ancho(2),
+    backgroundColor: '#ff3333',
+    height: alto(11),
+    alignItems:'center',
+    justifyContent:'center',
   },  
 
   //ACTION-BUTTON VIEW PERFIL
@@ -306,7 +322,6 @@ var styles = StyleSheet.create({
   checkVista:{
     marginLeft:ancho(3),
     marginRight:ancho(3),
-
     backgroundColor: '#ffffff',
   },
 
@@ -391,11 +406,10 @@ var styles = StyleSheet.create({
     marginRight:ancho(2.2),
     marginLeft:ancho(0),
     marginBottom:alto(2),*/
-    backgroundColor: '#ffebe6',
-    elevation:10,
+    backgroundColor: '#FFF',
     borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius:10,
+    borderWidth: 0,
+    borderRadius:0,
     marginTop:10,
     marginRight:15,
     marginRight:ancho(2.2),
@@ -423,7 +437,7 @@ var styles = StyleSheet.create({
     marginLeft:5,
     marginRight:5,
     marginBottom:0,
-    backgroundColor: '#ffe6ff',
+    backgroundColor: '#b3d9ff',
     height: alto(60),
   },
 

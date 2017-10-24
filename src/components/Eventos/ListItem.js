@@ -94,11 +94,9 @@ class ListItem extends Component {
 
                   <View style={style.DataDescView}>
                     <View style={style.descEventoView}>
-                      <ScrollView>
                           <Text style={style.descEventoText}>
                               {this.props.item.descripcion==" "?"NO HAY DESCRIPCIÓN":this.props.item.descripcion}
                           </Text>
-                      </ScrollView>
                      </View>
                   </View>
                 </View>

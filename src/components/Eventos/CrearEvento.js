@@ -36,7 +36,7 @@ export default class CrearEvento extends React.Component{
             centro:this.props.evento ? this.props.evento.centro :'',
             hora:this.props.evento ? this.props.evento.hora :'',
             isoFormatText:this.props.evento ? this.props.evento.hora :'HORA DEL EVENTO',
-            text: '',
+            text: this.props.evento.descripcion,
             
         };
 
