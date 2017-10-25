@@ -5,7 +5,6 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
-    TouchableHighlight,
     Alert,
     Image,
     KeyboardAvoidingView,
@@ -151,7 +150,7 @@ class Home extends React.Component{
                             {/*  -MAIL- */}
                             <View  style={style.singleInputView}>
                                 <TextInput style={style.singleInputText}
-                               
+                                autoCapitalize="characters"
                                 placeholder='INGRESE MAIL'
                                 onChangeText={ (text) => {
                                     this.setState({
