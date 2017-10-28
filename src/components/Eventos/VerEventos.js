@@ -22,6 +22,7 @@ export default class VerEventos extends React.Component{
         super(props);
         this.state = {
                 user: this.props.user,
+                eventoId: this.props.eventoId,
                 dataSource: new ListView.DataSource({
                     rowHasChanged: (row1, row2) => row1 !== row2}),
             };
@@ -47,23 +48,43 @@ export default class VerEventos extends React.Component{
 
     componentDidMount(){
         var items = [];
-        Backend.getEventosCreadosPorUsuario((evento)=>{
-                items.push({
-                            eventoId: evento.eventoId,
-                            categoria: evento.categoria.toUpperCase(),
-                            barrio: evento.barrio.toUpperCase(),
-                            fecha: evento.fecha,
-                            mensajeAlertaId: evento.mensajeAlertaId,
-                            descripcion: evento.descripcion.toUpperCase(),
-                            centro: evento.centro.toUpperCase(),
-                            hora: evento.hora,
-                            user: evento.user,
-                            createdAt:evento.createdAt,
-                        });
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(items),
-                  });
-        },this.state.user);
+        if(this.state.user){
+            Backend.getEventosCreadosPorUsuario((evento)=>{
+                    items.push({
+                                eventoId: evento.eventoId,
+                                categoria: evento.categoria.toUpperCase(),
+                                barrio: evento.barrio.toUpperCase(),
+                                fecha: evento.fecha,
+                                mensajeAlertaId: evento.mensajeAlertaId,
+                                descripcion: evento.descripcion.toUpperCase(),
+                                centro: evento.centro.toUpperCase(),
+                                hora: evento.hora,
+                                user: evento.user,
+                                createdAt:evento.createdAt,
+                            });
+                    this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(items),
+                      });
+            },this.state.user._id);
+        }else if(this.props.eventoId){
+             Backend.getEventoPorId((evento)=>{
+                    items.push({
+                                eventoId: evento.eventoId,
+                                categoria: evento.categoria.toUpperCase(),
+                                barrio: evento.barrio.toUpperCase(),
+                                fecha: evento.fecha,
+                                mensajeAlertaId: evento.mensajeAlertaId,
+                                descripcion: evento.descripcion.toUpperCase(),
+                                centro: evento.centro.toUpperCase(),
+                                hora: evento.hora,
+                                user: evento.user,
+                                createdAt:evento.createdAt,
+                            });
+                    this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(items),
+                      });
+            },this.props.eventoId);
+        }
     }
 
     componentWillUnMount(){
@@ -72,6 +93,7 @@ export default class VerEventos extends React.Component{
 
     _renderItem(item) {
         const onPress = () => {
+            if(this.state.user){
                   Alert.alert(
                     'PARA EDITAR  SU EVENTO APRIETE "EDITAR"',
                     null,
@@ -88,7 +110,8 @@ export default class VerEventos extends React.Component{
                     ],
                     'default'
                   );
-                };
+            }
+        };
         return (
               <ListItem item={item} onPress={onPress}/>
             );

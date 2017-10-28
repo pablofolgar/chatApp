@@ -257,9 +257,9 @@ class Backend{
         this.eventosRef = firebase.database().ref('eventos');
     } 
 
-    getEventosCreadosPorUsuario(callback, usuario){
+    getEventosCreadosPorUsuario(callback, userId){
         this.getEventoRef();
-        this.eventosRef.orderByChild("userId").equalTo(usuario._id).limitToLast(20).once('value',function(snapshot){
+        this.eventosRef.orderByChild("userId").equalTo(userId).limitToLast(20).once('value',function(snapshot){
             snapshot.forEach(function(childSnapshot) {
                 const evento = childSnapshot.val();
                     callback({
@@ -278,9 +278,10 @@ class Backend{
         });
     }
 
+
     getEventoPorId(callback,eventoId){
         this.getEventoRef();
-        this.eventosRef.orderByKey().equalTo(eventoId).limitToLast(20).once('value',function(snapshot){
+        this.eventosRef.orderByKey().equalTo(eventoId).once('value',function(snapshot){
             snapshot.forEach(function(childSnapshot) {
                 const evento = childSnapshot.val();
                     callback({
