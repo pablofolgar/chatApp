@@ -59,7 +59,7 @@ class Backend{
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los chat
     //Retrieve the message from the backend
-    loadMessages(callback,name,contacto){
+    loadMessages(callback,user,contacto){
         this.messageRef = firebase.database().ref('messages');
         this.messageRef.off();
         const onReceive = (data) => {
@@ -67,9 +67,9 @@ class Backend{
             //FIltra los mensajes creados por el usuario logueado para el contacto seleccionado
             // o los que son enviados al usuario logueado por el contacto seleccionado
             if(//Si yo mando el mensaje                                 y es para el contacto que seleccione
-                (message.user.name.toUpperCase()===name.toUpperCase() && message.para.toUpperCase() === contacto.toUpperCase())
+                (message.user._id === user._id && message.para._id === contacto._id)
                 //O yo recibo el mensaje                            y es del  contacto que seleccione
-                || (message.para.toUpperCase()===name.toUpperCase() && message.user.name.toUpperCase() === contacto.toUpperCase())
+                || (message.para._id===user._id && message.user._id === contacto._id)
                 ){
                     callback({
                         _id: data.key,
@@ -93,7 +93,7 @@ class Backend{
                 text: message[i].text.toUpperCase(),
                 user: message[i].user,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
-                para:para.toUpperCase()
+                para:para,
             });
         }
     }
@@ -674,6 +674,27 @@ class Backend{
 
         this.usuarioRef.update(updates);
     }
+
+    //Buscar contactos para chatear: usuarios que pertencen al mismo centro y que no es el usuario logueado
+    buscarContactosParaChat(callback, user){
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(50).once("value", function(snapshot) {
+            if(snapshot.hasChildren()){
+                snapshot.forEach(function(childSnapshot) {
+                    var usuario = childSnapshot.val();
+                    if(user._id  != usuario._id){
+                        callback({
+                            _id: usuario._id,
+                            name:  usuario.name.toUpperCase(),
+                        });
+                    }//Cierra IF
+                })//Cierra foreach
+            }else{
+                callback(null);
+            }
+        });
+    }
+
     getUsuarioRef(){
         this.usuarioRef = firebase.database().ref('usuario');
     }

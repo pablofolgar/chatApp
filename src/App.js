@@ -3,7 +3,7 @@ import React from 'react';
 import Home from './components/Home';
 import Chat from './components/Chat/Chat';
 import Menu from './components/Menu';
-import Contacto from './components/Contacto';
+import Contacto from './components/Chat/Contacto';
 import Comunicacion from './components/Comunicacion';
 import Historias from './components/Historias/Historias';
 import VerHistorias from './components/Historias/VerHistorias';
