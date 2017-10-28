@@ -13,15 +13,32 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Image,
+  TimePickerAndroid,
 } from 'react-native';
 import ActionButton from  '../ActionButton';
 import Backend from '../../Backend';
 const style = require('./../styles.js');
+import renderIf from './../RenderIf';
 
 export default class CrearEvento extends React.Component{
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
+        this.state={
+            user:this.props.user,
+            selectedTipoEvento: this.props.evento ? this.props.evento.categoria :' ',
+            eventos: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
+            barrio:this.props.evento ? this.props.evento.barrio : '',
+            fecha:this.props.evento ? this.props.evento.fecha :'',
+            simpleDate: new Date(Date.now()),
+            simpleText: this.props.evento ? this.props.evento.fecha :'FECHA DEL EVENTO',
+            descripcion:this.props.evento ? this.props.evento.descripcion :'',
+            centro:this.props.evento ? this.props.evento.centro :'',
+            hora:this.props.evento ? this.props.evento.hora :'',
+            isoFormatText:this.props.evento ? this.props.evento.hora :'HORA DEL EVENTO',
+            text: this.props.evento ? this.props.evento.descripcion :'',
+            
+        };
 
         console.ignoredYellowBox = [
             'Setting a timer'
@@ -29,14 +46,6 @@ export default class CrearEvento extends React.Component{
     }
 
 
-    state={
-        selectedTipoEvento: ' ',
-        eventos: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
-        barrio:'',
-        fecha:'',
-        simpleDate: new Date(Date.now()),
-        simpleText: 'FECHA DEL EVENTO',
-    };
 
 
     showPicker = async (stateKey, options) => {
@@ -57,6 +66,35 @@ export default class CrearEvento extends React.Component{
         }
     };
 
+    showTimePicker = async (stateKey, options) => {
+      try {
+        const {action, minute, hour} = await TimePickerAndroid.open(options);
+        var newState = {};
+        if (action === TimePickerAndroid.timeSetAction) {
+          newState[stateKey + 'Text'] = hour + ':' + (minute < 10 ? '0' + minute : minute);
+          newState[stateKey + 'Hour'] = hour;
+          newState[stateKey + 'Minute'] = minute;
+        } else if (action === TimePickerAndroid.dismissedAction) {
+          newState[stateKey + 'Text'] = 'dismissed';
+        }
+        this.setState(newState);
+        this.setState({hora:hour+':'+minute});
+      } catch ({code, message}) {
+        console.warn(`Error in example '${stateKey}': `, message);
+      }
+    };
+
+    _updateText(event) { 
+    /*this.setState({word:text+'\n'}); */
+
+        const { cursorPosition } = this.state;
+        let newText = event.nativeEvent.text;
+        const ar = newText.split('');
+        ar.splice(cursorPosition, 0, '\n');
+        newText = ar.join('');
+        this.setState({ text: newText });
+    }
+
     render(){
             let eventostems = this.state.eventos.map( (s, i) => {
                 return <Picker.Item key={i} value={s} label={s} />
@@ -73,6 +111,7 @@ export default class CrearEvento extends React.Component{
                     </Text>
                   </View>*/}
 
+                {/*   PICKER CATEGORÍA   */}
                   <View style={style.viewPicker}>
                     <Picker
                       selectedValue={this.state.selectedTipoEvento}
@@ -82,13 +121,12 @@ export default class CrearEvento extends React.Component{
                     </Picker>
                   </View>
 
-              
+                  {/*   BARRIO    */}
                   <View style={style.TituloIndicativoView}>
                     <Text style={style.TituloIndicativoText}> 
                       BARRIO:
                     </Text>
                   </View>
-
 
                   <View style={style.singleInputView}>
                     <TextInput 
@@ -103,7 +141,29 @@ export default class CrearEvento extends React.Component{
                         value= {this.state.barrio}
                     />
                   </View>
-         
+
+                  {/*   CENTRO    */}
+                  <View style={style.TituloIndicativoView}>
+                    <Text style={style.TituloIndicativoText}> 
+                      CENTRO:
+                    </Text>
+                  </View>
+
+                  <View style={style.singleInputView}>
+                    <TextInput 
+                        style={style.singleInputText}
+                        autoCapitalize="characters"
+                        placeholder='CENTRO'
+                        onChangeText={ (text) => {
+                            this.setState({
+                                centro:text,
+                            })
+                        }}
+                        value= {this.state.centro}
+                    />
+                  </View>
+
+                  {/*   FECHA     */}
                   <View style={style.TituloIndicativoView}>
                     <Text style={style.TituloIndicativoText}> 
                       FECHA:
@@ -126,18 +186,95 @@ export default class CrearEvento extends React.Component{
                     </View>
                   </View>
 
+                  {/*   HORA    */}
+                  <View style={style.TituloIndicativoView}>
+                    <Text style={style.TituloIndicativoText}> 
+                      HORA:
+                    </Text>
+                  </View>
 
-                  {/*Tiene un <View> en ActionButton.js*/}
-                  <ActionButton title="CREAR"
-                      onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
-                                      if(camposRequeridosOk){
-                                          this.agregarEvento();
+                  <View style={style.DatePickerView}>
+
+                    <View style={style.DatePickerButton}>
+                      <TouchableOpacity
+                        onPress={
+                                  this.showTimePicker.bind(this, 'isoFormat', {
+                                  hour: this.state.isoFormatHour,
+                                  minute: this.state.isoFormatMinute,
+                                  is24Hour: true,
+                                })
+                        }>
+                        <Text style={style.DatePickerText}>
+                          {this.state.isoFormatText}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  <View>
+                      <Text style={style.textTituloHistoria}>
+                         DESCRIPCION DEL EVENTO
+                       </Text>
+                  </View>
+
+                  <View style={style.MultiLineInputView}> 
+                      <TextInput
+                              style={style.multilineInputText}
+                              autoCapitalize="characters"
+                              onChangeText={(descripcion) => this.setState({descripcion:descripcion})}
+                              multiline={true}
+                              blurOnSubmit={false}
+                              onSelectionChange={(event) => this.setState({ cursorPosition: event.nativeEvent.selection.start })}
+                              onSubmitEditing = {(event) => {this._updateText(event)} }
+                              defaultValue={this.state.text}
+                              maxLength = {140}
+                              
+                      />
+                </View>   
+
+                {renderIf(!this.props.evento,
+                  <View style={style.ActionView}>
+                    <ActionButton title="CREAR"
+                        style={style.actionText}
+                        onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                        if(camposRequeridosOk){
+                                            this.agregarEvento();
+                                            }
+                                        }
+
+                                }
+                      />
+                  </View>   
+                  )}
+
+                  {renderIf(this.props.evento,
+                    <View style={style.ActionView}>
+                      <ActionButton 
+                          style={style.actionText}
+                          title="MODIFICAR"
+                          onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                                          if(camposRequeridosOk){
+                                              this.modificarEvento();
+                                              }
                                           }
-                                      }
 
-                              }
-                    />
-                    
+                                  }
+                        />
+                    </View> 
+                  )}
+                
+                {renderIf(this.props.evento,
+                  <View style={style.ActionView}>
+                    <ActionButton 
+                        style={style.actionText}
+                        title="BORRAR"
+                        onPress={() => {
+                                            this.borrarEvento();
+                                            }
+                                }
+                      />
+                  </View> 
+                  )}
                       
                 </KeyboardAvoidingView>
 
@@ -155,9 +292,9 @@ export default class CrearEvento extends React.Component{
             text: 'CREAR',
             onPress: (t) => {
               Backend.sendEvento(this.props.user,this.state.selectedTipoEvento,
-                                      this.state.barrio,this.state.fecha);
+                                      this.state.barrio,this.state.fecha,
+                                      this.state.descripcion,this.state.centro,this.state.hora);
               this.limpiarCampos();
-              this.notificar
             }
           },
           //TODO: hacer que cancele.
@@ -166,23 +303,62 @@ export default class CrearEvento extends React.Component{
       );
     }
 
+    modificarEvento() {
+      Alert.alert(
+        'ESTÁ POR MODIFICAR SU EVENTO.',
+        null,
+        [
+          {text: 'CANCELAR', onPress: (t) => console.log('Cancel')},
+          {
+            text: 'MODIFICAR',
+            onPress: (t) => {
+              Backend.modificarEvento(this.props.evento,this.state.selectedTipoEvento,
+                                      this.state.barrio,this.state.fecha,
+                                      this.state.descripcion,this.state.centro,this.state.hora,this.state.user);
+              this.limpiarCampos();
+            }
+          },
+          //TODO: hacer que cancele.
+        ],
+        'plain-text'
+      );
+    }
+
+  borrarEvento() {
+        Alert.alert(
+          'ESTÁ POR BORRAR SU EVENTO.',
+          null,
+          [
+            {text: 'CANCELAR', onPress: (t) => console.log('Cancel')},
+            {
+              text: 'BORRAR',
+              onPress: (t) => {
+                Backend.borrarEvento(this.props.evento,this.state.user);
+              }
+            },
+            //TODO: hacer que cancele.
+          ],
+          'plain-text'
+        );
+      }
     limpiarCampos(){
-        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA'})
+        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA',descripcion:'',centro:'',simpleText:'FECHA DEL EVENTO',isoFormatText:'HORA DEL EVENTO'})
     }
 
     validarCamposRequeridos(){
-        console.log('Nombre: '+this.props.name + ' ---- Evento: '+this.state.selectedTipoEvento+' ---- Barrio: '+this.state.barrio+' ----- Fecha: '+this.state.fecha);
         var result = true;
         if(!this.props.name ||
             !this.state.selectedTipoEvento ||
             !this.state.barrio ||
-            !this.state.fecha){
+            !this.state.fecha ||
+            !this.state.descripcion||
+            !this.state.centro||
+            !this.state.hora){
             alert("DEBE COMPLETAR TODOS LOS CAMPOS");
             result = false;
         }
         return result;
     }
-
  }
 
 

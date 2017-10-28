@@ -3,6 +3,8 @@ import {ScrollView, FlatList, StyleSheet, Text, View} from 'react-native';
 import {
     Actions,
 } from 'react-native-router-flux';
+import ActionButton from  './ActionButton';
+import Backend from '../Backend';
 
 const style = require('./styles.js');
 class Menu extends React.Component{
@@ -58,8 +60,20 @@ class Menu extends React.Component{
                                 {item.key}
                             </Text>
                         </View>
+
+                        
                     }
                 />
+                        <View style={style.ActionViewLogout}>
+                            <ActionButton
+                                style={style.actionText} 
+                                title="CERRAR SESIÓN"
+                                onPress={() => {
+                                        Backend.logOut();
+                                    }
+                                }/>
+                        </View>
+
             </ScrollView>
         );
     }

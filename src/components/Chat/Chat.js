@@ -8,17 +8,18 @@ import Backend from '../../Backend';
 
 class Chat extends React.Component{
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
+        this.state = {
+            user:this.props.user,
+            contacto:this.props.contacto,
+            messages: [],
+        };
 
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
     }
-
-    state = {
-        messages: [],
-      };
 
     componentWillMount() {
 
@@ -30,11 +31,11 @@ class Chat extends React.Component{
             <GiftedChat
                     messages={this.state.messages}
                     onSend={(message) => {
-                        Backend.sendMessage(message);
+                        Backend.sendMessage(message,this.state.contacto);
                     }}
                     user={{
                       _id: Backend.getUid(),
-                      name: this.props.user.name,
+                      name: this.state.user.name,
                     }}
              />
         );
@@ -47,7 +48,7 @@ class Chat extends React.Component{
                     messages: GiftedChat.append(previousState.messages, message),
                 };
             });
-        });
+        },this.state.user.name,this.state.contacto);
     }
 
     componentWillUnMount(){

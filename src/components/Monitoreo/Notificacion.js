@@ -47,13 +47,16 @@ export default class Notificacion extends React.Component{
                             _key: usuario.notificaciones[keyPre].eventoId,
                             fecha: usuario.notificaciones[keyPre].fecha,
                             barrio: usuario.notificaciones[keyPre].barrio,
+                            hora:usuario.notificaciones[keyPre].hora,
+                            centro:usuario.notificaciones[keyPre].centro,
+                            descripcion:usuario.notificaciones[keyPre].descripcion,
                             perfilCentro:false,
                         });
                 }
                 this.setState({
                             dataSource: this.state.dataSource.cloneWithRows(items)
                           });
-            },this.state.user.name);
+            });
             //Busco las actuales notificaciones asociadas al usuario para ver si hay alguna nueva
             //Con la busqueda se agrega un listener para que notifique las que se agregan nuevas
             Backend.buscarNotificacionesPorUsuarioLogueado((usuario)=>{
@@ -67,6 +70,9 @@ export default class Notificacion extends React.Component{
                             _key: notificacionesActuales[keyAct].eventoId,
                             fecha: notificacionesActuales[keyAct].fecha,
                             barrio: notificacionesActuales[keyAct].barrio,
+                            hora:usuario.notificaciones[keyAct].hora,
+                            centro:usuario.notificaciones[keyAct].centro,
+                            descripcion:usuario.notificaciones[keyAct].descripcion,
                             perfilCentro:false,
                         });
                         //Si no esta hago la notificacion

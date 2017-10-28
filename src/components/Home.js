@@ -9,7 +9,6 @@ import {
     Image,
     KeyboardAvoidingView,
     ScrollView,
-    ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -18,25 +17,101 @@ import {
 
 import ActionButton from  './ActionButton';
 import Backend from '../Backend';
-
+import * as firebase from 'firebase';
+import Validaciones from './Validaciones.js';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const style = require('./styles.js');
 
+const autenticacion = () => {
+    return new Promise((resolve,reject) => {
+        firebase.auth().onAuthStateChanged((user) => {
+             if(user){
+                resolve(user);
+             }else{
+                reject(null);
+             }
+
+        })
+    })
+}
+
+const login = (name, pass) => {
+    return new Promise((resolve,reject) => {
+        firebase.auth().signInWithEmailAndPassword(name,pass)
+        .then((user)=>{
+            if(user &&  user.emailVerified){
+                resolve(user);
+            }else {
+                reject();
+            }
+        })
+        .catch(error => {   
+            console.log(error.message);
+            reject(error);
+        })
+    })
+}
+
+const signUp = (name, pass) => {
+    return new Promise((resolve,reject) => {
+        firebase.auth().createUserWithEmailAndPassword(name,pass)
+        .then((user)=>{
+            resolve(user);
+        })
+        .catch(error => {   
+            console.log(error.message);
+            reject(error);
+        })
+    })
+}
 
 class Home extends React.Component{
-    constructor(){
+    constructor(props){
         super();
 
+        this.state={
+            name:'',
+            user:'',
+            pass:'',
+            response:'',
+            visible:true,
+        };
+        autenticacion()
+        .then((user)=>{
+            if(user &&  user.emailVerified){
+                console.log('Usuario autenticado por firebase: '+ user.uid);
+                Backend.setUid(user.uid);
+                Backend.buscarUsuarioLogueado((usuario)=>{
+                    if(usuario){
+                        console.log('entro por buscarUsuarioLogueado con : ' + usuario._id);
+                        Backend.actualizarFechaUltimoAcceso(usuario);
+                        this.setState({visible:!this.state.visible});
+                        Actions.menu({
+                            user:usuario,
+                        });
+                    }else{
+                        console.log('El usuario autenticado no esta creado en la tabla USERS');
+                        this.setState({visible:!this.state.visible});
+                        Actions.perfil({
+                            userId:this.uid,
+                        });
+                    }
+                });
+            }else {
+                console.log('usuario autenticado por firebase pero sin verificacion de email')
+                this.setState({visible:!this.state.visible});
+            }
+        })
+        .catch(error => {
+            this.setState({visible:!this.state.visible});
+            console.log('usuario no autenticado por firebase')
+        })
+        
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
     }
-
-    state={
-        name:'',
-        user:'',
-        spinner:false,
-    };
 
     render(){
         return(
@@ -46,38 +121,37 @@ class Home extends React.Component{
 
                 <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={700} >
 
-                    <View style={style.HomeContainer}>
+                    {/* TODO */}
+                    <View>
 
-                            {/*TÍTULO "HUELLAS EN RED" */}
-                            <View style={style.HomeTitleView}>
+                        {/* --------SPINNER--------- */}
+                        <View style={{ flex: 1 }}>
+                            <Spinner visible={this.state.visible} textContent={"Estamos cargando sus datos..."} textStyle={{color: '#FFF'}} />
+                        </View>
+
+                        {/*-----BLOQUE TITULO E IMAGEN ----*/}
+                        <View style={style.BloqueTituloImagen}>
+
+                            <View style={style.HomeTitleView} >
                                 <Text style={style.HomeTitleText}>
                                     HUELLAS {'\n'} EN RED
                                 </Text>
                             </View>
 
-                            {/*LOGO*/}
                             <View style={style.logoImageView}>
                                 <Image source={require('./imagenes/huellas2.jpg')} style={style.logoImage}/>
                             </View>
 
-                        {/* RUEDITA DEL LOADING
-                            <View >
-                            <ActivityIndicator 
-                                animating={this.state.spinner}
-                                size={50}
-                                color='black'
-                            />
-                         </View>*/}
+                         </View>
 
-                        {/*BLOQUE DE INGRESO*/}
-                        <View style={style.LoginBlockView}>
+                        {/*-----BLOQUE INGRESO Y BOTONES-------*/}
+                        <View >
 
-                            {/*INPUT INGRESE USUARIO*/}
+                            {/*  -MAIL- */}
                             <View  style={style.singleInputView}>
-                                <TextInput 
-                                style={style.singleInputText}
+                                <TextInput style={style.singleInputText}
                                 autoCapitalize="characters"
-                                placeholder='INGRESE SU USUARIO'
+                                placeholder='INGRESE MAIL'
                                 onChangeText={ (text) => {
                                     this.setState({
                                         name:text,
@@ -87,61 +161,187 @@ class Home extends React.Component{
                                 />
                             </View>
 
-                            {/*BOTÓN ENTRAR*/}
-                            {/*Tiene un <View> en ActionButton.js. Viene el componente completo.*/}
-                            <ActionButton 
-                                title="ENTRAR"
-                                onPress={() => {
-                                    if(this.state.name===''){
-                                        Alert.alert(
-                                          'CAMPO OBLIGATORIO',
-                                          'DEBE INGRESAR SU USUARIO PARA COMENZAR.',
-                                          [
-                                            {text: 'OK', onPress: () => console.log('OK Pressed')},
-                                          ],
-                                          { cancelable: false }
-                                        )
-                                    }else{
-                                        this.cargarDatosUsuarioLogueado();
-                                        
-                                    }
-                                }}/>
+                            {/*  -PASSWORD-  */}
+                            <View  style={style.singleInputView}>
+                                <TextInput style={style.singleInputText}
+                                autoCapitalize="characters"
+                                secureTextEntry={true}
+                                placeholder='INGRESE CLAVE'
+                                onChangeText={ (text) => {
+                                    this.setState({
+                                        pass:text,
+                                    })
+                                }}
+                                value= {this.state.pass}
+                                />
+                            </View>
+
+
+                            {/*  -BOTON INGRESAR-  */}
+                            <View style={style.ActionView}>
+
+                                <ActionButton 
+                                    title="INGRESAR"
+                                    style={style.actionText}
+                                    onPress={() => {
+                                        if(this.state.name==='' || this.state.pass ===''){
+                                            Alert.alert(
+                                              'CAMPO OBLIGATORIO',
+                                              'DEBE INGRESAR EL MAIL Y LA CONTRASEÑA PARA COMENZAR.',
+                                              [
+                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                              ],
+                                              { cancelable: false }
+                                            )
+                                        }else if(!Validaciones.validateEmail(this.state.name)){
+                                            Alert.alert(
+                                              'CAMPO INVÁLIDO',
+                                              'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
+                                              [
+                                                {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                              ],
+                                              { cancelable: false }
+                                            )
+                                        }else{
+                                            this.setState({visible:!this.state.visible,});
+                                            login(this.state.name,this.state.pass)
+                                            .then((user)=>{
+                                                console.log('Login de usuario: ' + user.uid)
+                                                 Backend.setUid(user.uid);
+                                                    Backend.buscarUsuarioLogueado((usuario)=>{
+                                                        if(usuario){
+                                                            console.log('entro por buscarUsuarioLogueado con : ' + usuario._id);
+                                                            Backend.actualizarFechaUltimoAcceso(usuario);
+                                                            this.setState({visible:!this.state.visible});
+                                                            Actions.menu({
+                                                                user:usuario,
+                                                            });
+                                                        }else{
+                                                            console.log('El usuario autenticado no esta creado en la tabla USERS');
+                                                            this.setState({visible:!this.state.visible});
+                                                            Actions.perfil({
+                                                                userId:this.uid,
+                                                            });
+                                                        }
+                                                    });
+                                            })
+                                            .catch(error => {
+                                                this.setState({visible:!this.state.visible,});
+                                                alert('La cuenta no existe o la contraseña es inválida');
+                                            })
+                                        }
+                                    }}/>
                 
-                        </View>
+                            </View>
 
+                            {/*BLOQUE FINAL DE OPCIONES: REGISTRO Y RECUPERAR CLAVE*/}
+                            <View style={style.BloqueSubIngreso}>
 
-                        {/*BLOQUE FINAL DE OPCIONES: REGISTRO Y RECUPERAR CLAVE*/}
-                        <View style={style.BloqueSubIngreso}>
+                                {/*  -BOTON REGISTRARSE-  */}
+                                <View style={style.ButtonRegistrese}>
+                                    
+                                    <ActionButton 
+                                        title="REGISTRARSE"
+                                        style={style.TextoRegistrese}
+                                        onPress={() => {
+                                            if(this.state.name==='' || this.state.pass ===''){
+                                                Alert.alert(
+                                                  'CAMPO OBLIGATORIO',
+                                                  'DEBE INGRESAR EL MAIL Y LA CONTRASEÑA PARA COMENZAR.',
+                                                  [
+                                                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                  ],
+                                                  { cancelable: false }
+                                                )
+                                            }else if(!Validaciones.validateEmail(this.state.name)){
+                                                Alert.alert(
+                                                  'CAMPO INVÁLIDO',
+                                                  'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
+                                                  [
+                                                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                  ],
+                                                  { cancelable: false }
+                                                )
+                                            }else{
+                                                this.setState({visible:!this.state.visible,});
+                                                signUp(this.state.name,this.state.pass)
+                                                .then((user)=>{
+                                                    console.log('Login de usuario creado: ' + user.uid)
+                                                    Backend.setUid(user.uid);
+                                                    this.setState({visible:!this.state.visible});
+                                                    user.sendEmailVerification().then(function() {
+                                                      alert('Se envio un email a '+ user.email +' .Verifique su identidad y vuelva a ingresar ')
+                                                    }).catch(function(error) {
+                                                      console.log('Error enciando mail de confirmacion')
+                                                    });
+                                                })
+                                                .catch(error => {
+                                                    this.setState({visible:!this.state.visible,});
+                                                    alert('La dirección de mail esta siendo usada por otra cuenta');
+                                                })
+                                            }
+                                        }}/>
+                    
+                                </View>
 
-                            {/*BOTÓN REGISTRO*/}
-                            <View style={style.ButtonRegistrese}>
-                                <TouchableOpacity>
-                                    <Text style={style.TextoRegistrese}>
-                                        REGÍSTRESE AQUÍ
+                                {/*SEPARACIÓN*/}
+                                <View style={style.Separador}>
+                                    <Text style={style.TextoSeparador}>
+                                        |
                                     </Text>
-                                </TouchableOpacity>
-                            </View>
+                                </View>
+                               
 
-                            {/*SEPARACIÓN*/}
-                            <View style={style.Separador}>
-                                <Text style={style.TextoSeparador}>
-                                    |
-                                </Text>
-                            </View>
+                                {/*  -BOTON LOGOUT-  ¿NO DEBERÏA ESTAR EN MENÚ?*/}
+                                {/*  <View>
+                                    <ActionButton
+                                        title="CERRAR SESIÓN"
+                                        onPress={() => {
+                                                Backend.logOut();
+                                            }
+                                        }/>
+                    
+                                </View>*/}
 
-                            {/*BOTÓN RECUPERAR CONTRASEÑA*/}
-                            <View style={style.ButtonContrasena}>
-                                <TouchableOpacity>
-                                    <Text style={style.TextoContrasena}>
-                                        RECUPERAR CLAVE
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                                {/*  -BOTON RECUPERAR CONTRASEÑA-  */}
+                                <View style={style.ButtonContrasena}>
+                                    <ActionButton 
+                                        title="RECUPERAR CLAVE"
+                                        style={style.TextoContrasena}
+                                        onPress={() => {
 
-                        </View>
+                                                if(this.state.name===''){
+                                                    Alert.alert(
+                                                      'CAMPO OBLIGATORIO',
+                                                      'DEBE INGRESAR EL MAIL PARA RECUPERAR LA CONTRASEÑA.',
+                                                      [
+                                                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                      ],
+                                                      { cancelable: false }
+                                                    )
+                                                }else if(!Validaciones.validateEmail(this.state.name)){
+                                                    Alert.alert(
+                                                      'CAMPO INVÁLIDO',
+                                                      'EL MAIL INGRESADO NO POSEE UN FORMATO VÁLIDO ',
+                                                      [
+                                                        {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                      ],
+                                                      { cancelable: false }
+                                                    )
+                                                }else{
+                                                    Backend.recuperarContrasenia(this.state.name);
+                                                }
+                                            }
+                                        }/>
+                    
+                                </View>
 
-                    </View>
+                            </View>                        
+                        </View> 
+                        {/*FIN BLOQUE INGRESO Y BOTONES*/}
 
+                    </View> 
+                    {/*FIN TODO*/}
 
                 </KeyboardAvoidingView>
             
@@ -150,30 +350,6 @@ class Home extends React.Component{
            
         );
     }
-
-    cargarDatosUsuarioLogueado(){
-        console.log('********************** Logueando usuario: '+this.state.name+' ***************************************')
-        Backend.buscarUsuarioLogueado((usuario)=>{
-            Backend.actualizarFechaUltimoAcceso(usuario);
-            // if(usuario._id){
-                Actions.menu({
-                                user:usuario,
-                                // name:usuario.name
-                            });
-            // }else{
-            //     return Alert.alert(
-            //       'USUARIO INEXISTENTE',
-            //       'EL USUARIO NO EXISTE EN EL SISTEMA',
-            //       [
-            //         {text: 'OK', onPress: () => console.log('OK Pressed')},
-            //       ],
-            //       { cancelable: false }
-            //     )
-            // }
-        },this.state.name);
-    }
-
-    
 }
 
 export default Home;

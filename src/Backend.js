@@ -1,5 +1,11 @@
 import firebase from 'firebase';
 
+import {
+    Actions,
+} from 'react-native-router-flux';
+
+import prompt from 'react-native-prompt-android';
+
 class Backend{
     uid='';
     messageRef=null;
@@ -16,16 +22,6 @@ class Backend{
             databaseURL: "https://redterceraedad-531be.firebaseio.com",
             storageBucket: "redterceraedad-531be.appspot.com",
         });
-            firebase.auth().onAuthStateChanged((user) => {
-            if(user){
-                this.setUid(user.uid);
-            }else{
-                firebase.auth().signInAnonymously().catch((error) => {
-                    alert(error.message);
-                });
-            }
-
-        });
     }
 
     setUid(value){
@@ -36,36 +32,68 @@ class Backend{
         return this.uid;
     }
 
+    logOut(){
+        console.log('Logout usuario: '+this.getUid());
+        firebase.auth().signOut().then(function() {
+            console.log('Logout satisfactorio');
+            Actions.home({});
+        }).catch(function(error) {
+          alert(error.message);
+        });
+    }
+
+    recuperarContrasenia(email){
+        var user = firebase.auth().currentUser;
+        if(user){
+            this.logOut();
+        }
+        firebase.auth().sendPasswordResetEmail(email)
+        .then(function() {
+            console.log('Se envio un email a '+ email +' para recuperar la contraseña')
+            alert('Se envio un email a '+ email +' para recuperar la contraseña')
+        }).catch(function(error) {
+            console.log('error al tratar de reestablecer la contrasenia')
+        });
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los chat
     //Retrieve the message from the backend
-    loadMessages(callback){
+    loadMessages(callback,name,contacto){
         this.messageRef = firebase.database().ref('messages');
         this.messageRef.off();
         const onReceive = (data) => {
             const message = data.val();
-            callback({
-                _id: data.key,
-                text: message.text.toUpperCase(),
-                createdAt: new Date(message.createdAt),
-                user:{
-                    _id: message.user._id,
-                    name: message.user.name.toUpperCase(),
-                },
-            });
+            //FIltra los mensajes creados por el usuario logueado para el contacto seleccionado
+            // o los que son enviados al usuario logueado por el contacto seleccionado
+            if(//Si yo mando el mensaje                                 y es para el contacto que seleccione
+                (message.user.name.toUpperCase()===name.toUpperCase() && message.para.toUpperCase() === contacto.toUpperCase())
+                //O yo recibo el mensaje                            y es del  contacto que seleccione
+                || (message.para.toUpperCase()===name.toUpperCase() && message.user.name.toUpperCase() === contacto.toUpperCase())
+                ){
+                    callback({
+                        _id: data.key,
+                        text: message.text.toUpperCase(),
+                        createdAt: new Date(message.createdAt),
+                        user:{
+                            _id: message.user._id,
+                            name: message.user.name.toUpperCase(),
+                        },
+                    });
+            }
         };
         this.messageRef.limitToLast(20).on('child_added', onReceive);
 
     }
 
     //Send message to the backend
-    sendMessage(message){
+    sendMessage(message,para){
         for(let i = 0; i < message.length; i++){
             this.messageRef.push({
                 text: message[i].text.toUpperCase(),
-                user: message[i].user.toUpperCase(),
+                user: message[i].user,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
+                para:para.toUpperCase()
             });
         }
     }
@@ -123,7 +151,7 @@ class Backend{
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los eventos
     //Send eventos to the backend
-    sendEvento(user,categoria,barrio,fecha){
+    sendEvento(user,categoria,barrio,fecha,descripcion,centro,hora){
             this.getEventoRef();
             //Agrego el evento en la tabla
             var mensajeAlertaId = this.getRandomInt(0,10000);
@@ -133,27 +161,65 @@ class Backend{
                 fecha: fecha.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 mensajeAlertaId:mensajeAlertaId,
-                user:{
-                  _id: this.getUid(),
-                  name: user.name.toUpperCase(),
-                }
+                descripcion:descripcion.toUpperCase(),
+                centro:centro.toUpperCase(),
+                hora:hora,
+                userId:this.getUid(),
             }).key;
             var evento = {
-                eventoId: eventoId.toUpperCase(),
+                eventoId: eventoId,
                 categoria: categoria.toUpperCase(),
                 barrio: barrio.toUpperCase(),
                 fecha: fecha.toUpperCase(),
                 mensajeAlertaId:mensajeAlertaId,
-                user:{
-                      _id: this.getUid(),
-                      name: user.name.toUpperCase(),
-                    }
-
+                descripcion:descripcion.toUpperCase(),
+                centro:centro.toUpperCase(),
+                hora:hora,
+                userId:this.getUid(),
             };
             //Agrego el evento como notificacipn para cada usuario
            this.agregarNotificacionParaUsuario(user,evento);
+           //Navego a la pantalla anterior
+            Actions.evento({user:user,});
     }
 
+    modificarEvento(evento,categoria,barrio,fecha,descripcion,centro,hora,user){
+        this.getEventoRef();
+        var eventoModificado = {
+            categoria: categoria.toUpperCase(),
+            barrio: barrio.toUpperCase(),
+            fecha: fecha.toUpperCase(),
+            createdAt: evento.createdAt,
+            mensajeAlertaId:evento.mensajeAlertaId,
+            descripcion:descripcion.toUpperCase(),
+            centro:centro.toUpperCase(),
+            hora:hora,
+            userId:this.getUid(),
+        };
+
+        var updates = {};
+        updates[evento.eventoId+'/'] = eventoModificado;
+        this.eventosRef.update(updates)
+                           .then(()=>{
+                               Actions.evento({user:user,});
+                           })
+                           .catch(error => {
+                                console.log(error);  
+                            })
+    }
+
+    borrarEvento(evento, user){
+        this.getEventoRef();
+        this.eventosRef.child(evento.eventoId).remove()
+                                              .then(()=>{
+                                                    Actions.evento({user:user,});
+                                              })
+                                              .catch(function(error) {
+                                                      console.log('Error: '+error);
+                                              })
+    }
+
+    
     agregarNotificacionParaUsuario(userCreador,evento){
         //Buscar los usuarios que esten interesados en participar del evento
         this.getUsuarioRef();
@@ -170,8 +236,11 @@ class Backend{
                         categoria: evento.categoria,
                         barrio: evento.barrio,
                         fecha: evento.fecha,
-                        user: evento.user,
+                        userId: evento.userId,
                         mensajeAlertaId:evento.mensajeAlertaId,
+                        descripcion:evento.descripcion,
+                        centro:evento.centro,
+                        hora:evento.hora,
                     };
                     // Get a key for a new Post.
                     var newPostKey = firebase.database().ref('usuario').push().key;
@@ -186,6 +255,48 @@ class Backend{
 
     getEventoRef(){
         this.eventosRef = firebase.database().ref('eventos');
+    } 
+
+    getEventosCreadosPorUsuario(callback, usuario){
+        this.getEventoRef();
+        this.eventosRef.orderByChild("userId").equalTo(usuario._id).limitToLast(20).once('value',function(snapshot){
+            snapshot.forEach(function(childSnapshot) {
+                const evento = childSnapshot.val();
+                    callback({
+                                eventoId: childSnapshot.key,
+                                categoria: evento.categoria.toUpperCase(),
+                                barrio: evento.barrio.toUpperCase(),
+                                fecha: evento.fecha,
+                                mensajeAlertaId: evento.mensajeAlertaId,
+                                descripcion: evento.descripcion.toUpperCase(),
+                                centro: evento.centro.toUpperCase(),
+                                hora: evento.hora,
+                                user: evento.user,
+                                createdAt:evento.createdAt,
+                     });
+                });
+        });
+    }
+
+    getEventoPorId(callback,eventoId){
+        this.getEventoRef();
+        this.eventosRef.orderByKey().equalTo(eventoId).limitToLast(20).once('value',function(snapshot){
+            snapshot.forEach(function(childSnapshot) {
+                const evento = childSnapshot.val();
+                    callback({
+                                eventoId: childSnapshot.key,
+                                categoria: evento.categoria.toUpperCase(),
+                                barrio: evento.barrio.toUpperCase(),
+                                fecha: evento.fecha,
+                                mensajeAlertaId: evento.mensajeAlertaId,
+                                descripcion: evento.descripcion.toUpperCase(),
+                                centro: evento.centro.toUpperCase(),
+                                hora: evento.hora,
+                                user: evento.user,
+                                createdAt:evento.createdAt,
+                     });
+                });
+        });
     }
 
     closeEventos(){
@@ -195,40 +306,255 @@ class Backend{
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los usuarios
     //Guardar usuarios
-    agregarUsuario(user){
+    agregarUsuario(userId, name, barrio, centro, interes, selectedPerfil, telefono, centroPrestaInstalaciones, descripcion, brindarCharlas, asistirCharlas,
+        recibirVisitasCentro, contactoSeguridad, telefonoContactoSeguridad, mailContactoSeguridad, tipoOrganizacion){
         this.getUsuarioRef();
-        this.usuarioRef.push({
+
+
+        if(selectedPerfil.toUpperCase() === 'CENTRO'){//9 CAMPOS
+            this.usuarioRef.push({
                 _id: this.getUid(),
-                name: 'PABLO',
-                intereses:['CINE','TEATRO','HISTORIA'],
-                perfil: 'USUARIO',
-                barrio: 'WILDE',
-                centro: ['CENTRO1'],
+                name: name.toUpperCase(),
+                perfil: selectedPerfil,
+                barrio: barrio.toUpperCase(),
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
-                puntaje:0,
-        });
+                telefono: telefono,
+                centroPrestaInstalaciones: centroPrestaInstalaciones,
+                tipoOrganizacion:tipoOrganizacion,
+            })
+            .then(result => {
+                this.buscarUsuarioLogueado((usuario)=>{
+                               Actions.menu({
+                                    user:usuario,
+                                });
+                        } );
+            })
+            .catch(error => {
+                console.log(error);  
+            })
+        }else if(selectedPerfil.toUpperCase() === 'VOLUNTARIO'){//12 CAMPOS
+            var intereses = [];
+            for(var keyPre in interes){
+                intereses.push(interes[keyPre].value);
+            }
+            this.usuarioRef.push({
+                    perfil: selectedPerfil,
+                    name: name.toUpperCase(),
+                    descripcion: descripcion,
+                    telefono: telefono,
+                    barrio: barrio.toUpperCase(),
+                    centro: centro.toUpperCase(),
+                    intereses:intereses,
+                    brindarCharlas: brindarCharlas,
+                    asistirCharlas: asistirCharlas,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
+                    _id: this.getUid(),
+            })
+            .then(result => {
+                this.buscarUsuarioLogueado((usuario)=>{
+                               Actions.menu({
+                                    user:usuario,
+                                });
+                        } );
+            })
+            .catch(error => {
+                console.log(error);  
+            })
+        }else if(selectedPerfil.toUpperCase() === 'USUARIO'){//16 CAMPOS
+            var intereses = [];
+            for(var keyPre in interes){
+                intereses.push(interes[keyPre].value);
+            }
+            this.usuarioRef.push({
+                    perfil: selectedPerfil,
+                    name: name.toUpperCase(),
+                    descripcion: descripcion,
+                    telefono: telefono,
+                    barrio: barrio.toUpperCase(),
+                    centro: centro.toUpperCase(),
+                    intereses:intereses,
+                    brindarCharlas: brindarCharlas,
+                    asistirCharlas: asistirCharlas,
+                    recibirVisitasCentro:recibirVisitasCentro,
+                    contactoSeguridad: contactoSeguridad,
+                    telefonoContactoSeguridad:telefonoContactoSeguridad,
+                    mailContactoSeguridad:mailContactoSeguridad,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    fechaUltimoAcceso:firebase.database.ServerValue.TIMESTAMP,
+                    _id: this.getUid(),
+            })
+            .then(result => {
+                this.buscarUsuarioLogueado((usuario)=>{
+                               Actions.menu({
+                                    user:usuario,
+                                });
+                        } );
+            })
+            .catch(error => {
+                console.log(error);  
+            })
+        }
+
     }
 
-    buscarUsuarioLogueado(callback,name){
+    modificarUsuario(user, name, barrio, centro, interes, selectedPerfil, telefono, centroPrestaInstalaciones, descripcion, brindarCharlas, asistirCharlas,
+        recibirVisitasCentro, contactoSeguridad, telefonoContactoSeguridad, mailContactoSeguridad, tipoOrganizacion){
+
         this.getUsuarioRef();
-        this.usuarioRef.orderByChild("name").equalTo(name.toUpperCase()).limitToLast(20).once('value',function(snapshot){
-                snapshot.forEach(function(childSnapshot) {
-                const user = childSnapshot.val();
-                callback({
-                            key:childSnapshot.key,
-                            _id: user._id,
-                            name:  user.name.toUpperCase(),
-                            intereses:  user.intereses,
-                            perfil:  user.perfil,
-                            barrio:  user.barrio.toUpperCase(),
-                            createdAt:  user.createdAt,
-                            notificaciones:user.notificaciones,
-                            usuarios:user.usuarios,
-                            centro:user.centro,
-                            puntaje:user.puntaje
-                });
-            });
+        var usuarioModificado = null;
+         if(selectedPerfil.toUpperCase() === 'CENTRO'){//9 CAMPOS
+             usuarioModificado={
+                _id: user._id,
+                name: name.toUpperCase(),
+                perfil: selectedPerfil,
+                barrio: barrio.toUpperCase(),
+                createdAt: user.createdAt,
+                fechaUltimoAcceso:user.fechaUltimoAcceso,
+                telefono:telefono,
+                centroPrestaInstalaciones: centroPrestaInstalaciones,
+                tipoOrganizacion:tipoOrganizacion,
+            }
+         }else if(selectedPerfil.toUpperCase() === 'VOLUNTARIO'){//12 CAMPOS
+            var intereses = [];
+            for(var keyPre in interes){
+                intereses.push(interes[keyPre].value);
+            }
+            usuarioModificado={
+                    perfil: selectedPerfil,
+                    name: name.toUpperCase(),
+                    descripcion: descripcion,
+                    telefono:telefono,
+                    barrio: barrio.toUpperCase(),
+                    centro: centro.toUpperCase(),
+                    intereses:intereses,
+                    brindarCharlas: brindarCharlas,
+                    asistirCharlas: asistirCharlas,
+                    createdAt: user.createdAt,
+                    fechaUltimoAcceso:user.fechaUltimoAcceso,
+                    _id: user._id,
+                }
+         }else if(selectedPerfil.toUpperCase() === 'USUARIO'){//16 CAMPOS
+            var intereses = [];
+            for(var keyPre in interes){
+                intereses.push(interes[keyPre].value);
+            }
+            usuarioModificado={
+                    perfil: selectedPerfil,
+                    name: name.toUpperCase(),
+                    descripcion: descripcion,
+                    telefono:telefono,
+                    barrio: barrio.toUpperCase(),
+                    centro: centro.toUpperCase(),
+                    intereses:intereses,
+                    brindarCharlas: brindarCharlas,
+                    asistirCharlas: asistirCharlas,
+                    recibirVisitasCentro:recibirVisitasCentro,
+                    contactoSeguridad: contactoSeguridad,
+                    telefonoContactoSeguridad:telefonoContactoSeguridad,
+                    mailContactoSeguridad:mailContactoSeguridad,
+                    createdAt: user.createdAt,
+                    fechaUltimoAcceso:user.fechaUltimoAcceso,
+                    _id: user._id,
+                }
+
+         }
+        var updates = {};
+        updates[user.key+'/'] = usuarioModificado;
+        this.usuarioRef.update(updates)
+        .then(result => {
+            this.buscarUsuarioLogueado((usuario)=>{
+                           Actions.menu({
+                                user:usuario,
+                            });
+                    } );
+        })
+        .catch(error => {
+            console.log(error);  
+        })
+    }
+
+    borrarUsuario(user){
+        this.getUsuarioRef();
+        this.usuarioRef.child(user.key).remove()
+            .then(()=>{
+                    prompt(
+                        'INGRESE SU  CONTRASEÑA',
+                        'Para borrar su cuenta debemos validar su identidad',
+                        [
+                         {text: 'OK', onPress: password => {
+                            const currentUser = firebase.auth().currentUser;
+                            const credential = firebase.auth.EmailAuthProvider.credential(
+                                currentUser.email, 
+                                password
+                            );
+                            currentUser.reauthenticateWithCredential(credential)
+                            .then(()=>{
+                                currentUser.delete()
+                                .then(()=>{
+                                    Actions.home({
+                                    });
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                    alert('Se produjo un error borrando el usuario');
+                                })
+                            })
+                            .catch(error => {
+                                console.log(error);
+                                alert('Se produjo un error borrando el usuario');
+                                this.logOut();
+                            })
+                         }},
+                        ],
+                        {
+                            type: 'secure-text',
+                            cancelable: false,
+                            defaultValue: 'test',
+                            placeholder: 'CONTRASEÑA'
+                        }
+                    );
+            })
+            .catch(error => {
+                console.log(error);
+                alert('Se produjo un error borrando el usuario');
+            })
+    }
+
+    buscarUsuarioLogueado(callback){
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("_id").equalTo(this.uid).once('value',function(snapshot){
+                if(snapshot.hasChildren()){
+                    snapshot.forEach(function(childSnapshot) {
+                    const user = childSnapshot.val();
+                    callback({
+                                key:childSnapshot.key,
+                                _id: user._id,
+                                name:  user.name.toUpperCase(),
+                                intereses:  user.intereses,
+                                perfil:  user.perfil,
+                                barrio:  user.barrio.toUpperCase(),
+                                createdAt:  user.createdAt,
+                                notificaciones:user.notificaciones,
+                                usuarios:user.usuarios,
+                                centro:user.centro,
+                                fechaUltimoAcceso:user.fechaUltimoAcceso,
+                                telefono: user.telefono,
+                                centroPrestaInstalaciones: user.centroPrestaInstalaciones,
+                                descripcion: user.descripcion,
+                                brindarCharlas:user.brindarCharlas,
+                                asistirCharlas:user.asistirCharlas,
+                                recibirVisitasCentro:user.recibirVisitasCentro,
+                                contactoSeguridad:user.contactoSeguridad,
+                                telefonoContactoSeguridad:user.telefonoContactoSeguridad,
+                                mailContactoSeguridad:user.mailContactoSeguridad,
+                                tipoOrganizacion:user.tipoOrganizacion,
+                            });
+                        });
+                }else{
+                    callback(null);
+                }
         });
     }
 
@@ -352,40 +678,9 @@ class Backend{
         this.usuarioRef = firebase.database().ref('usuario');
     }
 
-    closeUsuarioRef(){
+    closePerfil(){
         this.close(this.usuarioRef);
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Desde aca se escribe lo referido a los centros
-    //Guardar Centros
-    agregarCentro(){
-        this.getUsuarioRef();
-        this.usuarioRef.push({
-                _id: this.getUid(),
-                name: 'CENTRO1',
-                voluntarios: ['JUAN','PABLO'],
-                actividades: [''],
-                perfil: 'CENTRO',
-                barrio: 'WILDE',
-                createdAt: firebase.database.ServerValue.TIMESTAMP,
-        });
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Desde aca se escribe lo referido a los ADMIN
-    //Guardar Usuario perfil admin
-    agregarAdmin(){
-        this.getUsuarioRef();
-        this.usuarioRef.push({
-                _id: this.getUid(),
-                name: 'ADMIN1',
-                //voluntarios: ['JUAN','PABLO'],
-                //actividades: [''],
-                perfil: 'ADMIN',
-                barrio: 'WILDE',
-                createdAt: firebase.database.ServerValue.TIMESTAMP,
-        });
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido al guardado de imagenes en el storage
     getImageRef(){
         this.imageRef = firebase.storage().ref('images');
@@ -456,7 +751,6 @@ class Backend{
 
     modificarCatalogo(user, url, empresa, categoria, producto, imageName, medioPago,catalogo, precio, telefonoProveedor, mailProveedor, 
                       medioEntrega,horarioAtencion){
-        console.log('mailProveedor: '+mailProveedor);
         var imagenUrlAux;
         var empresaAux;
         var categoriaAux;

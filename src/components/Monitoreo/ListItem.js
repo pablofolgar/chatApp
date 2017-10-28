@@ -5,7 +5,7 @@ const {
     TouchableHighlight, 
     Text 
   } = ReactNative;
-import renderIf from './../RenderIf';
+import renderIf from './RenderIf';
 const style = require('./../styles.js');
 
 class ListItem extends Component {
@@ -35,7 +35,19 @@ class ListItem extends Component {
 
                 <View style={style.DataNotifView}>
                   <Text style={style.DataNotifText}>
+                    DESCRIPCION: {this.props.item.descripcion} 
+                  </Text>
+                </View>
+
+                <View style={style.DataNotifView}>
+                  <Text style={style.DataNotifText}>
                     FECHA: {this.props.item.fecha} 
+                  </Text>
+                </View>
+
+                <View style={style.DataNotifView}>
+                  <Text style={style.DataNotifText}>
+                    HORA: {this.props.item.hora} 
                   </Text>
                 </View>
 
@@ -44,6 +56,12 @@ class ListItem extends Component {
                     BARRIO:  {this.props.item.barrio}
                   </Text>
                 </View>
+                <View style={style.DataNotifView}>
+                  <Text style={style.DataNotifText}>
+                    CENTRO:  {this.props.item.centro}
+                  </Text>
+                </View>
+
               </View>
             </View>
         )}

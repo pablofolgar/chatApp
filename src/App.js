@@ -11,13 +11,15 @@ import CargarHistoria from './components/Historias/CargarHistoria';
 import CargarHistoriaTexto from './components/Historias/CargarHistoriaTexto';
 import CargarHistoriaAudio from './components/Historias/CargarHistoriaAudio';
 import Notificacion from './components/Monitoreo/Notificacion';
-import Evento from './components/Eventos/CrearEvento';
 import Perfil from './components/Perfil/CrearPerfil';
 import Catalogo from './components/Catalogo/Catalogo';
 import VerCatalogo from './components/Catalogo/VerCatalogo';
 import CargarCatalogo from './components/Catalogo/CargarCatalogo';
 import Valorar from './components/Valoracion/Valorar';
 import VerUsuarioValoracion from './components/Valoracion/VerUsuariosParaValorar';
+import Evento from './components/Eventos/Evento';
+import VerEventos from './components/Eventos/VerEventos';
+import CrearEvento from './components/Eventos/CrearEvento';
 
 import {
     Platform
@@ -44,13 +46,15 @@ class App extends React.Component{
                     <Scene key='cargarHistoriaTexto' component={CargarHistoriaTexto} title='HISTORIA EN TEXTO'/>
                     <Scene key='cargarHistoriaAudio' component={CargarHistoriaAudio} title='HISTORIA EN AUDIO'/>
                     <Scene key='notificacion' component={Notificacion} title='NOTIFICACIONES '/>
-                    <Scene key='evento' component={Evento} title='CREAR EVENTOS'/>
+                    <Scene key='evento' component={Evento} title='EVENTOS'/>
                     <Scene key='perfil' component={Perfil} title='PERFIL'/>
                     <Scene key='catalogo' component={Catalogo} title='CATALOGO'/>
                     <Scene key='verCatalogo' component={VerCatalogo} title='VER CATALOGO'/>
                     <Scene key='cargarCatalogo' component={CargarCatalogo} title='CARGAR CATALOGO'/>
                     <Scene key='valorar' component={Valorar} title='VALORACIÓN'/>
                     <Scene key='verUsuarioValoracion' component={VerUsuarioValoracion} title='VALORACIONES'/>
+                    {<Scene key='verEventos' component={VerEventos} title='VER EVENTOS'/>}
+                    <Scene key='crearEvento' component={CrearEvento} title='CREAR EVENTO'/>
                 </Scene>
             </Router>
         );
