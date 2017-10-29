@@ -342,7 +342,7 @@ export default class CrearEvento extends React.Component{
         );
       }
     limpiarCampos(){
-        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA',descripcion:'',centro:'',simpleText:'FECHA DEL EVENTO',isoFormatText:'HORA DEL EVENTO'})
+        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA',descripcion:'',centro:'',simpleText:'FECHA DEL EVENTO',isoFormatText:'HORA DEL EVENTO', text:' '})
     }
 
     validarCamposRequeridos(){

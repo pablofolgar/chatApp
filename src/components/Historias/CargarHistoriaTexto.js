@@ -151,7 +151,7 @@ class CargarHistoriaTexto extends React.Component{
     }
 
     limpiarCampos(){
-        this.setState({history: '' ,titulo:'',selectedCategoria:'SELECCIONAR CATEGORÍA',text:''})
+        this.setState({history: '' ,titulo:'',selectedCategoria:'SELECCIONAR CATEGORÍA',text:' '})
     }
 
     validarCamposRequeridos(){
