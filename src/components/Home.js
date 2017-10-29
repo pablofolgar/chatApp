@@ -227,7 +227,14 @@ class Home extends React.Component{
                                             })
                                             .catch(error => {
                                                 this.setState({visible:!this.state.visible,});
-                                                alert('La cuenta no existe o la contraseña es inválida');
+                                                Alert.alert(
+                                                  'IMPORTANTE',
+                                                  'La cuenta no existe o la contraseña es inválida',
+                                                  [
+                                                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                  ],
+                                                  { cancelable: false }
+                                                )
                                             })
                                         }
                                     }}/>
@@ -270,14 +277,28 @@ class Home extends React.Component{
                                                     Backend.setUid(user.uid);
                                                     this.setState({visible:!this.state.visible});
                                                     user.sendEmailVerification().then(function() {
-                                                      alert('Se envio un email a '+ user.email +' .Verifique su identidad y vuelva a ingresar ')
+                                                        Alert.alert(
+                                                          'IMPORTANTE',
+                                                          'Se envio un email a '+ user.email +' .Verifique su identidad y vuelva a ingresar',
+                                                          [
+                                                            {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                          ],
+                                                          { cancelable: false }
+                                                        )
                                                     }).catch(function(error) {
                                                       console.log('Error enciando mail de confirmacion')
                                                     });
                                                 })
                                                 .catch(error => {
                                                     this.setState({visible:!this.state.visible,});
-                                                    alert('La dirección de mail esta siendo usada por otra cuenta');
+                                                    Alert.alert(
+                                                          'IMPORTANTE',
+                                                          'La dirección de mail esta siendo usada por otra cuenta',
+                                                          [
+                                                            {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                          ],
+                                                          { cancelable: false }
+                                                        )
                                                 })
                                             }
                                         }}/>

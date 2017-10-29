@@ -5,6 +5,9 @@ import {
 } from 'react-native-router-flux';
 
 import prompt from 'react-native-prompt-android';
+import {
+    Alert,
+} from 'react-native';
 
 class Backend{
     uid='';
@@ -38,7 +41,15 @@ class Backend{
             console.log('Logout satisfactorio');
             Actions.home({});
         }).catch(function(error) {
-          alert(error.message);
+          console.log(error.message);
+          Alert.alert(
+              'IMPORTANTE',
+              'Ha ocurrido un error cerrando la sesión',
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              { cancelable: false }
+            )
         });
     }
 
@@ -50,7 +61,14 @@ class Backend{
         firebase.auth().sendPasswordResetEmail(email)
         .then(function() {
             console.log('Se envio un email a '+ email +' para recuperar la contraseña')
-            alert('Se envio un email a '+ email +' para recuperar la contraseña')
+            Alert.alert(
+              'IMPORTANTE',
+              'Se envio un email a '+ email +' para recuperar la contraseña',
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              { cancelable: false }
+            )
         }).catch(function(error) {
             console.log('error al tratar de reestablecer la contrasenia')
         });
