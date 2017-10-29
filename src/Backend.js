@@ -184,8 +184,17 @@ class Backend{
     }
 
     modificarEvento(evento,categoria,barrio,fecha,descripcion,centro,hora,user){
+        //si se modifica el barrio o la categoria del evento se deben agregar notificaciones a los usuarios
+        //porque las notificaciones dependen del barrio y de la categoria
+        var agregarNotificaciones = false;
+        if(evento.categoria.toUpperCase() != categoria.toUpperCase() 
+            || evento.barrio.toUpperCase() != barrio.toUpperCase()){
+            agregarNotificaciones = true;
+        }
+
         this.getEventoRef();
         var eventoModificado = {
+            eventoId: evento.eventoId,
             categoria: categoria.toUpperCase(),
             barrio: barrio.toUpperCase(),
             fecha: fecha.toUpperCase(),
@@ -201,7 +210,11 @@ class Backend{
         updates[evento.eventoId+'/'] = eventoModificado;
         this.eventosRef.update(updates)
                            .then(()=>{
-                               Actions.evento({user:user,});
+                                if(agregarNotificaciones){
+                                    console.log(eventoModificado.eventoId)
+                                    this.agregarNotificacionParaUsuario(user,eventoModificado)
+                                }
+                                Actions.evento({user:user,});
                            })
                            .catch(error => {
                                 console.log(error);  
