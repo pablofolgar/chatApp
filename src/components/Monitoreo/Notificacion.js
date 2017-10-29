@@ -144,6 +144,7 @@ export default class Notificacion extends React.Component{
         const onPress = () => {
                     Actions.verEventos({
                                     eventoId:item._key,
+                                    usuarioNotificado: this.state.user,
                                 });
                 };
         return (

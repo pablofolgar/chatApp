@@ -15,6 +15,7 @@ import ListItem from './ListItem';
 import {
     Actions,
 } from 'react-native-router-flux';
+import renderIf from './../RenderIf';
 
 export default class VerEventos extends React.Component{
 
@@ -23,6 +24,7 @@ export default class VerEventos extends React.Component{
         this.state = {
                 user: this.props.user,
                 eventoId: this.props.eventoId,
+                usuarioNotificado: this.props.usuarioNotificado,
                 dataSource: new ListView.DataSource({
                     rowHasChanged: (row1, row2) => row1 !== row2}),
             };
@@ -40,7 +42,25 @@ export default class VerEventos extends React.Component{
 
         return(
             <ScrollView  style={style.container}> 
-                    <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} enableEmptySections={true}/>
+                    {renderIf(this.state.dataSource.getRowCount() > 0, 
+                        <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} enableEmptySections={true}/>
+                    )}
+                
+                    {renderIf(this.state.dataSource.getRowCount() === 0 && this.state.eventoId && this.state.usuarioNotificado, 
+                        <View>
+                            <Text>EL EVENTO FUE ELIMINADO </Text>
+                            <View style={style.ActionView}>
+                            <ActionButton title="VOLVER"
+                                style={style.actionText}
+                                onPress={() => {
+                                                 Backend.borrarNotificacion(this.state.eventoId, this.state.usuarioNotificado);   
+                                                }
+
+                                        }
+                              />
+                          </View> 
+                        </View>
+                    )}
             </ScrollView>
         );
     }
@@ -113,7 +133,8 @@ export default class VerEventos extends React.Component{
             }
         };
         return (
-              <ListItem item={item} onPress={onPress}/>
+                <ListItem item={item} onPress={onPress}  enableEmptySections={true}/>
             );
     }
+
 }

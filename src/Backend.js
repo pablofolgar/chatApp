@@ -253,6 +253,26 @@ class Backend{
         });
     }
 
+    borrarNotificacion(eventoId, user){
+        var  notificacionKey = ''
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("_id").equalTo(user._id).once('value',function(snapshot){
+            snapshot.forEach(function(childSnapshot) {
+                var notificaciones = childSnapshot.val().notificaciones;
+                for(var keyPre in notificaciones){
+                    if(notificaciones[keyPre].eventoId === eventoId){
+                        notificacionKey = keyPre;
+                        break;
+                    }
+                }
+            })
+        })
+        .then(()=>{
+            this.usuarioRef.child(user.key+'/notificaciones/'+notificacionKey).remove()
+            .then(()=>{Actions.notificacion({user:user,})});
+        })
+    }
+
     getEventoRef(){
         this.eventosRef = firebase.database().ref('eventos');
     } 
@@ -299,6 +319,8 @@ class Backend{
                 });
         });
     }
+
+
 
     closeEventos(){
         this.close(this.eventosRef);
