@@ -58,7 +58,7 @@ export default class CrearPerfil extends React.Component{
     }
 
     componentDidMount(){
-        if(this.state.selectedPerfil != 'CENTRO'){
+        if(this.state.selectedPerfil != 'CENTRO' && this.state.selectedPerfil != 'ADMIN'){
             var aux = [];
            for (var i = this.state.selectedInteres.length - 1; i >= 0; i--) {
                 aux.push({label:this.state.selectedInteres[i] , value:this.state.selectedInteres[i]});
@@ -88,6 +88,7 @@ export default class CrearPerfil extends React.Component{
 
                         
                         {/*        -PERFIL-        */}
+                        {renderIf(this.props.user && this.props.user.perfil != 'ADMIN',
                         <View style={style.viewPicker}>
                             <Picker
                                 selectedValue={this.state.selectedPerfil}
@@ -96,6 +97,7 @@ export default class CrearPerfil extends React.Component{
                                 {perfilItems}
                             </Picker>
                         </View>
+                        )}
                         
                         {/*       -NOMBRE USUARIO-        */}
                         <View style={style.singleInputView}>
@@ -144,7 +146,7 @@ export default class CrearPerfil extends React.Component{
                         </View>
 
                         {/*          CENTRO DE JUBILADOS           */}
-                        {renderIf(this.state.selectedPerfil != 'CENTRO',
+                        {renderIf(this.state.selectedPerfil != 'CENTRO' && this.state.selectedPerfil != 'ADMIN',
                             <View style={style.singleInputView}>
                                 <TextInput 
                                     autoCapitalize="characters"
@@ -161,7 +163,7 @@ export default class CrearPerfil extends React.Component{
                         )}
 
                         {/* DESCRIPCION */}
-                        {renderIf(this.state.selectedPerfil != 'CENTRO',
+                        {renderIf(this.state.selectedPerfil != 'CENTRO' && this.state.selectedPerfil != 'ADMIN',
                             <View style={style.MultiLineInputView}> 
                                 <TextInput
                                         style={style.multilineInputText}
@@ -179,7 +181,7 @@ export default class CrearPerfil extends React.Component{
                         )}
 
                         {/*    CENTRO: TIPO ORGANIZACION */}
-                        {renderIf(this.state.selectedPerfil === 'CENTRO',
+                        {renderIf(this.state.selectedPerfil === 'CENTRO' && this.state.selectedPerfil != 'ADMIN',
                             <View style={style.singleInputView}>
                                 <TextInput 
                                         autoCapitalize="characters"
@@ -196,7 +198,7 @@ export default class CrearPerfil extends React.Component{
 
                         )}
                         {/*          INTERESES           */}
-                        {renderIf(this.state.selectedPerfil != 'CENTRO',
+                        {renderIf(this.state.selectedPerfil != 'CENTRO' && this.state.selectedPerfil != 'ADMIN',
                             <View>
                                 <View style={style.TituloIndicativoView}>
                                     <Text style={style.TituloIndicativoText}> 
@@ -213,7 +215,7 @@ export default class CrearPerfil extends React.Component{
                         )}
                             
                         {/*  CENTRO: Presta Instalaciones   */}
-                        {renderIf(this.state.selectedPerfil === 'CENTRO',
+                        {renderIf(this.state.selectedPerfil === 'CENTRO' && this.state.selectedPerfil != 'ADMIN',
                         <View style={style.checkVista}>
                             <CheckBox
                                 style={style.checkTexto}
@@ -228,7 +230,7 @@ export default class CrearPerfil extends React.Component{
 
                         {/*  VOLUNTARIOS o USUARIOS: Brindar o Asistir Charlas   */}
                         
-                        {renderIf(this.state.selectedPerfil != 'CENTRO',
+                        {renderIf(this.state.selectedPerfil != 'CENTRO' && this.state.selectedPerfil != 'ADMIN',
                             <View>
                                 <View style={style.TituloIndicativoView}>
                                     <Text style={style.TituloIndicativoText}> 
@@ -246,7 +248,7 @@ export default class CrearPerfil extends React.Component{
                             </View>
                         )}
 
-                        {renderIf(this.state.selectedPerfil != 'CENTRO',
+                        {renderIf(this.state.selectedPerfil != 'CENTRO' && this.state.selectedPerfil != 'ADMIN',
                             <View style={style.checkVista}>
                                 <CheckBox
                                     style={style.checkTexto}
