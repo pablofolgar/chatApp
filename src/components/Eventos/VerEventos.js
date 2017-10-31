@@ -48,7 +48,11 @@ export default class VerEventos extends React.Component{
                 
                     {renderIf(this.state.dataSource.getRowCount() === 0 && this.state.eventoId && this.state.usuarioNotificado, 
                         <View>
-                            <Text>EL EVENTO FUE ELIMINADO </Text>
+                            <View style={style.eliminadoView}>
+                                <Text style={style.eliminadoText} >
+                                    EL EVENTO QUE QUIERE VISUALIZAR FUE ELIMINADO :(
+                                </Text>
+                            </View>
                             <View style={style.ActionView}>
                             <ActionButton title="VOLVER"
                                 style={style.actionText}
@@ -59,7 +63,8 @@ export default class VerEventos extends React.Component{
                                         }
                               />
                           </View> 
-                        </View>
+                        </View> 
+                        
                     )}
             </ScrollView>
         );

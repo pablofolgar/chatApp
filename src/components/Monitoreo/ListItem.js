@@ -16,21 +16,100 @@ class ListItem extends Component {
                         
                 //TODA LA NOTIFICACIÓN
               <TouchableHighlight onPress={this.props.onPress}>
+                
                 <View>
+                  
+                  <View style={style.GralNotifView}>
+                  
+                  {/*TEXTOS DE LA NOTIFICACION*/}
+                    <View style={style.TitNotifView}>
+                      <Text style={style.TitNotifText}>
+                        ¡HAY UN EVENTO NUEVO PARA VOS!
+                      </Text>
+                    </View>
+
+
+                  {/*TEXTOS DE LA NOTIFICACION*/}
+                    <View style={style.BlockDataNotiView}>
+
+                      <View style={style.CatNotifView}>
+                        <Text style={style.CatNotifText}>
+                          **{this.props.item.categoria}** {/*{"\n"}*/}
+                        </Text>
+                      </View>
+
+                    {/* FECHA */}
+                    <View style={style.SubBlockDataView}>
+                      <View style={style.TitleNotifView}>
+                        <Text style={style.TitleNotifText}>
+                          FECHA: 
+                        </Text>
+                      </View>                
+                      <View style={style.DataNotifView}>
+                        <Text style={style.DataNotifText}>
+                          {this.props.item.fecha} 
+                        </Text>
+                      </View>
+                    </View>
+                  
+                  {/* HORA */}
+                    <View style={style.SubBlockDataView}>
+                      <View style={style.TitleNotifView}>
+                        <Text style={style.TitleNotifText}>
+                          HORA:
+                        </Text>
+                      </View>                
+                      <View style={style.DataNotifView}>
+                        <Text style={style.DataNotifText}>
+                          {this.props.item.hora}hs
+                        </Text>
+                      </View>
+                    </View>            
+
+
+                  {/* CENTRO */}
+                    <View style={style.SubBlockDataView}>
+                      <View style={style.TitleNotifView}>
+                        <Text style={style.TitleNotifText}>
+                          CENTRO:
+                        </Text>
+                      </View>                
+                      <View style={style.DataNotifView}>
+                        <Text style={style.DataNotifText}>
+                          {this.props.item.centro} 
+                        </Text>
+                      </View>
+                    </View>                  
+
+                  {/* AVISO */}
+                    <View style={style.SubBlockClickView}>
+
+                        <Text style={style.clickText}>
+                          APRIETE PARA VER MÁS
+                        </Text>
+               
+                    </View>
+
+                  </View>
+                </View>
+                
+                </View>
+
+{/*                <View>
                   <View style={style.GralNotifView}>
 
-                    {/*TITULO DE LA NOTIFICACIÓN*/}
+                    //TEXTOS DE LA NOTIFICACION
                     <View style={style.TitNotifView}>
                       <Text style={style.TitNotifText}>
                         ¡HAY UN EVENTO PARA VOS!
                       </Text>
                     </View>
 
-                    {/*TEXTOS DE LA NOTIFICACION*/}
+                    //TITULO DE LA NOTIFICACIÓN
                     <View style={style.BlockDataNotiView}>
                       <View style={style.CatNotifView}>
                         <Text style={style.DataNotifText}>
-                          **{this.props.item.categoria}** {/*{"\n"}*/}
+                          **{this.props.item.categoria}** 
                         </Text>
                       </View>
 
@@ -38,7 +117,7 @@ class ListItem extends Component {
                         <Text style={style.DataNotifText}>
                           DESCRIPCION: {this.props.item.descripcion} 
                         </Text>
-                      </View>
+                      </View>*/}
                     {/*
                       <View style={style.DataNotifView}>
                         <Text style={style.DataNotifText}>
@@ -64,16 +143,16 @@ class ListItem extends Component {
                       </View>
                     */}
 
-                    </View>
+  {/*                  </View>
                   </View>
-                </View>
+                </View>*/}
               </TouchableHighlight>
             )}
         
             {renderIf(this.props.item.perfilCentro,
               <TouchableHighlight onPress={this.props.onPress}>
                 <View>
-                  //TODA LA NOTIFICACIÓN
+                  {/*TODA LA NOTIFICACIÓN*/}
                   <View style={style.GralNotifView}>
 
                     {/*TITULO DE LA NOTIFICACIÓN*/}

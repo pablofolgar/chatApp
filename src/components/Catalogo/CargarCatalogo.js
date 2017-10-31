@@ -299,64 +299,75 @@ export default class CargarCatalogo extends React.Component{
                 </View>
 
                 {renderIf(!this.props.catalogo, 
-                  <ActionButton title="CREAR"
-                                  onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
-                                                   if(camposRequeridosOk){
-                                                        this.crearCatologo();
-                                                    }
-                                                  }
-                                            }
-                  />
+                  <View style={style.ActionView}>
+                    <ActionButton 
+                      title="CREAR"
+                      style={style.actionText}
+                      onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                             if(camposRequeridosOk){
+                                  this.crearCatologo();
+                              }
+                            }
+                      }
+                    />
+                </View>
                   )}
 
                 {renderIf(this.props.catalogo,
-                  <ActionButton 
-                    title="MODIFICAR"
-                    onPress={() => {
-                      Alert.alert(
-                      'PARA MODIFICAR DEFINITIVAMENTE SU CATALOGO APRIETE "MODIFICAR"',
-                      null,
-                      [
-                        {text: 'VOLVER',  onPress: (t) => console.log('Cancel')},
-                        {text: 'MODIFICAR', onPress: (t) => {
-                                                            var camposRequeridosOk=this.validarCamposRequeridos();
-                                                            if(camposRequeridosOk){
-                                                              this.modificarCatalogo();
-                                                              Actions.verCatalogo({
-                                                                    user:this.state.user,
-                                                                });
-                                                            }
-                                                        }
+                  <View style={style.ActionView}>
+                    <ActionButton 
+                      title="MODIFICAR"
+                      style={style.actionText}
+                      onPress={() => {
+                        Alert.alert(
+                        'PARA MODIFICAR DEFINITIVAMENTE SU CATALOGO APRIETE "MODIFICAR"',
+                        null,
+                        [
+                          {text: 'VOLVER',  onPress: (t) => console.log('Cancel')},
+                          {text: 'MODIFICAR', onPress: (t) => {
+                                                              var camposRequeridosOk=this.validarCamposRequeridos();
+                                                              if(camposRequeridosOk){
+                                                                this.modificarCatalogo();
+                                                                Actions.verCatalogo({
+                                                                      user:this.state.user,
+                                                                  });
+                                                              }
+                                                          }
+                          }
+                        ],
+                        'plain-text'
+                        );
                         }
-                      ],
-                      'plain-text'
-                      );
                       }
-                    }
-                  />
+                    />
+                  </View>
                 )}
 
                 {renderIf(this.props.catalogo,
-                  <ActionButton title="BORRAR"
-                                  onPress={() => {
-                                                  Alert.alert(
-                                                  'PARA BORRAR DEFINITIVAMENTE SU CATALOGO APRIETE "BORRAR"',
-                                                  null,
-                                                  [
-                                                    {text: 'VOLVER',  onPress: (t) => console.log('Cancel')},
-                                                    {text: 'BORRAR', onPress: (t) => {
-                                                                                        Backend.borrarCatalogo(this.props.catalogo);
-                                                                                        Actions.verCatalogo({
-                                                                                              user:this.state.user,
-                                                                                          });
-                                                                                    }
-                                                    }
-                                                  ],
-                                                  'plain-text'
-                                                  );
-                                                }
-                                          }
-                  />
+                  <View style={style.ActionView}>
+                    <ActionButton 
+                      title="BORRAR"
+                      style={style.actionText}
+                      onPress={() => {
+                          Alert.alert(
+                          'PARA BORRAR DEFINITIVAMENTE SU CATALOGO APRIETE "BORRAR"',
+                          null,
+                          [
+                            {text: 'VOLVER',  onPress: (t) => console.log('Cancel')},
+                            {text: 'BORRAR', onPress: (t) => {
+                                          Backend.borrarCatalogo(this.props.catalogo);
+                                          Actions.verCatalogo({
+                                                user:this.state.user,
+                                            });
+                                      }
+                                    }
+                                  ],
+                                  'plain-text'
+                                  );
+                          }
+                      }
+                    />
+                  </View>
                 )}
               </KeyboardAvoidingView>
             </ScrollView>

@@ -16,7 +16,7 @@ class ListItem extends Component {
         <TouchableHighlight onPress={this.props.onPress}>
           <View>
                       
-              <View style={style.GralNotifView}>
+              <View style={style.GralEventoView}>
 
               {/*TEXTOS DE LA NOTIFICACION*/}
                 <View style={style.BlockDataNotiView}>

@@ -300,7 +300,7 @@ class Backend{
         })
         .then(()=>{
             this.usuarioRef.child(user.key+'/notificaciones/'+notificacionKey).remove()
-            .then(()=>{Actions.notificacion({user:user,})});
+            .then(()=>{Actions.menu({user:user,})});
         })
     }
 
@@ -740,6 +740,7 @@ class Backend{
                         callback({
                             _id: usuario._id,
                             name:  usuario.name.toUpperCase(),
+                            perfil: usuario.perfil,
                         });
                     }//Cierra IF
                 })//Cierra foreach

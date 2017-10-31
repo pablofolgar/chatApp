@@ -27,6 +27,7 @@ export default class Contacto extends React.Component{
 				items.push({
                     		name:contacto.name,
                     		_id: contacto._id,
+                    		perfil: contacto.perfil,
                   });
 				this.setState({
 					dataSource: this.state.dataSource.cloneWithRows(items)

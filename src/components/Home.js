@@ -150,14 +150,14 @@ class Home extends React.Component{
                             {/*  -MAIL- */}
                             <View  style={style.singleInputView}>
                                 <TextInput style={style.singleInputText}
-                                autoCapitalize="characters"
-                                placeholder='INGRESE MAIL'
-                                onChangeText={ (text) => {
-                                    this.setState({
-                                        name:text,
-                                    })
-                                }}
-                                value= {this.state.name}
+                                    autoCapitalize="characters"
+                                    placeholder='INGRESE MAIL'
+                                    onChangeText={ (text) => {
+                                        this.setState({
+                                            name:text,
+                                        })
+                                    }}
+                                    value= {this.state.name}
                                 />
                             </View>
 
