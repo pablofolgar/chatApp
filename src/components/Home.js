@@ -111,6 +111,7 @@ class Home extends React.Component{
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
+        console.disableYellowBox = true;
     }
 
     render(){

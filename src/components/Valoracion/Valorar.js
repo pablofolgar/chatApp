@@ -32,6 +32,7 @@ export default class Valorar extends React.Component {
       opinion:'',
       text:'',
     };
+    console.disableYellowBox = true;
   }
 
   onGeneralStarRatingPress(rating) {
