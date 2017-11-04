@@ -600,7 +600,7 @@ var styles = StyleSheet.create({
   },
 
   nombreText:{
-    fontSize:alto(4),
+    fontSize:alto(3.1),
     fontWeight:'bold',
     color:'#000',
   },
