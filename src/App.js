@@ -34,9 +34,9 @@ class App extends React.Component{
     render(){
         return(
             <Router>
-                <Scene key='root' style={{paddingTop: Platform.OS === 'ios' ? 64 : 54}}>
+                <Scene key='root' style={{paddingTop: Platform.OS === 'ios' ? 64 : 54}} >
                     <Scene key='home' component={Home} title='INICIO' hideNavBar={true} style={{paddingTop: Platform.OS === 'ios' ? 64 : 0}} />
-                    <Scene key='menu' component={Menu} title='MENÚ' hideNavBar={false}/>
+                    <Scene key='menu' component={Menu} title='MENÚ' hideNavBar={false} hideBackImage={true}/>
                     <Scene key='comunicacion' component={Comunicacion} title='COMUNICACIÓN'/>
                     <Scene key='chat' component={Chat} title='CHAT'/>
                     <Scene key='historias' component={Historias} title='HISTORIAS'/>
