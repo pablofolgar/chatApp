@@ -47,7 +47,7 @@ export default class VerEventos extends React.Component{
                         <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} enableEmptySections={true}/>
                     )}
                 
-                    {renderIf(!this.state.hayDatosParaMostrar, 
+                    {renderIf(!this.state.hayDatosParaMostrar && this.state.eventoId && this.state.usuarioNotificado, 
                         <View>
                             <View style={style.eliminadoView}>
                                 <Text style={style.eliminadoText} >
