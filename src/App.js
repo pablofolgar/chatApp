@@ -28,12 +28,18 @@ import {
 import {
     Router,
     Scene,
+    Actions,
 } from 'react-native-router-flux';
 
 class App extends React.Component{
     render(){
         return(
-            <Router>
+            <Router backAndroidHandler={() =>  {
+                                                Actions.home({}); 
+                                                return true;
+                                                }
+                                        } 
+            >
                 <Scene key='root' style={{paddingTop: Platform.OS === 'ios' ? 64 : 54}} >
                     <Scene key='home' component={Home} title='INICIO' hideNavBar={true} style={{paddingTop: Platform.OS === 'ios' ? 64 : 0}} />
                     <Scene key='menu' component={Menu} title='MENÚ' hideNavBar={false} hideBackImage={true}/>
