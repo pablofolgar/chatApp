@@ -656,9 +656,8 @@ class Backend{
         this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(20).once("value", function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var usuario = childSnapshot.val();
-                //El usuario que califica no se puede calificar asi mismo, tiene que tener un centro y ser del mismo centro
-                //del usuario que puede calificar
-                if(user._id  != usuario._id && usuario.centro && user.centro === usuario.centro){
+                //El usuario que califica no se puede calificar asi mismo y tiene que tener un centro 
+                if(user._id  != usuario._id && usuario.centro && usuario.centro != ''){
                     callback({
                             key:childSnapshot.key,
                             _id: usuario._id,
@@ -677,11 +676,9 @@ class Backend{
         this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(20).once("value", function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var usuario = childSnapshot.val();
-                //El voluntario que califica no se puede calificar a el mismo, tiene que tener un centro y ser del mismo centro
-                //del usuario que puede calificar y solo puede calificar a perfiles usuario
+                //El voluntario que califica no se puede calificar a el mismo y tiene que tener un centro 
                 if(user._id  != usuario._id 
-                    && usuario.centro && user.centro === usuario.centro
-                    && usuario.perfil==='USUARIO'){
+                    && usuario.centro && usuario.centro != ''){
                     callback({
                             key:childSnapshot.key,
                             _id: usuario._id,
