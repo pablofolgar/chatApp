@@ -85,7 +85,7 @@ class ListItem extends Component {
                     <View style={style.SubBlockClickView}>
 
                         <Text style={style.clickText}>
-                          APRIETE PARA VER MÁS
+                          OPRIMA PARA VER MÁS
                         </Text>
                
                     </View>

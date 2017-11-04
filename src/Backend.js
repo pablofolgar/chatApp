@@ -311,21 +311,25 @@ class Backend{
     getEventosCreadosPorUsuario(callback, userId){
         this.getEventoRef();
         this.eventosRef.orderByChild("userId").equalTo(userId).limitToLast(20).once('value',function(snapshot){
-            snapshot.forEach(function(childSnapshot) {
-                const evento = childSnapshot.val();
-                    callback({
-                                eventoId: childSnapshot.key,
-                                categoria: evento.categoria.toUpperCase(),
-                                barrio: evento.barrio.toUpperCase(),
-                                fecha: evento.fecha,
-                                mensajeAlertaId: evento.mensajeAlertaId,
-                                descripcion: evento.descripcion.toUpperCase(),
-                                centro: evento.centro.toUpperCase(),
-                                hora: evento.hora,
-                                user: evento.user,
-                                createdAt:evento.createdAt,
-                     });
-                });
+            if(snapshot.hasChildren()){
+                snapshot.forEach(function(childSnapshot) {
+                    const evento = childSnapshot.val();
+                        callback({
+                                    eventoId: childSnapshot.key,
+                                    categoria: evento.categoria.toUpperCase(),
+                                    barrio: evento.barrio.toUpperCase(),
+                                    fecha: evento.fecha,
+                                    mensajeAlertaId: evento.mensajeAlertaId,
+                                    descripcion: evento.descripcion.toUpperCase(),
+                                    centro: evento.centro.toUpperCase(),
+                                    hora: evento.hora,
+                                    user: evento.user,
+                                    createdAt:evento.createdAt,
+                         });
+                    });
+            }else{
+                callback(null);
+            }
         });
     }
 
@@ -333,21 +337,25 @@ class Backend{
     getEventoPorId(callback,eventoId){
         this.getEventoRef();
         this.eventosRef.orderByKey().equalTo(eventoId).once('value',function(snapshot){
-            snapshot.forEach(function(childSnapshot) {
-                const evento = childSnapshot.val();
-                    callback({
-                                eventoId: childSnapshot.key,
-                                categoria: evento.categoria.toUpperCase(),
-                                barrio: evento.barrio.toUpperCase(),
-                                fecha: evento.fecha,
-                                mensajeAlertaId: evento.mensajeAlertaId,
-                                descripcion: evento.descripcion.toUpperCase(),
-                                centro: evento.centro.toUpperCase(),
-                                hora: evento.hora,
-                                user: evento.user,
-                                createdAt:evento.createdAt,
-                     });
-                });
+            if(snapshot.hasChildren()){
+                snapshot.forEach(function(childSnapshot) {
+                    const evento = childSnapshot.val();
+                        callback({
+                                    eventoId: childSnapshot.key,
+                                    categoria: evento.categoria.toUpperCase(),
+                                    barrio: evento.barrio.toUpperCase(),
+                                    fecha: evento.fecha,
+                                    mensajeAlertaId: evento.mensajeAlertaId,
+                                    descripcion: evento.descripcion.toUpperCase(),
+                                    centro: evento.centro.toUpperCase(),
+                                    hora: evento.hora,
+                                    user: evento.user,
+                                    createdAt:evento.createdAt,
+                         });
+                    });
+            }else{
+                callback(null);
+            }
         });
     }
 
