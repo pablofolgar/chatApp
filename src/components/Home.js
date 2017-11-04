@@ -40,7 +40,7 @@ const login = (name, pass) => {
     return new Promise((resolve,reject) => {
         firebase.auth().signInWithEmailAndPassword(name,pass)
         .then((user)=>{
-            if(user &&  user.emailVerified){
+            if(user/* &&  user.emailVerified*/){
                 resolve(user);
             }else {
                 reject();
