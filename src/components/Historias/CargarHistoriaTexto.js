@@ -24,6 +24,7 @@ class CargarHistoriaTexto extends React.Component{
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
+        console.disableYellowBox = true;
     }
 
 

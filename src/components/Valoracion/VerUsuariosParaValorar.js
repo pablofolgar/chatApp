@@ -29,6 +29,7 @@ export default class Valorar extends React.Component {
               rowHasChanged: (row1, row2) => row1 !== row2}),
     };
     // this._rendering = this._renderItem.bind(this);
+    console.disableYellowBox = true;
   }
 
   componentDidMount(){

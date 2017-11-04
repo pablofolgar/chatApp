@@ -32,6 +32,7 @@ export default class VerEventos extends React.Component{
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
+        console.disableYellowBox = true;
     }
 
     componentWillMount() {

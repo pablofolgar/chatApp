@@ -83,6 +83,7 @@ export default class CargarCatalogo extends React.Component{
             selectedHorario: this.props.catalogo ? this.props.catalogo.horarioAtencion : '',
             horario: ['SELECCIONAR HORARIO','9 a 12', '12 a 15', '15 a 18'],
             };
+        console.disableYellowBox = true;
     }
 
     

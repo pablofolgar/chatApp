@@ -51,6 +51,7 @@ export default class CrearPerfil extends React.Component{
                         tipoOrganizacion: (this.props.user && this.props.user.perfil === 'CENTRO') ? this.props.user.tipoOrganizacion : '',
                         text: (this.props.user && this.props.user.perfil != 'CENTRO') ? this.props.user.descripcion : '',
                     }
+        console.disableYellowBox = true;
     }
 
     onSelectionsChange = (selectedInt) => {

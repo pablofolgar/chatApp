@@ -25,6 +25,7 @@ export default class Notificacion extends React.Component{
             notificaciones:[],
         };
         this._rendering = this._renderItem.bind(this);
+        console.disableYellowBox = true;
     }
 
     componentWillUnmount() {
