@@ -27,6 +27,7 @@ export default class VerEventos extends React.Component{
                 usuarioNotificado: this.props.usuarioNotificado,
                 dataSource: new ListView.DataSource({
                     rowHasChanged: (row1, row2) => row1 !== row2}),
+                hayDatosParaMostrar:true,
             };
         console.ignoredYellowBox = [
             'Setting a timer'
@@ -42,11 +43,11 @@ export default class VerEventos extends React.Component{
 
         return(
             <ScrollView  style={style.container}> 
-                    {renderIf(this.state.dataSource.getRowCount() > 0, 
+                    {renderIf(this.state.hayDatosParaMostrar, 
                         <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} enableEmptySections={true}/>
                     )}
                 
-                    {renderIf(this.state.dataSource.getRowCount() === 0 && this.state.eventoId && this.state.usuarioNotificado, 
+                    {renderIf(!this.state.hayDatosParaMostrar, 
                         <View>
                             <View style={style.eliminadoView}>
                                 <Text style={style.eliminadoText} >
@@ -74,7 +75,9 @@ export default class VerEventos extends React.Component{
     componentDidMount(){
         var items = [];
         if(this.state.user){
+            console.log('1')
             Backend.getEventosCreadosPorUsuario((evento)=>{
+                if(evento){
                     items.push({
                                 eventoId: evento.eventoId,
                                 categoria: evento.categoria.toUpperCase(),
@@ -89,10 +92,15 @@ export default class VerEventos extends React.Component{
                             });
                     this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(items),
+                        hayDatosParaMostrar:items.length > 0,
                       });
+                }else{
+                    this.setState({hayDatosParaMostrar:false,})
+                }
             },this.state.user._id);
         }else if(this.props.eventoId){
              Backend.getEventoPorId((evento)=>{
+                if(evento){
                     items.push({
                                 eventoId: evento.eventoId,
                                 categoria: evento.categoria.toUpperCase(),
@@ -107,7 +115,11 @@ export default class VerEventos extends React.Component{
                             });
                     this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(items),
+                        hayDatosParaMostrar:items.length > 0,
                       });
+                }else{
+                    this.setState({hayDatosParaMostrar:false,})
+                }
             },this.props.eventoId);
         }
     }
