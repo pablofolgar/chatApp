@@ -37,24 +37,24 @@ class App extends React.Component{
                 <Scene key='root' style={{paddingTop: Platform.OS === 'ios' ? 64 : 54}} >
                     <Scene key='home' component={Home} title='INICIO' hideNavBar={true} style={{paddingTop: Platform.OS === 'ios' ? 64 : 0}} />
                     <Scene key='menu' component={Menu} title='MENÚ' hideNavBar={false} hideBackImage={true}/>
-                    <Scene key='comunicacion' component={Comunicacion} title='COMUNICACIÓN'/>
-                    <Scene key='chat' component={Chat} title='CHAT'/>
-                    <Scene key='historias' component={Historias} title='HISTORIAS'/>
-                    <Scene key='contacto' component={Contacto} title='CONTACTOS'/>
-                    <Scene key='verHistorias' component={VerHistorias} title='VER HISTORIAS'/>
-                    <Scene key='cargarHistoria' component={CargarHistoria} title='CARGAR HISTORIA'/>
-                    <Scene key='cargarHistoriaTexto' component={CargarHistoriaTexto} title='HISTORIA EN TEXTO'/>
-                    <Scene key='cargarHistoriaAudio' component={CargarHistoriaAudio} title='HISTORIA EN AUDIO'/>
-                    <Scene key='notificacion' component={Notificacion} title='NOTIFICACIONES '/>
-                    <Scene key='evento' component={Evento} title='EVENTOS'/>
-                    <Scene key='perfil' component={Perfil} title='PERFIL'/>
-                    <Scene key='catalogo' component={Catalogo} title='CATALOGO'/>
-                    <Scene key='verCatalogo' component={VerCatalogo} title='VER CATALOGO'/>
-                    <Scene key='cargarCatalogo' component={CargarCatalogo} title='CARGAR CATALOGO'/>
-                    <Scene key='valorar' component={Valorar} title='VALORACIÓN'/>
-                    <Scene key='verUsuarioValoracion' component={VerUsuarioValoracion} title='VALORACIONES'/>
-                    {<Scene key='verEventos' component={VerEventos} title='VER EVENTOS'/>}
-                    <Scene key='crearEvento' component={CrearEvento} title='CREAR EVENTO'/>
+                    <Scene key='comunicacion' component={Comunicacion} title='COMUNICACIÓN' hideBackImage={true}/>
+                    <Scene key='chat' component={Chat} title='CHAT' hideBackImage={true} />
+                    <Scene key='historias' component={Historias} title='HISTORIAS' hideBackImage={true}/>
+                    <Scene key='contacto' component={Contacto} title='CONTACTOS' hideBackImage={true}/>
+                    <Scene key='verHistorias' component={VerHistorias} title='VER HISTORIAS' hideBackImage={true}/>
+                    <Scene key='cargarHistoria' component={CargarHistoria} title='CARGAR HISTORIA' hideBackImage={true}/>
+                    <Scene key='cargarHistoriaTexto' component={CargarHistoriaTexto} title='HISTORIA EN TEXTO' hideBackImage={true}/>
+                    <Scene key='cargarHistoriaAudio' component={CargarHistoriaAudio} title='HISTORIA EN AUDIO' hideBackImage={true}/>
+                    <Scene key='notificacion' component={Notificacion} title='NOTIFICACIONES ' hideBackImage={true}/>
+                    <Scene key='evento' component={Evento} title='EVENTOS' hideBackImage={true}/>
+                    <Scene key='perfil' component={Perfil} title='PERFIL' hideBackImage={true}/>
+                    <Scene key='catalogo' component={Catalogo} title='CATALOGO' hideBackImage={true}/>
+                    <Scene key='verCatalogo' component={VerCatalogo} title='VER CATALOGO' hideBackImage={true}/>
+                    <Scene key='cargarCatalogo' component={CargarCatalogo} title='CARGAR CATALOGO' hideBackImage={true}/>
+                    <Scene key='valorar' component={Valorar} title='VALORACIÓN' hideBackImage={true}/>
+                    <Scene key='verUsuarioValoracion' component={VerUsuarioValoracion} title='VALORACIONES' hideBackImage={true}/>
+                    {<Scene key='verEventos' component={VerEventos} title='VER EVENTOS' hideBackImage={true}/>}
+                    <Scene key='crearEvento' component={CrearEvento} title='CREAR EVENTO' hideBackImage={true}/>
                 </Scene>
             </Router>
         );

@@ -79,7 +79,7 @@ class Home extends React.Component{
         };
         autenticacion()
         .then((user)=>{
-            if(user &&  user.emailVerified){
+            if(user/* &&  user.emailVerified*/){
                 console.log('Usuario autenticado por firebase: '+ user.uid);
                 Backend.setUid(user.uid);
                 Backend.buscarUsuarioLogueado((usuario)=>{
