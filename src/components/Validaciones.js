@@ -11,7 +11,7 @@ class Validaciones{
   }
 
   validarLetras(campoAlfabetico){
-  	var re = /^[a-zA-Z]*$/;
+  	var re = /^[a-zA-Z-. ]*$/;
           return re.test(campoAlfabetico);
   }
 

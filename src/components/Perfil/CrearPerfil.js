@@ -89,7 +89,7 @@ export default class CrearPerfil extends React.Component{
 
                         
                         {/*        -PERFIL-        */}
-                        {renderIf(this.props.user && this.props.user.perfil != 'ADMIN',
+                        {renderIf(!this.props.user || (this.props.user && this.props.user.perfil != 'ADMIN') ,
                         <View style={style.viewPicker}>
                             <Picker
                                 selectedValue={this.state.selectedPerfil}

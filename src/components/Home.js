@@ -94,7 +94,7 @@ class Home extends React.Component{
                         console.log('El usuario autenticado no esta creado en la tabla USERS');
                         this.setState({visible:!this.state.visible});
                         Actions.perfil({
-                            userId:this.uid,
+                            userId:user.uid,
                         });
                     }
                 });
