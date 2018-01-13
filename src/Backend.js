@@ -5,6 +5,9 @@ import {
 } from 'react-native-router-flux';
 
 import prompt from 'react-native-prompt-android';
+import {
+    Alert,
+} from 'react-native';
 
 class Backend{
     uid='';
@@ -38,7 +41,15 @@ class Backend{
             console.log('Logout satisfactorio');
             Actions.home({});
         }).catch(function(error) {
-          alert(error.message);
+          console.log(error.message);
+          Alert.alert(
+              'IMPORTANTE',
+              'Ha ocurrido un error cerrando la sesión',
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              { cancelable: false }
+            )
         });
     }
 
@@ -50,7 +61,14 @@ class Backend{
         firebase.auth().sendPasswordResetEmail(email)
         .then(function() {
             console.log('Se envio un email a '+ email +' para recuperar la contraseña')
-            alert('Se envio un email a '+ email +' para recuperar la contraseña')
+            Alert.alert(
+              'IMPORTANTE',
+              'Se envio un email a '+ email +' para recuperar la contraseña',
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              { cancelable: false }
+            )
         }).catch(function(error) {
             console.log('error al tratar de reestablecer la contrasenia')
         });
@@ -59,7 +77,7 @@ class Backend{
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Desde aca se escribe lo referido a los chat
     //Retrieve the message from the backend
-    loadMessages(callback,name,contacto){
+    loadMessages(callback,user,contacto){
         this.messageRef = firebase.database().ref('messages');
         this.messageRef.off();
         const onReceive = (data) => {
@@ -67,9 +85,9 @@ class Backend{
             //FIltra los mensajes creados por el usuario logueado para el contacto seleccionado
             // o los que son enviados al usuario logueado por el contacto seleccionado
             if(//Si yo mando el mensaje                                 y es para el contacto que seleccione
-                (message.user.name.toUpperCase()===name.toUpperCase() && message.para.toUpperCase() === contacto.toUpperCase())
+                (message.user._id === user._id && message.para._id === contacto._id)
                 //O yo recibo el mensaje                            y es del  contacto que seleccione
-                || (message.para.toUpperCase()===name.toUpperCase() && message.user.name.toUpperCase() === contacto.toUpperCase())
+                || (message.para._id===user._id && message.user._id === contacto._id)
                 ){
                     callback({
                         _id: data.key,
@@ -93,7 +111,7 @@ class Backend{
                 text: message[i].text.toUpperCase(),
                 user: message[i].user,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
-                para:para.toUpperCase()
+                para:para,
             });
         }
     }
@@ -184,8 +202,17 @@ class Backend{
     }
 
     modificarEvento(evento,categoria,barrio,fecha,descripcion,centro,hora,user){
+        //si se modifica el barrio o la categoria del evento se deben agregar notificaciones a los usuarios
+        //porque las notificaciones dependen del barrio y de la categoria
+        var agregarNotificaciones = false;
+        if(evento.categoria.toUpperCase() != categoria.toUpperCase() 
+            || evento.barrio.toUpperCase() != barrio.toUpperCase()){
+            agregarNotificaciones = true;
+        }
+
         this.getEventoRef();
         var eventoModificado = {
+            eventoId: evento.eventoId,
             categoria: categoria.toUpperCase(),
             barrio: barrio.toUpperCase(),
             fecha: fecha.toUpperCase(),
@@ -201,7 +228,11 @@ class Backend{
         updates[evento.eventoId+'/'] = eventoModificado;
         this.eventosRef.update(updates)
                            .then(()=>{
-                               Actions.evento({user:user,});
+                                if(agregarNotificaciones){
+                                    console.log(eventoModificado.eventoId)
+                                    this.agregarNotificacionParaUsuario(user,eventoModificado)
+                                }
+                                Actions.evento({user:user,});
                            })
                            .catch(error => {
                                 console.log(error);  
@@ -253,51 +284,82 @@ class Backend{
         });
     }
 
+    borrarNotificacion(eventoId, user){
+        var  notificacionKey = ''
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("_id").equalTo(user._id).once('value',function(snapshot){
+            snapshot.forEach(function(childSnapshot) {
+                var notificaciones = childSnapshot.val().notificaciones;
+                for(var keyPre in notificaciones){
+                    if(notificaciones[keyPre].eventoId === eventoId){
+                        notificacionKey = keyPre;
+                        break;
+                    }
+                }
+            })
+        })
+        .then(()=>{
+            this.usuarioRef.child(user.key+'/notificaciones/'+notificacionKey).remove()
+            .then(()=>{Actions.menu({user:user,})});
+        })
+    }
+
     getEventoRef(){
         this.eventosRef = firebase.database().ref('eventos');
     } 
 
-    getEventosCreadosPorUsuario(callback, usuario){
+    getEventosCreadosPorUsuario(callback, userId){
         this.getEventoRef();
-        this.eventosRef.orderByChild("userId").equalTo(usuario._id).limitToLast(20).once('value',function(snapshot){
-            snapshot.forEach(function(childSnapshot) {
-                const evento = childSnapshot.val();
-                    callback({
-                                eventoId: childSnapshot.key,
-                                categoria: evento.categoria.toUpperCase(),
-                                barrio: evento.barrio.toUpperCase(),
-                                fecha: evento.fecha,
-                                mensajeAlertaId: evento.mensajeAlertaId,
-                                descripcion: evento.descripcion.toUpperCase(),
-                                centro: evento.centro.toUpperCase(),
-                                hora: evento.hora,
-                                user: evento.user,
-                                createdAt:evento.createdAt,
-                     });
-                });
+        this.eventosRef.orderByChild("userId").equalTo(userId).limitToLast(20).once('value',function(snapshot){
+            if(snapshot.hasChildren()){
+                snapshot.forEach(function(childSnapshot) {
+                    const evento = childSnapshot.val();
+                        callback({
+                                    eventoId: childSnapshot.key,
+                                    categoria: evento.categoria.toUpperCase(),
+                                    barrio: evento.barrio.toUpperCase(),
+                                    fecha: evento.fecha,
+                                    mensajeAlertaId: evento.mensajeAlertaId,
+                                    descripcion: evento.descripcion.toUpperCase(),
+                                    centro: evento.centro.toUpperCase(),
+                                    hora: evento.hora,
+                                    user: evento.user,
+                                    createdAt:evento.createdAt,
+                         });
+                    });
+            }else{
+                callback(null);
+            }
         });
     }
 
+
     getEventoPorId(callback,eventoId){
         this.getEventoRef();
-        this.eventosRef.orderByKey().equalTo(eventoId).limitToLast(20).once('value',function(snapshot){
-            snapshot.forEach(function(childSnapshot) {
-                const evento = childSnapshot.val();
-                    callback({
-                                eventoId: childSnapshot.key,
-                                categoria: evento.categoria.toUpperCase(),
-                                barrio: evento.barrio.toUpperCase(),
-                                fecha: evento.fecha,
-                                mensajeAlertaId: evento.mensajeAlertaId,
-                                descripcion: evento.descripcion.toUpperCase(),
-                                centro: evento.centro.toUpperCase(),
-                                hora: evento.hora,
-                                user: evento.user,
-                                createdAt:evento.createdAt,
-                     });
-                });
+        this.eventosRef.orderByKey().equalTo(eventoId).once('value',function(snapshot){
+            if(snapshot.hasChildren()){
+                snapshot.forEach(function(childSnapshot) {
+                    const evento = childSnapshot.val();
+                        callback({
+                                    eventoId: childSnapshot.key,
+                                    categoria: evento.categoria.toUpperCase(),
+                                    barrio: evento.barrio.toUpperCase(),
+                                    fecha: evento.fecha,
+                                    mensajeAlertaId: evento.mensajeAlertaId,
+                                    descripcion: evento.descripcion.toUpperCase(),
+                                    centro: evento.centro.toUpperCase(),
+                                    hora: evento.hora,
+                                    user: evento.user,
+                                    createdAt:evento.createdAt,
+                         });
+                    });
+            }else{
+                callback(null);
+            }
         });
     }
+
+
 
     closeEventos(){
         this.close(this.eventosRef);
@@ -594,9 +656,8 @@ class Backend{
         this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(20).once("value", function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var usuario = childSnapshot.val();
-                //El usuario que califica no se puede calificar asi mismo, tiene que tener un centro y ser del mismo centro
-                //del usuario que puede calificar
-                if(user._id  != usuario._id && usuario.centro && user.centro === usuario.centro){
+                //El usuario que califica no se puede calificar asi mismo y tiene que tener un centro 
+                if(user._id  != usuario._id && usuario.centro && usuario.centro != ''){
                     callback({
                             key:childSnapshot.key,
                             _id: usuario._id,
@@ -615,11 +676,9 @@ class Backend{
         this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(20).once("value", function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var usuario = childSnapshot.val();
-                //El voluntario que califica no se puede calificar a el mismo, tiene que tener un centro y ser del mismo centro
-                //del usuario que puede calificar y solo puede calificar a perfiles usuario
+                //El voluntario que califica no se puede calificar a el mismo y tiene que tener un centro 
                 if(user._id  != usuario._id 
-                    && usuario.centro && user.centro === usuario.centro
-                    && usuario.perfil==='USUARIO'){
+                    && usuario.centro && usuario.centro != ''){
                     callback({
                             key:childSnapshot.key,
                             _id: usuario._id,
@@ -674,6 +733,28 @@ class Backend{
 
         this.usuarioRef.update(updates);
     }
+
+    //Buscar contactos para chatear: usuarios que pertencen al mismo centro y que no es el usuario logueado
+    buscarContactosParaChat(callback, user){
+        this.getUsuarioRef();
+        this.usuarioRef.orderByChild("barrio").equalTo(user.barrio.toUpperCase()).limitToLast(50).once("value", function(snapshot) {
+            if(snapshot.hasChildren()){
+                snapshot.forEach(function(childSnapshot) {
+                    var usuario = childSnapshot.val();
+                    if(user._id  != usuario._id){
+                        callback({
+                            _id: usuario._id,
+                            name:  usuario.name.toUpperCase(),
+                            perfil: usuario.perfil,
+                        });
+                    }//Cierra IF
+                })//Cierra foreach
+            }else{
+                callback(null);
+            }
+        });
+    }
+
     getUsuarioRef(){
         this.usuarioRef = firebase.database().ref('usuario');
     }

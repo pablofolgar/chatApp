@@ -26,7 +26,7 @@ export default class CrearEvento extends React.Component{
         super(props);
         this.state={
             user:this.props.user,
-            selectedTipoEvento: this.props.evento ? this.props.evento.categoria :' ',
+            selectedTipoEvento: this.props.evento ? this.props.evento.categoria :'',
             eventos: ['SELECCIONAR CATEGORÍA','MÚSICA', 'TEATRO', 'CINE', 'LITERATURA', 'HISTORIA NACIONAL','HISTORIA INTERNACIONAL','MANUALIDADES','COCINA','DEPORTES','MISCELÁNEA'],
             barrio:this.props.evento ? this.props.evento.barrio : '',
             fecha:this.props.evento ? this.props.evento.fecha :'',
@@ -43,6 +43,8 @@ export default class CrearEvento extends React.Component{
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
+
+        console.disableYellowBox = true;
     }
 
 
@@ -342,19 +344,26 @@ export default class CrearEvento extends React.Component{
         );
       }
     limpiarCampos(){
-        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA',descripcion:'',centro:'',simpleText:'FECHA DEL EVENTO',isoFormatText:'HORA DEL EVENTO'})
+        this.setState({barrio:'',selectedTipoEvento:'SELECCIONAR CATEGORÍA',descripcion:'',centro:'',simpleText:'FECHA DEL EVENTO',isoFormatText:'HORA DEL EVENTO', text:' '})
     }
 
     validarCamposRequeridos(){
         var result = true;
         if(!this.props.name ||
-            !this.state.selectedTipoEvento ||
+            (!this.state.selectedTipoEvento || this.state.selectedTipoEvento === 'SELECCIONAR CATEGORÍA') ||
             !this.state.barrio ||
             !this.state.fecha ||
             !this.state.descripcion||
             !this.state.centro||
             !this.state.hora){
-            alert("DEBE COMPLETAR TODOS LOS CAMPOS");
+            Alert.alert(
+                'IMPORTANTE',
+                'DEBE COMPLETAR TODOS LOS CAMPOS',
+                [
+                  {text: 'OK', onPress: () => console.log('OK Pressed')},
+                ],
+                { cancelable: false }
+              )
             result = false;
         }
         return result;

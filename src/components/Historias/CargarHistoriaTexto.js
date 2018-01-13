@@ -24,6 +24,7 @@ class CargarHistoriaTexto extends React.Component{
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
+        console.disableYellowBox = true;
     }
 
 
@@ -151,7 +152,7 @@ class CargarHistoriaTexto extends React.Component{
     }
 
     limpiarCampos(){
-        this.setState({history: '' ,titulo:'',selectedCategoria:'SELECCIONAR CATEGORÍA',text:''})
+        this.setState({history: '' ,titulo:'',selectedCategoria:'SELECCIONAR CATEGORÍA',text:' '})
     }
 
     validarCamposRequeridos(){

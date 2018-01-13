@@ -40,7 +40,7 @@ const login = (name, pass) => {
     return new Promise((resolve,reject) => {
         firebase.auth().signInWithEmailAndPassword(name,pass)
         .then((user)=>{
-            if(user &&  user.emailVerified){
+            if(user/* &&  user.emailVerified*/){
                 resolve(user);
             }else {
                 reject();
@@ -79,7 +79,7 @@ class Home extends React.Component{
         };
         autenticacion()
         .then((user)=>{
-            if(user &&  user.emailVerified){
+            if(user/* &&  user.emailVerified*/){
                 console.log('Usuario autenticado por firebase: '+ user.uid);
                 Backend.setUid(user.uid);
                 Backend.buscarUsuarioLogueado((usuario)=>{
@@ -94,7 +94,7 @@ class Home extends React.Component{
                         console.log('El usuario autenticado no esta creado en la tabla USERS');
                         this.setState({visible:!this.state.visible});
                         Actions.perfil({
-                            userId:this.uid,
+                            userId:user.uid,
                         });
                     }
                 });
@@ -111,6 +111,7 @@ class Home extends React.Component{
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
+        console.disableYellowBox = true;
     }
 
     render(){
@@ -150,14 +151,14 @@ class Home extends React.Component{
                             {/*  -MAIL- */}
                             <View  style={style.singleInputView}>
                                 <TextInput style={style.singleInputText}
-                                autoCapitalize="characters"
-                                placeholder='INGRESE MAIL'
-                                onChangeText={ (text) => {
-                                    this.setState({
-                                        name:text,
-                                    })
-                                }}
-                                value= {this.state.name}
+                                    autoCapitalize="characters"
+                                    placeholder='INGRESE MAIL'
+                                    onChangeText={ (text) => {
+                                        this.setState({
+                                            name:text,
+                                        })
+                                    }}
+                                    value= {this.state.name}
                                 />
                             </View>
 
@@ -227,7 +228,14 @@ class Home extends React.Component{
                                             })
                                             .catch(error => {
                                                 this.setState({visible:!this.state.visible,});
-                                                alert('La cuenta no existe o la contraseña es inválida');
+                                                Alert.alert(
+                                                  'IMPORTANTE',
+                                                  'La cuenta no existe o la contraseña es inválida',
+                                                  [
+                                                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                  ],
+                                                  { cancelable: false }
+                                                )
                                             })
                                         }
                                     }}/>
@@ -270,14 +278,28 @@ class Home extends React.Component{
                                                     Backend.setUid(user.uid);
                                                     this.setState({visible:!this.state.visible});
                                                     user.sendEmailVerification().then(function() {
-                                                      alert('Se envio un email a '+ user.email +' .Verifique su identidad y vuelva a ingresar ')
+                                                        Alert.alert(
+                                                          'IMPORTANTE',
+                                                          'Se envio un email a '+ user.email +' .Verifique su identidad y vuelva a ingresar',
+                                                          [
+                                                            {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                          ],
+                                                          { cancelable: false }
+                                                        )
                                                     }).catch(function(error) {
                                                       console.log('Error enciando mail de confirmacion')
                                                     });
                                                 })
                                                 .catch(error => {
                                                     this.setState({visible:!this.state.visible,});
-                                                    alert('La dirección de mail esta siendo usada por otra cuenta');
+                                                    Alert.alert(
+                                                          'IMPORTANTE',
+                                                          'La dirección de mail esta siendo usada por otra cuenta',
+                                                          [
+                                                            {text: 'OK', onPress: () => console.log('OK Pressed')},
+                                                          ],
+                                                          { cancelable: false }
+                                                        )
                                                 })
                                             }
                                         }}/>

@@ -29,6 +29,7 @@ export default class Valorar extends React.Component {
               rowHasChanged: (row1, row2) => row1 !== row2}),
     };
     // this._rendering = this._renderItem.bind(this);
+    console.disableYellowBox = true;
   }
 
   componentDidMount(){
@@ -93,12 +94,7 @@ export default class Valorar extends React.Component {
                                                             this.setState({
                                                                             dataSource: this.state.dataSource.cloneWithRows([]),
                                                                         });
-                                                            Actions.valorar({userValorar:item,user:this.state.user,
-                                                                              onBack: () => {
-                                                                                              Actions.verUsuarioValoracion({user:this.state.user,});
-                                                                                            } 
-
-                                                                            }); 
+                                                            Actions.valorar({userValorar:item,user:this.state.user,}); 
                                                         }
                         },
                       {text: 'CANCELAR', onPress: (text) => console.log('Cancel')}

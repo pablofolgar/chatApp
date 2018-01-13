@@ -15,6 +15,7 @@ import ListItem from './ListItem';
 import {
     Actions,
 } from 'react-native-router-flux';
+import renderIf from './../RenderIf';
 
 export default class VerEventos extends React.Component{
 
@@ -22,12 +23,16 @@ export default class VerEventos extends React.Component{
         super(props);
         this.state = {
                 user: this.props.user,
+                eventoId: this.props.eventoId,
+                usuarioNotificado: this.props.usuarioNotificado,
                 dataSource: new ListView.DataSource({
                     rowHasChanged: (row1, row2) => row1 !== row2}),
+                hayDatosParaMostrar:true,
             };
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
+        console.disableYellowBox = true;
     }
 
     componentWillMount() {
@@ -39,7 +44,30 @@ export default class VerEventos extends React.Component{
 
         return(
             <ScrollView  style={style.container}> 
-                    <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} enableEmptySections={true}/>
+                    {renderIf(this.state.hayDatosParaMostrar, 
+                        <ListView dataSource={this.state.dataSource} renderRow={this._renderItem.bind(this)} enableEmptySections={true}/>
+                    )}
+                
+                    {renderIf(!this.state.hayDatosParaMostrar && this.state.eventoId && this.state.usuarioNotificado, 
+                        <View>
+                            <View style={style.eliminadoView}>
+                                <Text style={style.eliminadoText} >
+                                    EL EVENTO QUE QUIERE VISUALIZAR FUE ELIMINADO :(
+                                </Text>
+                            </View>
+                            <View style={style.ActionView}>
+                            <ActionButton title="VOLVER"
+                                style={style.actionText}
+                                onPress={() => {
+                                                 Backend.borrarNotificacion(this.state.eventoId, this.state.usuarioNotificado);   
+                                                }
+
+                                        }
+                              />
+                          </View> 
+                        </View> 
+                        
+                    )}
             </ScrollView>
         );
     }
@@ -47,23 +75,54 @@ export default class VerEventos extends React.Component{
 
     componentDidMount(){
         var items = [];
-        Backend.getEventosCreadosPorUsuario((evento)=>{
-                items.push({
-                            eventoId: evento.eventoId,
-                            categoria: evento.categoria.toUpperCase(),
-                            barrio: evento.barrio.toUpperCase(),
-                            fecha: evento.fecha,
-                            mensajeAlertaId: evento.mensajeAlertaId,
-                            descripcion: evento.descripcion.toUpperCase(),
-                            centro: evento.centro.toUpperCase(),
-                            hora: evento.hora,
-                            user: evento.user,
-                            createdAt:evento.createdAt,
-                        });
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(items),
-                  });
-        },this.state.user);
+        if(this.state.user){
+            console.log('1')
+            Backend.getEventosCreadosPorUsuario((evento)=>{
+                if(evento){
+                    items.push({
+                                eventoId: evento.eventoId,
+                                categoria: evento.categoria.toUpperCase(),
+                                barrio: evento.barrio.toUpperCase(),
+                                fecha: evento.fecha,
+                                mensajeAlertaId: evento.mensajeAlertaId,
+                                descripcion: evento.descripcion.toUpperCase(),
+                                centro: evento.centro.toUpperCase(),
+                                hora: evento.hora,
+                                user: evento.user,
+                                createdAt:evento.createdAt,
+                            });
+                    this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(items),
+                        hayDatosParaMostrar:items.length > 0,
+                      });
+                }else{
+                    this.setState({hayDatosParaMostrar:false,})
+                }
+            },this.state.user._id);
+        }else if(this.props.eventoId){
+             Backend.getEventoPorId((evento)=>{
+                if(evento){
+                    items.push({
+                                eventoId: evento.eventoId,
+                                categoria: evento.categoria.toUpperCase(),
+                                barrio: evento.barrio.toUpperCase(),
+                                fecha: evento.fecha,
+                                mensajeAlertaId: evento.mensajeAlertaId,
+                                descripcion: evento.descripcion.toUpperCase(),
+                                centro: evento.centro.toUpperCase(),
+                                hora: evento.hora,
+                                user: evento.user,
+                                createdAt:evento.createdAt,
+                            });
+                    this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(items),
+                        hayDatosParaMostrar:items.length > 0,
+                      });
+                }else{
+                    this.setState({hayDatosParaMostrar:false,})
+                }
+            },this.props.eventoId);
+        }
     }
 
     componentWillUnMount(){
@@ -72,6 +131,7 @@ export default class VerEventos extends React.Component{
 
     _renderItem(item) {
         const onPress = () => {
+            if(this.state.user){
                   Alert.alert(
                     'PARA EDITAR  SU EVENTO APRIETE "EDITAR"',
                     null,
@@ -88,9 +148,11 @@ export default class VerEventos extends React.Component{
                     ],
                     'default'
                   );
-                };
+            }
+        };
         return (
-              <ListItem item={item} onPress={onPress}/>
+                <ListItem item={item} onPress={onPress}  enableEmptySections={true}/>
             );
     }
+
 }

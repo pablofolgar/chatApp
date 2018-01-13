@@ -26,7 +26,7 @@ class Historias extends React.Component{
                             <Text 
                             style={style.ButtonsText}
                             onPress={() => {
-                                Actions.cargarHistoria({
+                                Actions.cargarHistoriaTexto({
                                     user:this.state.user,
                                 });
                             }}>

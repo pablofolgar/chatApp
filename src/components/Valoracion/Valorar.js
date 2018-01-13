@@ -32,6 +32,7 @@ export default class Valorar extends React.Component {
       opinion:'',
       text:'',
     };
+    console.disableYellowBox = true;
   }
 
   onGeneralStarRatingPress(rating) {
@@ -111,15 +112,18 @@ export default class Valorar extends React.Component {
                     
             />
         </View>
-
-        <ActionButton title="VALORAR"
-                                  onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
-                                                   if(camposRequeridosOk){
-                                                        this.guardarValoracion();
-                                                    }
-                                                  }
-                                            }
-                  />
+        <View style={style.ActionView}>
+          <ActionButton 
+            title="VALORAR"
+            style={style.actionText}
+            onPress={() => {var camposRequeridosOk=this.validarCamposRequeridos();
+                             if(camposRequeridosOk){
+                                  this.guardarValoracion();
+                              }
+                            }
+                    }
+           />
+        </View>
         
       </ScrollView>
     );

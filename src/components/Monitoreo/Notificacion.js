@@ -12,7 +12,7 @@ import Backend from '../../Backend';
 import PushController from './PushController';  
 import PushNotification from 'react-native-push-notification';
 import ListItem from './ListItem';
-
+import renderIf from './../RenderIf';
 
 export default class Notificacion extends React.Component{
 
@@ -25,6 +25,7 @@ export default class Notificacion extends React.Component{
             notificaciones:[],
         };
         this._rendering = this._renderItem.bind(this);
+        console.disableYellowBox = true;
     }
 
     componentWillUnmount() {
@@ -51,6 +52,7 @@ export default class Notificacion extends React.Component{
                             centro:usuario.notificaciones[keyPre].centro,
                             descripcion:usuario.notificaciones[keyPre].descripcion,
                             perfilCentro:false,
+                            userId: usuario.notificaciones[keyPre].userId,
                         });
                 }
                 this.setState({
@@ -74,6 +76,7 @@ export default class Notificacion extends React.Component{
                             centro:usuario.notificaciones[keyAct].centro,
                             descripcion:usuario.notificaciones[keyAct].descripcion,
                             perfilCentro:false,
+                            userId: usuario.notificaciones[keyAct].userId,
                         });
                         //Si no esta hago la notificacion
                         let date = new Date(Date.now());
@@ -139,8 +142,14 @@ export default class Notificacion extends React.Component{
     }
 
     _renderItem(item) {
+        const onPress = () => {
+                    Actions.verEventos({
+                                    eventoId:item._key,
+                                    usuarioNotificado: this.state.user,
+                                });
+                };
         return (
-              <ListItem item={item} />
+              <ListItem item={item} onPress={onPress}/>
             );
     }
 

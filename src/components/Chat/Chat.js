@@ -19,6 +19,7 @@ class Chat extends React.Component{
         console.ignoredYellowBox = [
             'Setting a timer'
         ]
+        console.disableYellowBox = true;
     }
 
     componentWillMount() {
@@ -48,7 +49,7 @@ class Chat extends React.Component{
                     messages: GiftedChat.append(previousState.messages, message),
                 };
             });
-        },this.state.user.name,this.state.contacto);
+        },this.state.user,this.state.contacto);
     }
 
     componentWillUnMount(){

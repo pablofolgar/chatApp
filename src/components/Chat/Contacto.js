@@ -4,8 +4,8 @@ import {
     Actions,
 } from 'react-native-router-flux';
 
-import {ListView, StyleSheet, Text, View} from 'react-native';
-const style = require('./styles.js');
+import {ListView, StyleSheet, Text, View,ScrollView,} from 'react-native';
+const style = require('./../styles.js');
 import Backend from '../../Backend';
 import ListItem from './ListItem';
 
@@ -22,12 +22,13 @@ export default class Contacto extends React.Component{
 	}
 
 	componentDidMount(){
-		 alert(this.state.user.name)
+		var items = [];
 		Backend.buscarContactosParaChat((contacto) => {
 			if(contacto){
-				var items = [];
 				items.push({
-                    contacto:contacto,
+                    		name:contacto.name,
+                    		_id: contacto._id,
+                    		perfil: contacto.perfil,
                   });
 				this.setState({
 					dataSource: this.state.dataSource.cloneWithRows(items)

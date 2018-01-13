@@ -427,8 +427,40 @@ var styles = StyleSheet.create({
     color:'black'
   },
 
+  //EVENTO ELIMINADO
+  eliminadoView:{
+    marginTop:alto(2),
+    marginLeft:ancho(2),
+    marginRight:ancho(2),
+    marginBottom:alto(2),
+    backgroundColor:'#e6f7ff',
+    height: alto(10),
+    justifyContent:'center',
+  },
+
+  eliminadoText:{
+    fontSize: alto(3),
+    color:'red',
+    textAlign:'center',
+    fontWeight: 'bold',
+  },
+
   //NOTIFICACIONES VIEW
   GralNotifView:{
+    flex:1,
+    borderWidth:0,
+    borderRadius:4,
+    borderColor: 'grey',
+    marginTop:6,
+    marginLeft:5,
+    marginRight:5,
+    marginBottom:0,
+    backgroundColor: '#b3d9ff',
+    height: alto(27),
+  },
+
+  //EVENTOS GENERAL VIEW
+  GralEventoView:{
     flex:1,
     borderWidth:0,
     borderRadius:4,
@@ -454,6 +486,15 @@ var styles = StyleSheet.create({
     color:'#b300b3',
     fontWeight:'bold',
 
+  },  
+
+  //TÍTULO-NOTIFICACIONES TEXT
+  clickText:{
+    fontSize:alto(3),
+    color:'#b30000',
+    fontWeight:'bold',
+
+
   },
 
   //BLOQUE DE DATOS-NOTIFICACIONES VIEW
@@ -464,6 +505,14 @@ var styles = StyleSheet.create({
   SubBlockDataView:{
     flex:1,
     flexDirection: 'row',
+  },    
+
+  SubBlockClickView:{
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center',
+    marginTop:alto(0.5),
+    marginBottom:alto(0.5),
   },  
 
   SubBlockDescView:{
@@ -510,7 +559,7 @@ var styles = StyleSheet.create({
   //DATOS-NOTIFICACIONES TEXT
   CatNotifText:{
     fontSize:alto(3.3),
-    color:'#cc2900',
+    color:'#b30000',
     fontWeight:'bold',
     textDecorationLine:'underline',
   },  
@@ -526,6 +575,48 @@ var styles = StyleSheet.create({
     color:'black',
   },
   
+  //------------CONTACTOS Y CHAT --------------
+
+  contactosView:{
+    flex:1,
+    flexDirection:'row',
+    elevation:10,
+    backgroundColor:'#FFF', 
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius:0,
+    marginTop:alto(0),
+    marginRight:ancho(0),
+    marginLeft:ancho(0),
+    marginBottom:alto(0),
+    height: alto(10),
+  },
+
+
+  nombreView:{
+    flex: 1,
+    marginLeft:ancho(3),
+    justifyContent:'center',
+  },
+
+  nombreText:{
+    fontSize:alto(3.1),
+    fontWeight:'bold',
+    color:'#000',
+  },
+
+  perfilView:{
+    flex: 1,
+    marginLeft:ancho(3),
+    justifyContent:'center',
+  },
+
+  perfilText:{
+    fontSize:alto(4),
+    fontWeight:'bold',
+    color:'#000',
+  },
+
   //BOTON-USUARIOS-CHAT VIEW
   ChatUserView:{
     elevation:0,
@@ -552,6 +643,8 @@ var styles = StyleSheet.create({
   },
 
   
+  //-------FIN CONTACTOS Y CHAT-------------
+
 
 
   //SELECTS.

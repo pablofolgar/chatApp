@@ -20,7 +20,8 @@ class Menu extends React.Component{
 
                     data={[
                     {key: 'CATÁLOGO'},
-                    {key: 'COMUNICACIÓN'},
+                    {key: 'CHAT'},
+                    {key: 'HISTORIAS'},
                     {key: 'EVENTOS'},
                     {key: 'PERFIL'},
                     {key: 'NOTIFICACIONES'},
@@ -33,8 +34,11 @@ class Menu extends React.Component{
                             <Text style={style.ButtonsText}
                             onPress={() =>{
                                 switch(item.key){
-                                    case 'COMUNICACIÓN':
-                                        Actions.comunicacion({user:this.state.user,});
+                                     case 'CHAT':
+                                        Actions.contacto({user:this.state.user,});
+                                        break;
+                                    case 'HISTORIAS':
+                                        Actions.historias({user:this.state.user,});
                                         break;
                                     case 'NOTIFICACIONES':
                                         Actions.notificacion({user:this.state.user,});
