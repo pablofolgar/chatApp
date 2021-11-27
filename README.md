@@ -21,5 +21,10 @@
   
     3.3 Levantar la app
       * react-native run-android. 
-  
+ 
+ 4. Ver la consola de Android
+
+  * cd  /Users/pablo/Library/Android/sdk/platform-tools
+
+  * ./adb logcat -s ReactNative:V ReactNativeJS:V
   
